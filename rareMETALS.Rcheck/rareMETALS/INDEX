@@ -1,0 +1,46 @@
+ColSums                 Safe colSums
+Mean                    Safe mean
+RowSums                 Safe rowSums
+Sum                     Safe sum
+binary.rareMETALS.single.group
+                        Single variant meta-analysis
+conditional.rareMETALS.range
+                        Perform conditional analysis for gene-level
+                        tests
+conditional.rareMETALS.range.group
+                        Perform conditional analysis for gene-level
+                        tests and correcting for allele flips with
+conditional.rareMETALS.single
+                        Perform conditional analysis for single variant
+                        tests
+conditional.rareMETALS.single.group
+                        Perform conditional analysis for single variant
+                        tests
+conditional.rareMETALS.single.group.core
+                        Perform conditional analysis for single variant
+                        tests
+find.gene.chrpos        Find the chromosomal position for genes;
+find.top.variant        Find top variants in a gene region that satisfy
+                        a MAF cutoff;
+flipAllele              This is the function for flipping alleles
+genomic.dist            Get genomic distance between two variant
+                        positions;
+get.gene.inWindow       Find nearby genes for a sigificant SNP
+get.tabix.range         change position to tabix range;
+rareMETALS.cleanScore   Single variant meta-analysis
+rareMETALS.gene         Meta-analysis of gene-level tests;
+rareMETALS.gene.group   Meta-analysis of gene-level tests by range;
+rareMETALS.range        Meta-analysis of gene-level tests by range;
+rareMETALS.range.core   #' Meta-analysis of gene-level tests by range;
+rareMETALS.range.group
+                        Meta-analysis of gene-level tests by range;
+rareMETALS.range.group.core
+                        Meta-analysis of gene-level tests by range;
+rareMETALS.single       Single variant meta-analysis
+rareMETALS.single.correctRefAlt
+                        Single variant meta-analysis
+rareMETALS.single.group
+                        Single variant meta-analysis
+rm.na                   Remove nas
+set.intersect           Intersection of two sets;
+sortPos                 Sort genomic positions;

@@ -416,20 +416,23 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
     vstat.list.imp <- vstat.list;
     cov.mat.list.imp <- cov.mat.list;
     V.list <- list();
+    impState <- matrix(0,nrow=length(ustat),ncol=length(ustat[[1]]));
     for(ii in 1:length(ustat.list)) {
         ix.miss <- which(is.na(ustat.list[[ii]]));
-        cov.mat.list.imp[[ii]][ix.miss,] <- covG[ix.miss,];
-        cov.mat.list.imp[[ii]][,ix.miss] <- covG[,ix.miss];
-        
-        vstat.list.imp[[ii]][ix.miss] <- sqrt(diag(cov.mat.list.imp[[ii]])[ix.miss]*max(N.mat[ii,],na.rm=T));
-
-        if(is.null(beta.vec)) {
-            ##ustat.list.imp[[ii]][ix.miss] <- (ginv(covG)%*%(U.imp/nSample.U))[ix.miss]*(vstat.list.imp[[ii]][ix.miss])^2;
-            ustat.list.imp[[ii]][ix.miss] <- (U.imp[ix.miss])/(diag(covG.ori)[ix.miss])*(vstat.list.imp[[ii]][ix.miss])^2;
-        }
-        if(!is.null(beta.vec)) {
-            ustat.list.imp[[ii]][ix.miss] <- beta.vec[ix.miss]*vstat.list.imp[[ii]][ix.miss]^2;
-
+        if(length(ix.miss)>0) {
+            impState[ii,ix.miss] <- 1;
+            cov.mat.list.imp[[ii]][ix.miss,] <- covG[ix.miss,];
+            cov.mat.list.imp[[ii]][,ix.miss] <- covG[,ix.miss];
+            
+            vstat.list.imp[[ii]][ix.miss] <- sqrt(diag(cov.mat.list.imp[[ii]])[ix.miss]*max(N.mat[ii,],na.rm=T));
+            
+            if(is.null(beta.vec)) {
+                ##ustat.list.imp[[ii]][ix.miss] <- (ginv(covG)%*%(U.imp/nSample.U))[ix.miss]*(vstat.list.imp[[ii]][ix.miss])^2;
+                         ustat.list.imp[[ii]][ix.miss] <- (U.imp[ix.miss])/(diag(covG.ori)[ix.miss])*(vstat.list.imp[[ii]][ix.miss])^2;
+            }
+            if(!is.null(beta.vec)) {
+                ustat.list.imp[[ii]][ix.miss] <- beta.vec[ix.miss]*vstat.list.imp[[ii]][ix.miss]^2;
+            }
         }
         V.list[[ii]] <- cov.mat.list.imp[[ii]]*max(N.mat[ii,],na.rm=T);
     }
@@ -439,6 +442,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
                 V.imp=V.imp,
                 U.imp=U.imp,
                 V.list=V.list,
+                impState=impState,
                 ustat.list.imp=ustat.list.imp,
                 vstat.list.imp=vstat.list.imp,
                 cov.mat.list.imp=cov.mat.list.imp,

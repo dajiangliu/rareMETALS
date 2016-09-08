@@ -1,0 +1,22 @@
+Package: rareMETALS
+Type: Package
+Title: Meta-Analysis of Gene-level Rare Variant Association Test
+Version: 5.9
+Date: 2015-01-24
+Author: Dajiang J. Liu, Xiaowei Zhan & Goncalo R. Abecasis
+Maintainer: Dajiang J. Liu <dajiang.liu@outlook.com>
+Description: rareMETALS implements our methodologies for performing rare
+    variant associations using summary level statistics. By sharing information
+    on the single variant score statistics, and their variance-covariance
+    matrix, a variety of rare variant association test can be performed
+    centrally. The set of gene-level rare variant tests include simple or
+    weighted burden test, sequence kernel association test, and variable
+    threshold test. The user can also determine the set of variants they want
+    to include in the gene-level test centrally.Additional features for
+    rareMETALS package include 1.) A monte-carlo method for evaluating
+    statistical significance empirically 2.) methods for performing conditional
+    association analysis and dissecting independent association signals.
+License: GPL3
+Depends: seqminer,mvtnorm,CompQuadForm,getopt,MASS
+Packaged: 2014-07-29 20:26:36 UTC; dajiang
+Built: R 3.1.3; x86_64-pc-linux-gnu; 2015-04-08 16:57:48 UTC; unix

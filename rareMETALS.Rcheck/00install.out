@@ -1,0 +1,16 @@
+* installing *source* package ‘rareMETALS’ ...
+** libs
+g++ -I/usr/share/R/include -DNDEBUG      -fpic  -O3 -pipe  -g  -c genericBoot.cpp -o genericBoot.o
+g++ -I/usr/share/R/include -DNDEBUG      -fpic  -O3 -pipe  -g  -c imhof.cpp -o imhof.o
+g++ -I/usr/share/R/include -DNDEBUG      -fpic  -O3 -pipe  -g  -c qfc.cpp -o qfc.o
+g++ -I/usr/share/R/include -DNDEBUG      -fpic  -O3 -pipe  -g  -c ruben.cpp -o ruben.o
+g++ -shared -o rareMETALS.so genericBoot.o imhof.o qfc.o ruben.o -L/usr/lib/R/lib -lR
+installing to /net/fantasia/home/dajiang/RARE-LIPIDS/software/rareMETALS.Rcheck/rareMETALS/libs
+** R
+** data
+** preparing package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+* DONE (rareMETALS)
