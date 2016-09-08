@@ -53,7 +53,7 @@ rareMETALS.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',ma
     for(kk in 1:length(raw.data.all))
       {
         raw.data <- raw.data.all[[kk]];
-        ################################################################print(gene.name[kk]);
+        ########################################################################################print(gene.name[kk]);
         QC.par <- list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff);
         raw.data <- QC(raw.data,QC.par,cov=1);        
         ix.var <- integer(0);
@@ -80,7 +80,7 @@ rareMETALS.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',ma
               
               N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
               no.sample <- no.sample+N.list[[ii]];
-              ##########################################################################################################print(N.list[[ii]]);
+              ##################################################################################################################################print(N.list[[ii]]);
               U.stat <- rm.na(raw.data$ustat[[ii]][ix.var]);
               V.stat <- rm.na(raw.data$vstat[[ii]][ix.var]);
               score.stat.vec.list[[ii]] <- rm.na(U.stat/V.stat);
@@ -119,15 +119,14 @@ rareMETALS.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',ma
                           ref.list[[ix.gold]][ii] <- ref.list[[jj]][ii];
                           alt.list[[ix.gold]][ii] <- alt.list[[jj]][ii];
                         }
-                      if((is.na(alt.list[[ix.gold]][ii]) | (alt.list[[ix.gold]][ii])=='0' | (alt.list[[ix.gold]][ii])==".") & (!is.na(alt.list[[jj]][ii]) & (alt.list[[jj]][ii]!="0") & (alt.list[[jj]][ii]!=".")))
-                        {
-                          ##ref.list[[ix.gold]][ii] <- ref.list[[jj]][ii];
+                      if((is.na(alt.list[[ix.gold]][ii]) | (alt.list[[ix.gold]][ii])=='0' | (alt.list[[ix.gold]][ii])==".") & (!is.na(alt.list[[jj]][ii]) & (alt.list[[jj]][ii]!="0") & (alt.list[[jj]][ii]!="."))) {
+                        
                           alt.list[[ix.gold]][ii] <- alt.list[[jj]][ii];
                         }
-                      if(!is.na(ref.list[[jj]][ii]) & !is.na(ref.list[[ix.gold]][ii]))
-                        {
-                          if(ref.list[[jj]][ii]==alt.list[[ix.gold]][ii] & (ref.list[[jj]][ii])!=(ref.list[[ix.gold]][ii]))
-                            {
+                      if(!is.na(ref.list[[jj]][ii]) & !is.na(ref.list[[ix.gold]][ii])) {
+                        
+                          if(ref.list[[jj]][ii]==alt.list[[ix.gold]][ii] & (ref.list[[jj]][ii])!=(ref.list[[ix.gold]][ii])) {
+                            
                               tmp <- ref.list[[jj]][ii];
                               ref.list[[jj]][ii] <- alt.list[[jj]][ii];
                               alt.list[[jj]][ii] <- tmp;                              
@@ -243,7 +242,7 @@ rareMETALS.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',ma
               direction.meta.single.var.out[kk] <- res[[kk]]$direction.meta.single.var;          
               pos.ref.alt.out[kk] <- paste(res[[kk]]$pos,res[[kk]]$ref,res[[kk]]$alt,sep='/',collapse=',');
               ix.best <- res[[kk]]$ix.best;
-              ################################################################print(c("ix.best",ix.best));
+              ########################################################################################print(c("ix.best",ix.best));
               top.singlevar.pos[kk] <- res[[kk]]$pos[ix.best];
               top.singlevar.refalt[kk] <- paste(c(res[[kk]]$ref[ix.best],res[[kk]]$alt[ix.best]),sep="/",collapse="/");
               top.singlevar.pval[kk] <- format(res[[kk]]$singlevar.pval.vec[ix.best],digits=out.digits);

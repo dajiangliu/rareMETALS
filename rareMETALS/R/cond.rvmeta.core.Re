@@ -30,6 +30,14 @@ cond.rvmeta.core <- function(X.T.times.Y.all,X.T.times.X.all,maf.vec,N,var.Y,ix.
       }
     return(res);
 }
+#' This is the function to obtain conditional score statistics;
+#'
+#' @param ustat The non-standardized score statistics
+#' @param X.T.times.X The covariance matrix for ustat;
+#' @param ix.candidate the indics of candidate variant;
+#' @param ix.known the indices of known variants that are conditioned on;
+#' @return the score statistic and their covariance matrix;
+#' @export
 get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known)
     {
         X.T.times.Y <- ustat;
@@ -55,3 +63,22 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
                     conditional.V=V));
 
     }
+
+#' This is the function to obtain conditional score statistics when conditional on the genes that are detected by SKAT test;
+#'
+#' @param ustat The non-standardized score statistics
+#' @param X.T.times.X The covariance matrix for ustat;
+#' @param ix.candidate the indics of candidate variant;
+#' @param ix.known the indices of known variants that are conditioned on;
+#' @return the score statistic and their covariance matrix;
+#' @export
+get.conditional.score.stat.RE <- function(ustat,X.T.times.X,N,ix.candidate,ix.known) {
+    ustat.candidate <- ustat[ix.candidiate];
+    ustat.known <- ustat[ix.known];
+    ## P.Z <- diag(nrow(Z.tilde))-Z.tilde%*%ginv(t(Z.tilde)%*%Z.tilde)%*%t(Z.tilde);
+    ## ustatX.post <- t(X)%*%P.Z%*%(Y-Z%*%betaZ.post);
+    ## ustatX.post.vec[ii] <- ustatX.post;
+    conditional.ustat <- ustat.candidate-X.T.times.X[ix.candidate,ix.known]%*%ginv(X.T.times.X[ix.known,ix.known])%*%ustat.known;
+   
+}
+

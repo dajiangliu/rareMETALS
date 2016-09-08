@@ -11,7 +11,7 @@
 #' @export
 flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.var,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
     {
-        ##print(c("REF","ALT",refaltList$ref[ix.var],refaltList$alt[ix.var]))
+        ##########################print(c("REF","ALT",refaltList$ref[ix.var],refaltList$alt[ix.var]))
         if((is.na(refaltList$ref[ix.var]) | is.na(refaltList$alt[ix.var])) & analyzeRefAltListOnly )
             {
                 ii <- ix.pop;
@@ -23,7 +23,6 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                         raw.data$cov[[ii]][ix.var,] <- NA;
                         raw.data$cov[[ii]][,ix.var] <- NA;
                     }
-                ##print("NotInRefAltList");
                 log.mat.var[ii] <- "NotInRefAltList";
                 raw.data$nSample[[ii]][ix.var] <- NA;
                 raw.data$af[[ii]][ix.var] <- NA;
@@ -42,7 +41,7 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
             {
                 ii <- ix.pop;                
                 ix.include <- rep(0,length(raw.data$ustat));
-                ##print("NotInRefAltList");
+                ##########################print("NotInRefAltList");
                 log.mat.var[ii] <- "NotInRefAltList";
                 return(list(raw.data=raw.data,
                             log.mat.var=log.mat.var,
@@ -54,8 +53,6 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
         ii <- ix.pop;
         ref.gold <- refaltList$ref;alt.gold <- refaltList$alt;af.gold <- refaltList$af;af.diff.max <- refaltList$af.diff.max;checkAF <- refaltList$checkAF;
         if(length(checkAF)==0) checkAF <- FALSE;
-        print(c("raw.data$af[[ii]][ix.var]",raw.data$af[[ii]][ix.var]));
-        print(c("af.gold[ix.var]",af.gold[ix.var]));
         
         af.diff <- abs(raw.data$af[[ii]][ix.var]-af.gold[ix.var]);
         ix.include <- rep(0,length(raw.data$ustat));
@@ -100,7 +97,8 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                 strandAmbiguous <- (((ref.gold[ix.var]=="A") & (alt.gold[ix.var]=="T")) | ((ref.gold[ix.var]=="T") & (alt.gold[ix.var]=="A")) | ((ref.gold[ix.var]=="C") & (alt.gold[ix.var]=="G")) | ((ref.gold[ix.var]=="G") & (alt.gold[ix.var]=="C")));
                 flip.ref.alt <- (raw.data$ref[[ii]][ix.var]==refaltList$alt[ix.var] & raw.data$alt[[ii]][ix.var]==refaltList$ref[ix.var]);
                 match.ref.alt <- (refaltList$ref[ix.var]==(raw.data$ref[[ii]][ix.var]) & refaltList$alt[ix.var]==raw.data$alt[[ii]][ix.var]);
-                mono <- (((raw.data$ref[[ii]][ix.var]==".") | (raw.data$ref[[ii]][ix.var]==0) | (raw.data$alt[[ii]][ix.var]==".") | (raw.data$alt[[ii]][ix.var]==0) | (rm.na(raw.data$af[[ii]][ix.var])==0)| rm.na(raw.data$af[[ii]][ix.var])==1) & !is.na(raw.data.ori$nSample[[ii]][ix.var]))
+                ##mono <- (((raw.data$ref[[ii]][ix.var]==".") | (raw.data$ref[[ii]][ix.var]==0) | (raw.data$alt[[ii]][ix.var]==".") | (raw.data$alt[[ii]][ix.var]==0) | (rm.na(raw.data$af[[ii]][ix.var])==0)| rm.na(raw.data$af[[ii]][ix.var])==1) & !is.na(raw.data.ori$nSample[[ii]][ix.var]))
+                mono <- (((raw.data$ref[[ii]][ix.var]==".") | (raw.data$ref[[ii]][ix.var]==0) | (raw.data$alt[[ii]][ix.var]==".") | (raw.data$alt[[ii]][ix.var]==0) ) & (rm.na(raw.data$af[[ii]][ix.var])==0 | rm.na(raw.data$af[[ii]][ix.var])==1) & !is.na(raw.data.ori$nSample[[ii]][ix.var]))
                 if(!match.ref.alt & !correctFlip &!mono)
                     {
                         
@@ -277,8 +275,8 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                     }
                 if(checkAF==TRUE)
                     {
-                        print(c("raw.data$af[[ii]][ix.var]",raw.data$af[[ii]][ix.var]));
-                        print(c("af.gold[ix.var]",af.gold[ix.var]));
+                        ########################print(c("raw.data$af[[ii]][ix.var]",raw.data$af[[ii]][ix.var]));
+                        ########################print(c("af.gold[ix.var]",af.gold[ix.var]));
                         af.diff.new <- abs(raw.data$af[[ii]][ix.var]-af.gold[ix.var]);
                         if(is.na(af.diff.new)) af.diff.new <- 0;
                         if(af.diff.new>af.diff.max)

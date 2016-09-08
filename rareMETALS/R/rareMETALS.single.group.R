@@ -17,10 +17,10 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
   {
     ix.gold <- 1;
     extra.par <- list(ix.gold=ix.gold,QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
-    ########print(range);
-    ########print(score.stat.file);
+    ################################print(range);
+    ################################print(score.stat.file);
     capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, cov.file, range));
-    ################################################print("read data okay");
+    ########################################################################print("read data okay");
     if(length(raw.data.all)==0)
       return(list(list(p.value=NA,
                        skip=1,
@@ -86,8 +86,6 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                   nearby=NA,
                   pos=NA));
     
-
-
     ref.gold <- refaltList$ref;
     alt.gold <- refaltList$alt;
     af.gold <- refaltList$af;
@@ -97,6 +95,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
     maf.sd.vec <- 0;maf.maxdiff.vec <- 0;ix.maf.maxdiff.vec <- 0;
     maf.pop.ori <- 0;
     QC.by.study <- "";
+    cochranQ.stat <- NA;cochranQ.pVal <- NA;cochranQ.df <- NA;I2 <- NA;
     for(ix.var in 1:length(raw.data$ref[[ix.gold]]))
       {
           cat("Analyzing ",raw.data$pos[ix.var],"\n");
@@ -104,8 +103,14 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
           U.stat <- 0;V.stat.sq <- 0;maf.pop <- 0;
           nref.var <- 0;nhet.var <- 0;nalt.var <- 0;
           ix.include <- rep(0,length(ix.pop));
+          Z.byStudy <- 0;
           for(ii in 1:length(ix.pop))
               {
+                  
+                  if(length(raw.data$covXZ[[ii]])>0) {
+
+                      warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
+                  }
                   res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var,log.mat[ix.var,],correctFlip,analyzeRefAltListOnly);
                   raw.data <- res.flipAllele$raw.data;
                   ix.include <- res.flipAllele$ix.include;
@@ -116,17 +121,37 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                   nalt.var <- nalt.var+rm.na(raw.data$nalt[[ii]][ix.var]);
                   nhet.var <- nhet.var+rm.na(raw.data$nhet[[ii]][ix.var]);
                   no.sample.mat[ii,ix.var] <- (raw.data$nSample[[ii]][ix.var]);
-                  if(is.na(raw.data$ustat[[ii]][ix.var])) direction.by.study.var[ii] <- "X";
+                  if(is.na(raw.data$ustat[[ii]][ix.var]))
+                      {
+                          direction.by.study.var[ii] <- "X";
+                          ix.include[ii] <- 1;
+                          log.mat[ix.var,ii] <- "ustatNA";
+                          raw.data$nSample[[ii]][ix.var] <- NA;
+                          raw.data$af[[ii]][ix.var] <- NA;
+                          raw.data$ac[[ii]][ix.var] <- NA;
+                          raw.data$ustat[[ii]][ix.var] <- NA;
+                          raw.data$vstat[[ii]][ix.var] <- NA;
+                          raw.data$nref[[ii]][ix.var] <- NA;
+                          raw.data$nhet[[ii]][ix.var] <- NA;
+                          raw.data$nalt[[ii]][ix.var] <- NA;
+                      }
+                  ## U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
+                  ## V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
+                  ## nref.var <- nref.var+rm.na(raw.data$nref[[ii]][ix.var]);
+                  ## nalt.var <- nalt.var+rm.na(raw.data$nalt[[ii]][ix.var]);
+                  ## nhet.var <- nhet.var+rm.na(raw.data$nhet[[ii]][ix.var]);
+                  ## no.sample.mat[ii,ix.var] <- (raw.data$nSample[[ii]][ix.var]);                  
                   if(!is.na(raw.data$ustat[[ii]][ix.var]))
                       {
                           if(raw.data$ustat[[ii]][ix.var]>0) direction.by.study.var[ii] <- "+";
                           if(raw.data$ustat[[ii]][ix.var]<0) direction.by.study.var[ii] <- "-";
                           if(raw.data$ustat[[ii]][ix.var]==0) direction.by.study.var[ii] <- "=";
                       }
-                  
+                  Z.byStudy[ii] <- (raw.data$ustat[[ii]][ix.var])/(raw.data$vstat[[ii]][ix.var]);
                   maf.pop[ii] <- ((raw.data$af[[ii]])[ix.var]);
                   maf.pop.ori[ii] <- (raw.data$af[[ii]])[ix.var];
               }
+          
           maf.byStudy[ix.var] <- paste(maf.pop,collapse=",",sep=",");
           maf.vec[ix.var] <- sum(maf.pop*no.sample.mat[,ix.var],na.rm=TRUE)/sum(no.sample.mat[,ix.var],na.rm=TRUE);
           maf.sd.vec[ix.var] <- sqrt(sum((no.sample.mat[,ix.var])*((maf.pop.ori-maf.vec[ix.var])^2),na.rm=TRUE)/sum(no.sample.mat[,ix.var],na.rm=TRUE));
@@ -151,8 +176,17 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
               }
           direction.by.study[ix.var] <- paste(direction.by.study.var,sep='',collapse='');
           QC.by.study[ix.var] <- paste(log.mat[ix.var,],sep=",",collapse=",");
+
           beta1.est[ix.var] <- U.stat/V.stat.sq;
           beta1.sd[ix.var] <- sqrt(1/V.stat.sq);
+          Z.meta <- U.stat/sqrt(V.stat.sq);
+          cochranQ.stat[ix.var] <- sum((Z.byStudy-Z.meta)^2,na.rm=T);
+          cochranQ.df[ix.var] <- sum(which(!is.na(Z.byStudy-Z.meta)^2))-1;
+          if(cochranQ.df[ix.var]>0)
+              cochranQ.pVal[ix.var] <- pchisq(cochranQ.stat[ix.var],df=cochranQ.df[ix.var],lower.tail=FALSE);
+          if(cochranQ.df[ix.var]<=0)
+              cochranQ.pVal[ix.var] <- NA;
+          I2[ix.var] <- (cochranQ.stat[ix.var]-cochranQ.df[ix.var])/cochranQ.stat[ix.var];
           hsq.est[ix.var] <- (beta1.est[ix.var])*(beta1.est[ix.var])*V.stat.sq/sum(no.sample.mat[,ix.var],na.rm=TRUE);
           no.sample.var[ix.var] <- sum(no.sample.mat[,ix.var],na.rm=TRUE);
           nearby[ix.var] <- paste(get.gene.inWindow(raw.data$pos[ix.var],1e6),sep=",",collapse=",");
@@ -193,7 +227,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
     effect.out <- list(beta1.est);
     pVal.out <- list(p.value);
     pos.out <- raw.data$pos;
-    anno.out <- raw.data$anno;
+    ##anno.out <- list(anno.gold);
     cov.out <- list(matrix(nrow=0,ncol=0));
     integratedData <- list();
     integratedData[[1]] <- list(ref=ref.out,
@@ -217,8 +251,8 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                                 hweCase=list(rep(NA,length(ref.out[[1]]))),
                                 hweCtrl=list(rep(NA,length(ref.out[[1]]))),
                                 afCtrl=list(rep(NA,length(ref.out[[1]]))),
-                                afCase=list(rep(NA,length(ref.out[[1]]))),
-                                anno=anno.out);
+                                afCase=list(rep(NA,length(ref.out[[1]]))));
+                                ##anno=anno.out);
     
     
     return(list(p.value=p.value,
@@ -242,6 +276,10 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                 QC.by.study=QC.by.study,
                 hsq.est=hsq.est,
                 nearby=nearby,
+                cochranQ.stat=cochranQ.stat,
+                cochranQ.df=cochranQ.df,
+                cochranQ.pVal=cochranQ.pVal,
+                I2=I2,
                 log.mat=log.mat,
                 pos=raw.data$pos));
   }

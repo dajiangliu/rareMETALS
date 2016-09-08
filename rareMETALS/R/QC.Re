@@ -2,7 +2,7 @@
 QC <- function(raw.data,QC.par,cov=1)
   {
     
-      ############print(c("QC.par",QC.par));
+      ####################################print(c("QC.par",QC.par));
       hwe.cutoff <- QC.par$hwe.cutoff;
       callrate.cutoff <- QC.par$callrate.cutoff;
       if(length(hwe.cutoff)==0) hwe.cutoff <- 0;
@@ -35,11 +35,11 @@ QC <- function(raw.data,QC.par,cov=1)
                       
                       if(length(ix.bug)>0)
                           {
-                              ## ############print("bug");
+                              ## ####################################print("bug");
                               ## ix.rm <- c(ix.rm,ix.bug);
-                              ## ############print(c("study",ii));
-                              ## ############print(res.diag);
-                              ## ############print(res.vstat)
+                              ## ####################################print(c("study",ii));
+                              ## ####################################print(res.diag);
+                              ## ####################################print(res.vstat)
                               log.mat[ix.bug,ii] <- "bug";
                               warning(msg);
                           }
@@ -50,10 +50,10 @@ QC <- function(raw.data,QC.par,cov=1)
                   {
                       raw.data$ustat[[ii]][ix.rm] <- NA;
                       raw.data$vstat[[ii]][ix.rm] <- NA;
-                      ############print("out");
+                      ####################################print("out");
                       if(cov==1)
                           {
-                              ############print("this is exec");
+                              ####################################print("this is exec");
                               raw.data$cov[[ii]][ix.rm,ix.rm] <- NA;
                           }
                       raw.data$ref[[ii]][ix.rm] <- NA;

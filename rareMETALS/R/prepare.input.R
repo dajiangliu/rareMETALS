@@ -7,7 +7,7 @@ prepare.mega.input <- function(dat.ped.list,sumstat.list,ix.pop)
       {
         dat.ped <- dat.ped.list[[ix.pop]];
         maf.vec <- (sumstat.list[[ix.pop]])$maf.vec;
-        ############################################################################################################################################################print(maf.vec);
+        ####################################################################################################################################################################################print(maf.vec);
         dat.ped.list <- list(dat.ped);
         maf.vec.list <- list(maf.vec);
         covar.mat.list <- list(integer(0));
@@ -38,7 +38,7 @@ prepare.pool.input <- function(dat.ped.list,sumstat.list,ix.pop)
       {
         dat.ped <- dat.ped.list[[ix.pop]];
         maf.vec <- (sumstat.list[[ix.pop]])$maf.vec;
-        ######################################################################################################################################################print(maf.vec);
+        ##############################################################################################################################################################################print(maf.vec);
         dat.ped.list <- list(dat.ped);
         maf.vec.list <- list(maf.vec);
         covar.mat.list <- list(integer(0));

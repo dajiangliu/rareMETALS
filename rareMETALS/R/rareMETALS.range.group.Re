@@ -17,18 +17,17 @@
 #' @export
 rareMETALS.range.group <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',refaltList,maf.cutoff=1,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
 {
-    ########print('this is running');
+
     cat("Analyzing ",range.name[1],"\n");
-    ########print('here');
+
     ii <- 1;
-    ########print(c(range.name[ii],range[ii]));
+
     res <- rareMETALS.range.group.core(score.stat.file,cov.file,range[1],range.name[1],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly)
     if(length(range)>1)
         {
             for(ii in 2:length(range))
                 {
                     cat("Analyzing ",range.name[ii],"\n");
-                    ########print(c(range.name[ii],range[ii]));        
                     res0 <- rareMETALS.range.group.core(score.stat.file,cov.file,range[ii],range.name[ii],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly);                     
                     res$res.out <- rbind(res$res.out,res0$res.out);
                     res$res.list <- c(res$res.list,res0$res.list);
@@ -81,7 +80,6 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                      pos=NA);
     if(length(raw.data.all)==0)
       {
-          ##########################print("return with no Data");
         res <- list();
         for(ii in 1:length(range.name))
           {
@@ -140,13 +138,16 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
 
                       }
               }
-          ##########################################print(log.mat[,29]);
+       
           af.mat <- matrix(NA,ncol=length(raw.data$ustat[[ii]]),nrow=length(raw.data$ustat));
           ac.mat <- af.mat;
           N.mat <- af.mat;
           vstat.list <- list();
           for(ii in 1:length(ix.pop))
               {
+                  if(length(raw.data$afCase[[ii]])>0) {
+                      warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
+                  }
                   U.stat <- raw.data$ustat[[ii]][ix.var];
                   V.stat <- raw.data$vstat[[ii]][ix.var];
                   vstat.list[[ii]] <- V.stat;
@@ -218,7 +219,28 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                     alt.list[[ii]] <- alt.list[[ix.gold]][ix.rare];
                     
               }
+              
               N.mat <- matrix(N.mat[,ix.rare],nrow=nrow(N.mat),ncol=length(ix.rare));
+              ##approximate correlation matrix between variants;
+              covG <- matrix(0,nrow=length(ix.rare),ncol=length(ix.rare));
+              nSample.covG <- covG;
+              ##print(length(ix.rare));
+              
+              for(aa in 1:length(ix.rare)) {
+                  for(bb in 1:length(ix.rare)) {
+                      for(cc in ix.pop) {
+                          ####print(c(aa,bb,cc));
+                          ####print(dim(cov.mat.list[[cc]]));
+                          
+                          ####print(cov.mat.list[[cc]][ix.rare[aa],ix.rare[bb] ]);
+                          ####print(c(aa,bb,cc,'okay'));
+                          covG[aa,bb] <- covG[aa,bb]+rm.na(sqrt(N.mat[cc,aa]*N.mat[cc,bb])*cov.mat.list[[cc]][aa,bb]);
+                          nSample.covG[aa,bb] <- nSample.covG[aa,bb]+sqrt(rm.na(N.mat[cc,aa])*rm.na(N.mat[cc,bb]));
+                      }
+                  }
+              }
+              r2.approx <- cov2cor(rm.na(covG/nSample.covG));
+
               res.extra <- list(anno=anno.list[[ix.gold]],
                                 pos=refaltList.rare$pos,
                                 ref=refaltList.rare$ref,
@@ -231,13 +253,14 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                                 ref.list=ref.list,
                                 af.mat=af.mat,
                                 ac.mat=ac.mat,
+                                r2.approx=r2.approx,
                                 log.mat=log.mat,
                                 N.mat=N.mat,
                                 raw.data=raw.data.ori,
                                 clean.data=raw.data,
                                 gene.name=gene.name[kk]);
               if(test=='WSS')
-                {
+                  {
                   res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(vstat.list=vstat.list,weight='MB',ac.vec.list=ac.vec.list,
                                                                                                                                                     maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
                   res[[kk]] <- c(res.kk,res.extra);
@@ -247,6 +270,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                 {
                   res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(vstat.list=vstat.list,weight='MZ',ac.vec.list=ac.vec.list,
                                                                                                                                                     maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
+                  ####################print('this is executed');
                   res[[kk]] <- c(res.kk,res.extra);
                   res[[kk]]$maf.cutoff <- maf.cutoff;
                 }
@@ -260,9 +284,10 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               if(test=='VT')
                 {
                   res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='VT',extra.pars=list(vstat.list=vstat.list,ac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare,max.TH=max.VT))));
-                  res[[kk]] <- c(res.kk,res.extra);
+                  pos.VT <- res.extra$pos[res.kk$ixVar.VT];               
+                  res[[kk]] <- c(res.kk,res.extra,list(pos.VT=pos.VT));
                 }
-              ##########################################print(res[[kk]]);
+              res[[kk]]$vstat.list <- vstat.list;
               gene.name.out[kk] <- res[[kk]]$gene.name;
               N.out[kk] <- res[[kk]]$N;
               p.value.out[kk] <- format(res[[kk]]$p.value,digits=out.digits);
@@ -290,8 +315,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               nhet.out <- 0;
               ustat.out <- list(res[[kk]]$ustat);
               vstat.out <- list(res[[kk]]$vstat);
-              ##########################################print(c("ustat.out",ustat.out));
-              ##########################################print(c("vstat.out",vstat.out))
+
               callrate.out <- list(rep(1,length(ref.out[[1]])));
               hwe.out <- list(rep(1,length(ref.out[[1]])));
               effect.out <- list(ustat.out[[1]]/vstat.out[[1]]^2);
@@ -299,6 +323,8 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               cov.out <- list(res[[kk]]$cov);
               pos.out <- res[[kk]]$pos;
               anno.out <- res[[kk]]$anno;
+              res[[kk]]$cMAC <- sum(mac.vec.rare);
+              res[[kk]]$ix.rare <- ix.rare;
               for(aa in 1:length(nref.list))
                 {
                   nref.out <- nref.out+nref.list[[aa]];

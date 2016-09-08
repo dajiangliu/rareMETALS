@@ -61,14 +61,17 @@ rareMETALS.single <- function(score.stat.file,cov.file,range,alternative=c('two.
                   hsq.est=NA,
                   nearby=NA,
                   pos=NA));
+    ##if(raw.data$afCase
     for(ix.var in 1:length(raw.data$ref[[ix.gold]]))
       {
-       
         direction.by.study.var <- rep("?",length(ix.pop));
         U.stat <- 0;V.stat.sq <- 0;maf.pop <- 0;
         nref.var <- 0;nhet.var <- 0;nalt.var <- 0;
-        for(ii in 1:length(ix.pop))
-          {
+        for(ii in 1:length(ix.pop)) {
+            if(length(raw.data$covXZ[[ii]])>0) {
+                warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
+            }
+              
             if(is.na(ref.gold[ix.var]) & !is.na(raw.data$ref[[ii]][ix.var]))
               {
                 ref.gold[ix.var] <- raw.data$ref[[ii]][ix.var];
@@ -96,12 +99,11 @@ rareMETALS.single <- function(score.stat.file,cov.file,range,alternative=c('two.
                 if(match.ref.alt)
                   {
                     U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
+                    print(c('rm1-ustat',U.stat));
                     V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
                     nref.var <- nref.var+rm.na(raw.data$nref[[ii]][ix.var]);
                     nalt.var <- nalt.var+rm.na(raw.data$nalt[[ii]][ix.var]);
                     nhet.var <- nhet.var+rm.na(raw.data$nhet[[ii]][ix.var]);
-                    ## no.sample.mat[ii,ix.var] <- raw.data$nalt[[ii]][ix.var]+raw.data$nref[[ii]][ix.var]+raw.data$nhet[[ii]][ix.var]
-                    ## if(is.na(no.sample.mat[ii,ix.var])) no.sample.mat[ii,ix.var] <- raw.data$nSample[[ii]][ix.var]
                     no.sample.mat[ii,ix.var] <- raw.data$nSample[[ii]][ix.var];                   
                     log.mat[ix.var,ii] <- paste(log.mat[ix.var,ii],"M",sep="",collapse="");
                   }
@@ -120,8 +122,8 @@ rareMETALS.single <- function(score.stat.file,cov.file,range,alternative=c('two.
                   }
                 if(mono)
                   {
-                    U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
-                    V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
+                      ##U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
+                    ##V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
                     nref.var <- nref.var+raw.data$nref[[ii]][ix.var];
                     nalt.var <- nalt.var+raw.data$nalt[[ii]][ix.var];
                     nhet.var <- nhet.var+raw.data$nhet[[ii]][ix.var];

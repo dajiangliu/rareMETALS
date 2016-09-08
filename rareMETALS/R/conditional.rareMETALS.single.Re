@@ -13,7 +13,7 @@
 #' @param hwe.cutoff Cutoff of HWE p-values. Sites with HWE pvalues lower than the cutoff will be labeled as missing
 #' @return return a list of meta-analysis results
 #' @export
-conditional.rareMETALS.single <- function(candidate.variant.vec,score.stat.file,cov.file,known.variant.vec,maf.cutoff,no.boot=10000,alternative=c('two.sided','greater','less'),ix.gold=1,out.digits=4,callrate.cutoff=0,hwe.cutoff=0,p.value.known.variant.vec=NA,anno.known.variant.vec=NA,anno.candidate.variant.vec=NA)
+conditional.rareMETALS.single <- function(candidate.variant.vec,score.stat.file,cov.file,known.variant.vec,maf.cutoff,no.boot=10000,alternative=c('two.sided','greater','less'),ix.gold=1,out.digits=4,callrate.cutoff=0,hwe.cutoff=0,p.value.known.variant.vec=NA,anno.known.variant.vec=NA,anno.candidate.variant.vec=NA,knownCoding='identity')
   {
     alpha <- 0.05;maf.cutoff <- 1;
     if(sum(is.na(p.value.known.variant.vec))>0) p.value.known.variant.vec <- rep("N/A",length(p.value.known.variant.vec));
@@ -109,10 +109,14 @@ conditional.rareMETALS.single <- function(candidate.variant.vec,score.stat.file,
           ref.list <- list();
           alt.list <- list();
           for(ii in 1:length(ix.pop))
-            {
-              N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
-
-              U.stat <- rm.na(raw.data$ustat[[ii]][ix.var]);
+              {
+                  if(length(raw.data$covXZ[[ii]])>0) {
+                      warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
+                  }
+                  
+                  N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
+                  
+                  U.stat <- rm.na(raw.data$ustat[[ii]][ix.var]);
               V.stat <- rm.na(raw.data$vstat[[ii]][ix.var]);
               score.stat.vec.list[[ii]] <- rm.na(U.stat/V.stat);
               cov.mat.list[[ii]] <- as.matrix(rm.na(as.matrix(raw.data$cov[[ii]])[ix.var,ix.var]));
@@ -219,36 +223,12 @@ conditional.rareMETALS.single <- function(candidate.variant.vec,score.stat.file,
                                 gene.name=gene.name[kk]);
               ix.X1 <- 1:(length(ix.rare)-length(ix.tmp));
               ix.X2 <- (length(ix.rare)-length(ix.tmp)+1):length(ix.rare);
-              if(test=='SINGLE')
-                {
-                    res.kk <- (c(cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='SINGLE',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
-                    res[[kk]] <- c(res.kk,res.extra);
-                    res[[kk]]$maf.cutoff <- maf.cutoff;
-                }
-              if(test=='WSS')
-                {
-                    res.kk <- (c(cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
-                    res[[kk]] <- c(res.kk,res.extra);
-                    res[[kk]]$maf.cutoff <- maf.cutoff;
-                }
-              if(test=='GRANVIL')
-                  {
-                  weight <- "MZ";
-                  res.kk <- c(cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,weight=weight,mac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare)));
-                  res[[kk]] <- c(res.kk,res.extra);
-                  res[[kk]]$maf.cutoff <- maf.cutoff;
-                }
-              if(test=='SKAT')
-                {
-                  res.kk <- (c(cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='SKAT',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,mac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
-                  res[[kk]] <- c(res.kk,res.extra);
-                  res[[kk]]$maf.cutoff <- maf.cutoff;
-                }
-              if(test=='VT')
-                {
-                  res.kk <- (c(cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='VT',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,mac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
-                  res[[kk]] <- c(res.kk,res.extra);
-                }
+              
+              
+              res.kk <- cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='SINGLE',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare),knownCoding);
+              res[[kk]] <- c(res.kk,res.extra);
+              res[[kk]]$maf.cutoff <- maf.cutoff;
+              
               gene.name.out[kk] <- res[[kk]]$gene.name;
               p.value.out[kk] <- format(res[[kk]]$p.value,digits=out.digits);
               statistic.out[kk] <- format(res[[kk]]$statistic,digits=out.digits);
@@ -262,64 +242,38 @@ conditional.rareMETALS.single <- function(candidate.variant.vec,score.stat.file,
               pos.ref.alt.known.out[kk] <- paste(res[[kk]]$pos[ix.X2],res[[kk]]$ref[ix.X2],res[[kk]]$alt[ix.X2],res[[kk]]$anno[ix.X2],sep='/',collapse=',');
               p.value.known.out[kk] <- p.value.known.variant.vec[kk];
               anno.known.out[kk] <- anno.known.variant.vec[kk];
-              if(test!="SINGLE")
-                  {
-                      p.value.single.out <- c(p.value.single.out,format(res[[kk]]$p.value.single,digit=out.digits));
-                      
-                      pos.single.out <- c(pos.single.out,paste(res[[kk]]$pos[ix.X1],sep=''));
-                      direction.single.out <- c(direction.single.out,res[[kk]]$direction.single.vec);
-                      ref.single.out <- c(ref.single.out,res[[kk]]$ref[ix.X1]);
-                      alt.single.out <- c(alt.single.out,res[[kk]]$alt[ix.X1]);
-                      beta1.est.single.out <- c(beta1.est.single.out,format(res[[kk]]$beta1.est.single[ix.X1],digits=out.digits));
-                      beta1.sd.single.out <- c(beta1.sd.single.out,format(res[[kk]]$beta1.sd.single[ix.X1],digits=out.digits));
-                      maf.single.out <- c(maf.single.out,format(res[[kk]]$maf.vec[ix.X1],digits=out.digits));
-                      anno.single.out <- c(anno.single.out,res[[kk]]$anno[ix.X1]);
-                      
-                      p.value.known.single.out <- c(p.value.known.single.out,rep(paste(format(p.value.known.variant.vec[kk],digits=out.digits),sep=',',collapse=','),length(ix.X1)));
-                      anno.known.single.out <- c(anno.known.single.out,rep(paste(anno.known.variant.vec[kk],sep=',',collapse=','),length(ix.X1)));
-                      pos.ref.alt.known.single.out <- c(pos.ref.alt.known.single.out,
-                                                        rep(format(pos.ref.alt.known.out[kk],digits=out.digits),length(ix.X1)));
-                  }
-              if(test=="SINGLE")
-                  {
-                      p.value.single.out[kk] <- c((format(res[[kk]]$p.value.single,digit=out.digits)));
-                      pos.single.out[kk] <- c(paste(res[[kk]]$pos[ix.X1],sep=''));
-                      direction.single.out[kk] <- c(res[[kk]]$direction.single.vec);
-                      ref.single.out[kk] <- c(res[[kk]]$ref[ix.X1]);
-                      alt.single.out[kk] <- c(res[[kk]]$alt[ix.X1]);
-                      beta1.est.single.out[kk] <- c(format(res[[kk]]$beta1.est.single[ix.X1],digits=out.digits));
-                      beta1.sd.single.out[kk] <- c(format(res[[kk]]$beta1.sd.single[ix.X1],digits=out.digits));
-                      maf.single.out[kk] <- c(format(res[[kk]]$maf.vec[ix.X1],digits=out.digits));
-                      anno.single.out[kk] <- anno.candidate.variant;
-                      p.value.known.single.out[kk] <- c(rep(paste(format(p.value.known.variant.vec[kk],digits=out.digits),sep=',',collapse=','),length(ix.X1)));
-                      anno.known.single.out[kk] <- c(rep(paste(anno.known.variant.vec[kk],sep=',',collapse=','),length(ix.X1)));
-                      pos.ref.alt.known.single.out[kk] <- rep(format(pos.ref.alt.known.out[kk],digits=out.digits),length(ix.X1));
-                  }
+              
+              
+              p.value.single.out[kk] <- c((format(res[[kk]]$p.value.single,digit=out.digits)));
+              pos.single.out[kk] <- c(paste(res[[kk]]$pos[ix.X1],sep=''));
+              direction.single.out[kk] <- c(res[[kk]]$direction.single.vec);
+              ref.single.out[kk] <- c(res[[kk]]$ref[ix.X1]);
+              alt.single.out[kk] <- c(res[[kk]]$alt[ix.X1]);
+              beta1.est.single.out[kk] <- c(format(res[[kk]]$beta1.est.single[ix.X1],digits=out.digits));
+              beta1.sd.single.out[kk] <- c(format(res[[kk]]$beta1.sd.single[ix.X1],digits=out.digits));
+              maf.single.out[kk] <- c(format(res[[kk]]$maf.vec[ix.X1],digits=out.digits));
+              anno.single.out[kk] <- anno.candidate.variant;
+              p.value.known.single.out[kk] <- c(rep(paste(format(p.value.known.variant.vec[kk],digits=out.digits),sep=',',collapse=','),length(ix.X1)));
+              anno.known.single.out[kk] <- c(rep(paste(anno.known.variant.vec[kk],sep=',',collapse=','),length(ix.X1)));
+              pos.ref.alt.known.single.out[kk] <- rep(format(pos.ref.alt.known.out[kk],digits=out.digits),length(ix.X1));
+              
           }
       }
     }
-    if(test!="SINGLE")
-        {
-        res.out <- cbind(gene.name.out,p.value.out,statistic.out,no.site.out,beta1.est.out,beta1.sd.out,maf.cutoff.out,direction.burden.by.study.out,direction.meta.single.var.out,pos.ref.alt.out,pos.ref.alt.known.out,p.value.known.out,anno.known.single.out);
-        res.single.out <- cbind(pos.single.out,ref.single.out,alt.single.out,p.value.single.out,maf.single.out,beta1.est.single.out,beta1.sd.single.out,direction.single.out,anno.single.out,pos.ref.alt.known.single.out,p.value.known.single.out,anno.known.single.out);
-        
-        return(list(res.list=res,
-                    res.out=res.single.out));
-      }
-    if(test=='SINGLE')
-      {
-        res.single.out <- cbind(pos.single.out,ref.single.out,alt.single.out,p.value.single.out,maf.single.out,beta1.est.single.out,beta1.sd.single.out,direction.single.out,anno.single.out,pos.ref.alt.known.single.out);
-        colnames(res.single.out) <- c("POS","REF","ALT","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION_BY_STUDY","ANNO","POS_REF_ALT_ANNO_KNOWN");
-        
-        return(list(res.list=res,
-                    res.out=res.single.out));
-      }
+
+
+    res.single.out <- cbind(pos.single.out,ref.single.out,alt.single.out,p.value.single.out,maf.single.out,beta1.est.single.out,beta1.sd.single.out,direction.single.out,anno.single.out,pos.ref.alt.known.single.out);
+    colnames(res.single.out) <- c("POS","REF","ALT","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION_BY_STUDY","ANNO","POS_REF_ALT_ANNO_KNOWN");
     
-  }
+    return(list(res.list=res,
+                res.out=res.single.out));
+    
+    
+}
 r2cov.mat <- function(r2.mat,maf.vec)
-  {
-    var.vec <- sqrt(maf.vec*(1-maf.vec)*2);
-    var.mat <- (var.vec%*%t(var.vec));
-    cov.mat <- r2.mat*var.mat;
-    return(cov.mat);
-  }
+    {
+        var.vec <- sqrt(maf.vec*(1-maf.vec)*2);
+        var.mat <- (var.vec%*%t(var.vec));
+        cov.mat <- r2.mat*var.mat;
+        return(cov.mat);
+    }

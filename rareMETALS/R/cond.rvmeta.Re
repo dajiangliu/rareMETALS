@@ -1,4 +1,4 @@
-cond.rvmeta <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,N.list,alternative=c('two.sided','greater','less'),no.boot,alpha=0.05,rv.test,extra.pars=list())
+cond.rvmeta <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,N.list,alternative=c('two.sided','greater','less'),no.boot,alpha=0.05,rv.test,extra.pars=list(),knownCoding='identity')
   {
     if(length(alternative)>1) alternative <- "two.sided";
     res.list <- list();
@@ -22,7 +22,7 @@ cond.rvmeta <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list
     ac.vec.cond.list <- list();
     burden.stat.by.study <- 0;
     direction.single.mat <- matrix(nrow=length(score.stat.vec.list),ncol=length(ix.X1))
-
+    
     direction.code <- c("+","=","-");
     for(ii in 1:length(score.stat.vec.list))
       {
@@ -40,7 +40,19 @@ cond.rvmeta <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list
         X.T.times.Y.centered.uncond.list[[ii]] <- (sqrt(N.list[[ii]]))*(score.stat.vec.list[[ii]])*sqrt(diag(cov.mat.list[[ii]]))*sqrt(var.Y.list[[ii]]);
         maf.vec <- maf.vec.list[[ii]][ix.X1]*(N.list[[ii]])+maf.vec
         ac.vec <- ac.vec.list[[ii]][ix.X1]+ac.vec;
-        res.cond.ii <- cond.rvmeta.core(X.T.times.Y.centered.uncond.list[[ii]],X.T.times.X.uncond.list[[ii]],extra.pars$maf.vec,N.list[[ii]],var.Y.list[[ii]],ix.X1,ix.X2,"generic",alternative,no.boot,list());
+        if(knownCoding=="identity") {
+            res.cond.ii <- cond.rvmeta.core(X.T.times.Y.centered.uncond.list[[ii]],X.T.times.X.uncond.list[[ii]],extra.pars$maf.vec,N.list[[ii]],var.Y.list[[ii]],ix.X1,ix.X2,"generic",alternative,no.boot,list());
+        }
+        if(knownCoding=="burden") {
+            X.T.times.Y.ii <- c(X.T.times.Y.centered.uncond.list[[ii]][ix.X1],sum(X.T.times.Y.centered.uncond.list[[ii]][ix.X2]));
+            ix.candidate <- ix.X1;ix.known <- ix.X2;
+            X.T.times.X.ii <- rbind(cbind(matrix(X.T.times.X.uncond.list[[ii]][ix.X1,ix.X1],nrow=length(ix.candidate),ncol=length(ix.candidate)),
+                                          matrix(rowSums(matrix(X.T.times.X.uncond.list[[ii]][ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known))),nrow=length(ix.candidate),ncol=1)),
+                                    cbind(matrix(rowSums(matrix(X.T.times.X.uncond.list[[ii]][ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known))),ncol=length(ix.candidate),nrow=1),
+                                      matrix(sum(X.T.times.X.uncond.list[[ii]][ix.known,ix.known]),nrow=1,ncol=1)));            
+            res.cond.ii <- cond.rvmeta.core(X.T.times.Y.ii,X.T.times.X.ii,extra.pars$maf.vec,N.list[[ii]],var.Y.list[[ii]],ix.X1,length(ix.X1)+1,"generic",alternative,no.boot,list());
+        }
+        
         X.T.times.Y.centered.list[[ii]] <- rm.na(as.vector(res.cond.ii$X.T.times.Y));
         direction.single.mat[ii,] <- direction.code[sign(X.T.times.Y.centered.list[[ii]])+2];
         X.T.times.X.list[[ii]] <- rm.na(res.cond.ii$X.T.times.X);
@@ -147,7 +159,8 @@ cond.rvmeta <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list
       {
         ix.var <- which(ac.vec<=res$mac.cutoff);
       }
-    
+    ixVar.VT <- NULL;
+    if(rv.test=="VT") ixVar.VT <- ix.var;
     X.T.times.X <- X.T.times.X[ix.var,ix.var];
     w <- rep(1,length(X.T.times.Y));
     if(rv.test=='WSS')
@@ -179,6 +192,7 @@ cond.rvmeta <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list
                       statistic.single=statistic.single,
                       singlevar.af.vec=singlevar.af.vec,
                       ix.best=ix.best,
+                      ixVar.VT=ix.var,
                       singlevar.stat.vec=singlevar.stat.vec,
                       singlevar.pval.vec=singlevar.pval.vec,
                       burden.stat.by.study=burden.stat.by.study,

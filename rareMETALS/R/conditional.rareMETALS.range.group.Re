@@ -21,6 +21,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
     ANNO <- "gene";
     no.boot <- 0;
     alpha <- 0.05;
+    ix.gold <- 1;
     extra.pars <- list(ix.gold=ix.gold,
                        out.digits=out.digits,
                        QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
@@ -28,8 +29,8 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
     tabix.candidate.variant <- get.tabix.range(candidate.variant.vec);
     tabix.all <- paste(tabix.known.variant,tabix.candidate.variant,collapse=",",sep=",");
     raw.data.all <- list();
+    ######################print('reading data');
     capture.output(raw.data.all[[1]] <- rvmeta.readDataByRange( score.stat.file, cov.file,tabix.all)[[1]]);
-    ##################################################################################print(raw.data.all);
     res.null <- list(gene.name=NA,
                      p.value=NA,
                      statistic=NA,
@@ -73,14 +74,13 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
         if(length(extra.pars$QC.par)>0) 
           raw.data <- QC(raw.data,extra.pars$QC.par,cov=1);        
         ix.var <- integer(0);
-        if(ANNO=='gene')
-          {
-            if(length(raw.data$ustat[[1]])>0)
-              ix.var <- 1:length(raw.data$ustat[[1]]);
-          }
+        if(length(raw.data$ustat[[1]])>0)
+            ix.var <- 1:length(raw.data$ustat[[1]]);
+        known.variant.vec <- intersect(known.variant.vec,raw.data$pos);
         ix.var <- c(ix.var,match(known.variant.vec,raw.data$pos));
         ix.var <- sort(unique(ix.var));
         ix.tmp <- match(known.variant.vec,(raw.data$pos)[ix.var]);
+        ######################print(c('ix.tmp',ix.tmp));
         ix.var <- c(ix.var[-ix.tmp],ix.var[ix.tmp]);##make sure the last few variants are to be conditioned on;
         if(length(ix.var)==length(ix.tmp))
           {
@@ -93,19 +93,19 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
           ref.list <- list();
           alt.list <- list();
           no.sample <- 0;
-          N.mat <- matrix(NA,ncol=length(raw.data$nSample[[ii]]),nrow=length(raw.data$nSample));
+          N.mat <- matrix(NA,ncol=length(raw.data$nSample[[1]]),nrow=length(raw.data$nSample));
+          log.mat <- t(N.mat);
           af.mat <- N.mat;
           ac.mat <- N.mat;
           for(ii in 1:length(ix.pop))
             {
+                ##############print(ii);
                 N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
-                N.mat[ii,] <- N.list[[ii]];
+                N.mat[ii,] <- raw.data$nSample[[ii]][ix.var];
                 no.sample <- no.sample+N.list[[ii]];
                 U.stat <- rm.na(raw.data$ustat[[ii]][ix.var]);
                 V.stat <- rm.na(raw.data$vstat[[ii]][ix.var]);
-                
                 score.stat.vec.list[[ii]] <- rm.na(U.stat/V.stat);
-                
                 cov.mat.list[[ii]] <- as.matrix(rm.na(as.matrix(raw.data$cov[[ii]])[ix.var,ix.var]));
                 var.Y.list[[ii]] <- 1;
                 mean.Y.list[[ii]] <- 0;
@@ -120,11 +120,16 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
             }
           ix.match <- match(raw.data$pos[ix.var],refaltList$pos);
           ref.gold <- refaltList$ref[ix.match];alt.gold <- refaltList$alt[ix.match];af.gold <- refaltList$af[ix.match];checkAF <- refaltList$checkAF;anno.gold <- refaltList$anno[ix.match];pos.gold <- refaltList$pos[ix.match];
+          ######################print(c('pos.gold',pos.gold));
           if(length(checkAF)==0) checkAF <- FALSE;
           refaltList <- list(ref=ref.gold,alt=alt.gold,af=af.gold,checkAF=checkAF,af.diff.max=refaltList$af.diff.max,anno=anno.gold,pos=pos.gold);
           
           for(ii in 1:length(ix.pop))
               {
+                  if(length(raw.data$covXZ[[ii]])>0) {
+                      warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
+                  }
+                  
                   for(jj in 1:length(ix.var))
                       {
                           res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var[jj],log.mat[ix.var[jj],],correctFlip,analyzeRefAltListOnly);
@@ -137,11 +142,6 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
           maf.vec <- rep(0,length(af.vec.list[[1]]));
           af.vec <- maf.vec;
           mac.vec <- 0;ac.vec <- 0;##no.sample <- 0;
-          ## for(ii in 1:length(ix.pop))
-          ##   {
-          ##     af.vec <- af.vec+(af.vec.list[[ii]])*(2*N.list[[ii]]);
-          ##     ac.vec <- ac.vec+ac.vec.list[[ii]];
-          ##   }
           af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
           ac.vec <- colSums(ac.mat,na.rm=TRUE);
           maf.vec <- af.vec;
@@ -150,7 +150,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
           if(length(ix.major)>0)
             {
                 maf.vec[ix.major] <- 1-maf.vec[ix.major];
-                mac.vec[ix.major] <- no.sample-ac.vec[ix.major];
+                mac.vec[ix.major] <- 2*no.sample-ac.vec[ix.major];
                 tmp.major <- flip.score.cov(score.stat.vec.list,cov.mat.list,ix.major);
                 score.stat.vec.list <- tmp.major$score.stat.vec.list;
                 cov.mat.list <- tmp.major$cov.mat.list;
@@ -161,8 +161,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
           ix.tmp <- match(known.variant.vec,pos.list[[ix.gold]][ix.rare]);
           ix.rare <- c(ix.rare[-ix.tmp],ix.rare[ix.tmp]);
           maf.vec.rare <- maf.vec[ix.rare];
-          mac.vec.rare <- mac.vec[ix.rare];
-          
+          mac.vec.rare <- mac.vec[ix.rare];          
           if(length(ix.rare)==length(ix.tmp))
             {
               res.null$gene.name <- range.name[kk];
@@ -182,9 +181,9 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                     alt.list[[ii]] <- alt.gold[ix.rare];
                 }
               res.extra <- list(anno=anno.gold,
-                                pos=pos.gold,
-                                ref=ref.gold,
-                                alt=alt.gold,
+                                pos=pos.gold[ix.rare],
+                                ref=ref.gold[ix.rare],
+                                alt=alt.gold[ix.rare],
                                 af.vec.list=af.vec.list,
                                 score.stat.vec.list=score.stat.vec.list,
                                 cov.mat.list=cov.mat.list,
@@ -196,24 +195,27 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
               ix.X1 <- 1:(length(ix.rare)-length(ix.tmp));
               ix.X2 <- (length(ix.rare)-length(ix.tmp)+1):length(ix.rare);
               
-              if(test=='GRANVIL')
-                {
+              if(test=='GRANVIL') {
+                
                   weight <- "MZ";
                   res.kk <- c(cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,weight=weight,mac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare)));
                   res[[kk]] <- c(res.kk,res.extra);
                   res[[kk]]$maf.cutoff <- maf.cutoff;
-                }
-              if(test=='SKAT')
-                {
+              }
+              if(test=='SKAT') {
+              
                   res.kk <- (c(cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='SKAT',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,mac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
                   res[[kk]] <- c(res.kk,res.extra);
                   res[[kk]]$maf.cutoff <- maf.cutoff;
-                }
-              if(test=='VT')
-                {
+              }
+              if(test=='VT') {
+                
                   res.kk <- (c(cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='VT',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,mac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare,max.TH=max.VT))));
-                  res[[kk]] <- c(res.kk,res.extra);
-                }
+                  pos.VT <- res.extra$pos[ix.X1[res.kk$ixVar.VT]]; 
+                  res[[kk]] <- c(res.kk,res.extra,list(pos.VT=pos.VT));
+
+                  ##res[[kk]] <- c(res.kk,res.extra);
+              }
               gene.name.out[kk] <- range.name;
               p.value.out[kk] <- format(res[[kk]]$p.value,digits=out.digits);
               statistic.out[kk] <- format(res[[kk]]$statistic,digits=out.digits);
@@ -225,10 +227,9 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
               direction.burden.by.study.out[kk] <- res[[kk]]$direction.burden.by.study;
               direction.meta.single.var.out[kk] <- res[[kk]]$direction.meta.single.var;          
               pos.ref.alt.out[kk] <- paste(res[[kk]]$pos[ix.X1],res[[kk]]$ref[ix.X1],res[[kk]]$alt[ix.X1],sep='/',collapse=',');
-              
+
               pos.ref.alt.known.out[kk] <- paste(res[[kk]]$pos[ix.X2],res[[kk]]$ref[ix.X2],res[[kk]]$alt[ix.X2],sep='/',collapse=',');
               p.value.single.out <- c(p.value.single.out,format(res[[kk]]$p.value.single,digit=out.digits));
-
               pos.single.out <- c(pos.single.out,paste('chr',res[[kk]]$pos[ix.X1],sep=''));
               direction.single.out <- c(direction.single.out,res[[kk]]$direction.single.vec);
               ref.single.out <- c(ref.single.out,res[[kk]]$ref[ix.X1]);
@@ -240,14 +241,12 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
               pos.ref.alt.known.single.out <- c(pos.ref.alt.known.single.out,
                                                 rep(pos.ref.alt.known.out[kk],length(ix.X1)));
               ix.best <- res[[kk]]$ix.best;
-              ##############################################################print(c("ix.best",ix.best));
               top.singlevar.pos[kk] <- res[[kk]]$pos[ix.X1][ix.best];
               top.singlevar.refalt[kk] <- paste(c(res[[kk]]$ref[ix.X1][ix.best],res[[kk]]$alt[ix.X1][ix.best]),sep="/",collapse="/");
               top.singlevar.pval[kk] <- format(res[[kk]]$singlevar.pval.vec[ix.best],digits=out.digits);
               top.singlevar.af[kk] <- format(res[[kk]]$singlevar.af.vec[ix.best],digits=out.digits);
-
-            }
-        }
+          }
+      }
     }
     res.out <- cbind(gene.name.out,p.value.out,statistic.out,no.site.out,beta1.est.out,beta1.sd.out,maf.cutoff.out,direction.burden.by.study.out,direction.meta.single.var.out,
                      top.singlevar.pos,top.singlevar.refalt,top.singlevar.pval,top.singlevar.af,
@@ -256,10 +255,10 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
     return(list(res.list=res,
                 res.single.out=res.single.out,
                 res.out=res.out));
-  }
+}
 r2cov.mat <- function(r2.mat,maf.vec)
-  {
-    var.vec <- sqrt(maf.vec*(1-maf.vec)*2);
+    {
+        var.vec <- sqrt(maf.vec*(1-maf.vec)*2);
     var.mat <- (var.vec%*%t(var.vec));
     cov.mat <- r2.mat*var.mat;
     return(cov.mat);

@@ -26,12 +26,12 @@ genomic.dist <- function(pos1,pos2)
     pos1.in <- pos1;pos2.in <- pos2;
     a <- strsplit(pos1.in,split=":");
     b <- strsplit(pos2.in,split=":");
-    ########print(a);
-    ########print(b);
+    ################################print(a);
+    ################################print(b);
     chr1 <- a[[1]][1];pos1 <- a[[1]][2];
     chr2 <- b[[1]][1];pos2 <- b[[1]][2];
-    ########print(c(chr1,as.numeric(pos1),chr2,as.numeric(pos2)));
-    ########print(as.numeric(pos1)-as.numeric(pos2));
+    ################################print(c(chr1,as.numeric(pos1),chr2,as.numeric(pos2)));
+    ################################print(as.numeric(pos1)-as.numeric(pos2));
     if(chr1!=chr2) return(Inf);
     if(chr1==chr2) return(abs(as.numeric(pos1)-as.numeric(pos2)));
   }
