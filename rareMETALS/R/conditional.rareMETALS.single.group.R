@@ -218,7 +218,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     N.mat <- res.impute$N.mat;
                     impState <- res.impute$impState;
                 }
-                
+                print(res.impute);
                 ## res.impMeta <- get.conditional.score.stat(rm.na(res.impute$ustat.list.imp[[jj]]),rm.na(res.impute$V.list[[jj]]),res.impute$N.mat.imp[jj,],ix.X1,ix.X2,res.impute$impState[jj,]);
                 ## conditional.U.all.imp <- conditional.U.all.imp+as.numeric(res.impMeta$conditional.ustat);
                 ## conditional.V.all.imp <- conditional.V.all.imp+as.numeric(res.impMeta$conditional.V);
