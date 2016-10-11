@@ -166,7 +166,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 ac.mat <- af.mat;
                 N.mat <- af.mat;
                 ref.list <- list();
-                alt.list <- list();
+                alt.list <- list();V.list <- list();
                 ########print(raw.data$afCase[[1]]);
                 for(ii in 1:length(ix.pop))
                     {   
