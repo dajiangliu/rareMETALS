@@ -238,7 +238,9 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     ustat.tmp[ix.known] <- rm.na(raw.data$ustat[[ii]][ix.known]);               
                     
                     if(knownCoding=="identity") {
-                        res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=T),ix.candidate,ix.known)
+                        res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=T),ix.candidate,ix.known,res.impute$impState[ii,])
+                        print("condition okay");
+                        
                         conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
                     }
