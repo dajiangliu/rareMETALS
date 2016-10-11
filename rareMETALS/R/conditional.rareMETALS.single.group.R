@@ -309,11 +309,11 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 mac.vec <- 0;
                 ac.vec <- 0;
                 af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
+                print(c('af.vec',af.vec));
                 ac.vec <- colSums(ac.mat,na.rm=TRUE);
                 N.vec <- colSums(N.mat,na.rm=TRUE);
                 maf.vec <- af.vec;
                 mac.vec <- ac.vec;
-                print('still okay');                
                 res.extra$cov.mat.list <- cov.mat.list;
                 res.extra$af.mat <- af.mat;
                 res.extra$ac.mat <- ac.mat;
