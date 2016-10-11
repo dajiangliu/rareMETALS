@@ -283,6 +283,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     ref.list[[ii]] <- refaltList$ref;
                     alt.list[[ii]] <- refaltList$alt;
                     anno.list[[ii]] <- refaltList$anno;
+                    print(c(ii,'okay'));
                 }          
                 
                 ## ## make use of imputed statistics in meta-analyses
