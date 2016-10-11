@@ -21,7 +21,7 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
           N.list[[ii]] <- mean(N.mat[ii,],na.rm=TRUE);
           if(is.na(N.list[[ii]]))
           {
-####################################################################print(c(ii,N.mat[ii,]));
+######################################################################print(c(ii,N.mat[ii,]));
           }
           score.stat.vec.list[[ii]] <- rm.na(score.stat.vec.list[[ii]]);
           
@@ -29,15 +29,15 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
           if(length(vstat.list)==0)
           {
               X.T.times.Y.ii <- (sqrt(N.mat[ii,]))*(score.stat.vec.list[[ii]])*sqrt(diag(cov.mat.list[[ii]]))*sqrt(var.Y.list[[ii]]);
-              ##print('use diagonal');
-              ##print(X.T.times.Y.ii)
+              ####print('use diagonal');
+              ####print(X.T.times.Y.ii)
           }
           if(length(vstat.list)>0)
           {
               X.T.times.Y.ii <- score.stat.vec.list[[ii]]*vstat.list[[ii]]
               vstat.sq.vec <- vstat.sq.vec+(rm.na(vstat.list[[ii]]))^2;
-              ##print('use vstat');
-              ##print(X.T.times.Y.ii)
+              ####print('use vstat');
+              ####print(X.T.times.Y.ii)
           }
           U.ii <- sum(X.T.times.Y.ii,na.rm=TRUE);
           if(is.na(U.ii)) direction.burden.by.study.vec[ii] <- "X";
@@ -139,9 +139,9 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
 
     if(rv.test=='VT')
         {
-            ##########################################print(c('mac.cutoff',res$mac.cutoff));
+            ############################################print(c('mac.cutoff',res$mac.cutoff));
             ix.var <- which(mac.vec<=res$mac.cutoff+0.1);
-            ##########################################print(c('ix.var',ix.var));
+            ############################################print(c('ix.var',ix.var));
             for(ii in 1:length(score.stat.vec.list))
                 {
                     X.T.times.Y.ii <- (sqrt(N.mat[ii,]))*(score.stat.vec.list[[ii]])*sqrt(diag(cov.mat.list[[ii]]))*sqrt(var.Y.list[[ii]]);
@@ -186,7 +186,7 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
     hsq.est <- beta1.est*beta1.est*as.numeric(t(w[ix.var])%*%matrix(X.T.times.X[ix.var,ix.var],ncol=length(ix.var),nrow=length(ix.var))%*%(w[ix.var]));
     beta1.conf.lower <- beta1.est-1.96*beta1.sd;
     beta1.conf.upper <- beta1.est+1.96*beta1.sd;
-##    ######################print('returned here');
+##    ########################print('returned here');
     ixVar.VT <- NULL;
     if(rv.test=="VT") ixVar.VT <- ix.var;
     return(c(res,list(direction.meta.single.var=direction.meta.single.var,
@@ -222,9 +222,9 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
 calcGeneLevelTest <- function(ustat,V,maf.vec,N,test="GRANVIL") {
     mac.vec <- as.integer(maf.vec*N);
     if(test=='GRANVIL') {
-        print('rvmeta okay here');
+        ##print('rvmeta okay here');
         res <- rvmeta.CMH.wss(list(ustat),list(V),maf.vec,list(V/N),list(1),list(N),alternative='two.sided',0,0.05,'MZ');
-        print('rvmeta still okay');
+        ##print('rvmeta still okay');
     }
     if(test=='SKAT') {
         res <- rvmeta.CMH.skat(list(ustat),list(V),maf.vec,list(V/N),list(1),list(N),'two.sided',0,0.05,'beta');

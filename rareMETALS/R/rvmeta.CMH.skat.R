@@ -31,13 +31,13 @@ rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,c
             W <- diag((dbeta(maf.vec,1,25))^2);
             ##W <- diag(length(maf.vec));
             if(length(maf.vec)==1) W <- as.matrix((dbeta(maf.vec,1,25))^2);
-            ######################################################################################print(c('maf.vec',maf.vec));
+            ########################################################################################print(c('maf.vec',maf.vec));
           }
         Q <- 0;lambda <- double(0);
         U <- rep(0,length(X.T.times.Y.centered.list[[1]]));
         V <- matrix(0,nrow=length(X.T.times.Y.centered.list[[1]]),ncol=length(X.T.times.Y.centered.list[[1]]));
-        ######################################################################################print(var.Y.list);
-        ######################################################################################print(N.list);
+        ########################################################################################print(var.Y.list);
+        ########################################################################################print(N.list);
         for(ii in 1:length(X.T.times.Y.centered.list))
           {
             U <- U+(X.T.times.Y.centered.list[[ii]]);
@@ -45,18 +45,18 @@ rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,c
           }
 
         Q <- as.numeric(t(U)%*%W%*%U);
-        ######################################################################################print("V");
-        ######################################################################################print(V);
-        ######################################################################################print("W");
-        ######################################################################################print(W);
+        ########################################################################################print("V");
+        ########################################################################################print(V);
+        ########################################################################################print("W");
+        ########################################################################################print(W);
         svd.V <- svd(V);
-        ######################################################################################print(c('svd(V)',svd.V));
+        ########################################################################################print(c('svd(V)',svd.V));
         lambda.V <- abs(svd.V$d);
 
         ##L <- (svd.V$u)%*%diag(sqrt(lambda.V));
         L <- (svd.V$u)%*%diag(sqrt(lambda.V))%*%t(svd.V$v);
         lambda <- try(get.eigen(W,L,t(L)),silent=TRUE);
-        ######################################################################################print(c('lambda',lambda));
+        ########################################################################################print(c('lambda',lambda));
         if(class(lambda)=='try-error')
           {
             return(list(statistic=NA,
@@ -77,7 +77,7 @@ rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,c
             p.value.davies <- try(davies(Q,lambda=lambda)$Qq,silent=TRUE);
             p.value.liu <- try(liu(Q,lambda=lambda),silent=TRUE);
             p.value.imhof <- try(imhof(Q,lambda=lambda)$Qq,silent=TRUE);
-            ######################################################################################print(c(p.value.davies,p.value.liu,p.value.imhof));
+            ########################################################################################print(c(p.value.davies,p.value.liu,p.value.imhof));
             if(length(attr(p.value.davies,'class'))+length(attr(p.value.liu,'class'))+length(attr(p.value.imhof,'class'))>0)
               return(list(statistic=NA,
                           p.value=NA,

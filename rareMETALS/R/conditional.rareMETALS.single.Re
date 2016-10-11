@@ -226,6 +226,7 @@ conditional.rareMETALS.single <- function(candidate.variant.vec,score.stat.file,
               
               
               res.kk <- cond.rvmeta(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='SINGLE',extra.pars=list(ix.X1=ix.X1,ix.X2=ix.X2,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare),knownCoding);
+              
               res[[kk]] <- c(res.kk,res.extra);
               res[[kk]]$maf.cutoff <- maf.cutoff;
               
@@ -260,7 +261,6 @@ conditional.rareMETALS.single <- function(candidate.variant.vec,score.stat.file,
           }
       }
     }
-
 
     res.single.out <- cbind(pos.single.out,ref.single.out,alt.single.out,p.value.single.out,maf.single.out,beta1.est.single.out,beta1.sd.single.out,direction.single.out,anno.single.out,pos.ref.alt.known.single.out);
     colnames(res.single.out) <- c("POS","REF","ALT","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION_BY_STUDY","ANNO","POS_REF_ALT_ANNO_KNOWN");

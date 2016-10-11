@@ -50,7 +50,7 @@ readms.output <- function( txt=NA, file.ms.output=NA ) {
     if( !is.na(file.ms.output) ) txt <- scan(file=file.ms.output,
        what=character(0), sep="\n", quiet=TRUE)
     if( is.na(txt[1]) ){
-    	######################################################################################################################################################################################print("Usage: read.ms.output(txt), or read.ms.output(file=filename)")
+    	########################################################################################################################################################################################print("Usage: read.ms.output(txt), or read.ms.output(file=filename)")
     	return()
     	}
     nsam <- as.integer( strsplit(txt[1], split=" ")[[1]][2] )

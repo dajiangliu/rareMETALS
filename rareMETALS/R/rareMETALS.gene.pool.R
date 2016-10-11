@@ -3,7 +3,7 @@ rareMETALS.gene.pool <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVI
     capture.output(raw.data.all <- rvmeta.readDataByGene( score.stat.file, cov.file, gene.file,gene));
     if(length(raw.data.all)==0)
       {
-        ##############################################################################################################################################################print('no gene');
+        ################################################################################################################################################################print('no gene');
         return(list(list(p.value=NA,
                          skip=1,
                          statistic=NA,
@@ -126,7 +126,7 @@ rareMETALS.gene.pool <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVI
                 alt=NA,
                 pos=NA);
             }
-          ################################################################################################################################################################print(c("ix.rare",ix.rare));
+          ##################################################################################################################################################################print(c("ix.rare",ix.rare));
           if(length(ix.rare)>=1)
             {
               for(ii in 1:length(ix.pop))
