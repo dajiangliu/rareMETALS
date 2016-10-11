@@ -313,7 +313,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 N.vec <- colSums(N.mat,na.rm=TRUE);
                 maf.vec <- af.vec;
                 mac.vec <- ac.vec;
-                                
+                print('still okay');                
                 res.extra$cov.mat.list <- cov.mat.list;
                 res.extra$af.mat <- af.mat;
                 res.extra$ac.mat <- ac.mat;
