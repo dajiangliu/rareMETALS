@@ -406,6 +406,8 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
             
         }
     }
+    print(covG);
+    print(nSample.covG);
     covG.ori <- covG;    
     covG <- (covG/nSample.covG);
     ix.missing <- which(is.na(covG),arr.ind=TRUE);
