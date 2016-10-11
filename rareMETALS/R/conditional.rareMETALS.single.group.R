@@ -301,6 +301,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     statistic <- statistic^2;
                     p.value <- pchisq(statistic,df=1,lower.tail=FALSE);
                 }
+                print(c(statistic,p.value));
                 beta1.est <- conditional.U.all/conditional.V.all;
                 beta1.sd <- sqrt(1/conditional.V.all);
                 maf.vec <- rep(0,length(af.vec.list[[1]]));
