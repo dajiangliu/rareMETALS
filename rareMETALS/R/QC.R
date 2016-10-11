@@ -396,7 +396,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
         {
             for(kk in 1:jj)
             {
-                print(c(ii,jj,kk,N.mat[ii,jj],N.mat[ii,kk],cov.mat.list[[ii]][jj,kk]));
+                print(c(ii,jj,kk,"N.mat",N.mat[ii,jj],"N.mat",N.mat[ii,kk],"cov.mat",cov.mat.list[[ii]][jj,kk]));
                 print(dim(cov.mat.list[[ii]]));
                 covG[jj,kk] <- covG[jj,kk]+rm.na(sqrt(N.mat[ii,jj]*N.mat[ii,kk])*cov.mat.list[[ii]][jj,kk]);
                 covG[kk,jj] <- covG[jj,kk];
