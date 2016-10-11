@@ -386,10 +386,10 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
     U.imp <- 0;nSample.U <- 0;
     covG <- matrix(0,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
     nSample.covG <- covG;
-    
+    N.mat.imp <- N.mat;
     for(ii in 1:length(ustat.list))
     {
-        
+        N.mat.imp[ii,] <- max(N.mat[ii,],na.rm=T);
         U.imp <- U.imp+rm.na(ustat.list[[ii]]);
         nSample.U <- nSample.U+rm.na(N.mat[ii,]);
         for(jj in 1:length(ustat.list[[1]]))
@@ -443,6 +443,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
                 U.imp=U.imp,
                 V.list=V.list,
                 impState=impState,
+                N.mat=N.mat.imp;
                 ustat.list.imp=ustat.list.imp,
                 vstat.list.imp=vstat.list.imp,
                 cov.mat.list.imp=cov.mat.list.imp,
