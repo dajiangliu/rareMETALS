@@ -13,7 +13,7 @@ find.gene.chrpos <- function(candidate.gene)
     pos.start <- res$pos.start;
     pos.end <- res$pos.end;
     ix <- match(candidate.gene,gene);
-    ######################################################################################print(ix);
+    ########################################################################################print(ix);
     tabix <- paste(chr[ix],paste(pos.start[ix],pos.end[ix],sep="-"),sep=":");
     return(list(tabix=tabix,
                 pos.start=paste(chr[ix],pos.start[ix],sep=":",collapse=":"),
@@ -56,6 +56,13 @@ get.gene.inWindow <- function(known.variant.vec,window.size=1e6)
     pos.window.start <- max(pos.variant.list-window.size);
     pos.window.end <- min(pos.variant.list+window.size);
     ix.gene <- which(chr==chr.variant.list[1] & pos.start>pos.window.start & pos.end<pos.window.end);
+    if(length(ix.gene)>0) {
+        pos.start.end <- cbind(pos.start[ix.gene],pos.end[ix.gene]);
+        pos.median <- apply(pos.start.end,1,median);
+        dist.vec <- abs(pos.variant.list-pos.median);
+        ix.sort <- sort(dist.vec,index.return=T)$ix;
+        ix.gene <- ix.gene[ix.sort];
+    }
     gene.vec <- gene[ix.gene];
     return(gene.vec);
   }

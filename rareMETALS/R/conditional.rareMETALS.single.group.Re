@@ -14,10 +14,10 @@
 #' @param knownCoding knownCoding option allows users to specify if a linear transformation needs to be applied known variants. Possible choices for knownCoding option include identical, burden, randomm-eff.
 #' @return return a list of meta-analysis results
 #' @export
-conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,approxCov=TRUE,correctFlip=TRUE,knownCoding="identity")
+conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,approxCov=TRUE,correctFlip=TRUE,knownCoding="identity",impute=FALSE)
     {
         cat('Conditional analysis',candidate.variant[1],"\n",sep=" ");
-        res <- conditional.rareMETALS.single.group.core(candidate.variant[1],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,approxCov,correctFlip,knownCoding);
+        res <- conditional.rareMETALS.single.group.core(candidate.variant[1],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,approxCov,correctFlip,knownCoding,impute);
         res.mat <- matrix(nrow=length(candidate.variant),ncol=ncol(res$res.out))
         res.mat[1,] <- res$res.out;
         colnames(res.mat) <- c("CHROM","POS","REF","ALT","SAMPLE_SIZE","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION","POS_REF_ALT_KNOWN","LOG","NOTE");
@@ -28,7 +28,7 @@ conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.fil
                 for(ii in 2:length(candidate.variant))
                     {
                         cat('Conditional analysis',candidate.variant[ii],"\n",sep=" ");
-                        res.ii <- conditional.rareMETALS.single.group.core(candidate.variant[ii],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,approxCov,correctFlip,knownCoding);
+                        res.ii <- conditional.rareMETALS.single.group.core(candidate.variant[ii],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,approxCov,correctFlip,knownCoding,impute);
                         res.mat[ii,] <- res.ii$res.out;
                         res.list[[ii]] <- res.ii$res;
                         
@@ -54,7 +54,7 @@ conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.fil
 #' @param knownCoding knownCoding option allows users to specify if a linear transformation needs to be applied known variants. Possible choices for knownCoding option include identical, burden, randomm-eff.
 #' @return return a list of meta-analysis results
 #' @export
-conditional.rareMETALS.single.group.core <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,approxCov=TRUE,correctFlip=TRUE,knownCoding='identity')
+conditional.rareMETALS.single.group.core <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,approxCov=TRUE,correctFlip=TRUE,knownCoding='identity',impute=FALSE)
     {
         alpha <- 0.05;maf.cutoff <- 1;no.boot <- 0;test <- "SINGLE";
         both.vec <- set.intersect(candidate.variant,known.variant.vec);
@@ -167,7 +167,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 N.mat <- af.mat;
                 ref.list <- list();
                 alt.list <- list();
-                ####print(raw.data$afCase[[1]]);
+                ######print(raw.data$afCase[[1]]);
                 for(ii in 1:length(ix.pop))
                     {
 
@@ -193,6 +193,8 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 conditional.U.all <- 0;
                 conditional.V.all <- 0;
                 direction.single.vec <- 0;
+
+
                 for(ii in 1:length(ix.pop)) {
                     
                         
@@ -254,6 +256,13 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     anno.list[[ii]] <- refaltList$anno;
                 }          
                 
+                ## make use of imputed statistics in meta-analyses
+                if(impute==TRUE) {
+                    res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat);
+                    res.impMeta <- get.conditional.score.stat(res.impute$U.imp,res.impute$V.imp,res.impute$N.meta,ix.candidate,ix.known)
+                    conditional.U.all <- as.numeric(res.impMeta$conditional.ustat);
+                    conditional.V.all <- as.numeric(res.impMeta$conditional.V);
+                }
                 statistic <- conditional.U.all/sqrt(conditional.V.all);
                 
                 

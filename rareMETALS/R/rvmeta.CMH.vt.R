@@ -21,14 +21,14 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
         X.T.times.X.NA <- X.T.times.X.NA[-ix.rm.NA,-ix.rm.NA];
         X.T.times.X.NA <- X.T.times.X.NA/sqrt(diag( X.T.times.X.NA)%*%t(diag(X.T.times.X.NA)))
       }
-    ##########################################################################################################print(c("det of LD",det(X.T.times.X.NA)));
+    ############################################################################################################print(c("det of LD",det(X.T.times.X.NA)));
     diag(X.T.times.X.NA) <- NA;
-    ##########################################################################################################print(c("max r2",max(X.T.times.X.NA,na.rm=TRUE)));
+    ############################################################################################################print(c("max r2",max(X.T.times.X.NA,na.rm=TRUE)));
     maf.TH <- sort(unique(maf.vec));
     max.TH <- extra.pars$max.TH;
-    ####################################################print(maf.TH);
+    ######################################################print(maf.TH);
     ##max.TH <- 10;
-    ####################################################################print(c("max.TH",max.TH));
+    ######################################################################print(c("max.TH",max.TH));
     if(length(max.TH)>0)
       {
         ix.tmp <- as.integer(seq(1,length(maf.TH),length=max.TH));
@@ -36,11 +36,11 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
         maf.TH <- unique(sort(maf.TH));
       }
     maf.TH.old <- maf.TH;
-    ##########################################print(c("maf.TH",maf.TH));
+    ############################################print(c("maf.TH",maf.TH));
     if(maf.TH[1]==0) {maf.TH <- maf.TH[-1];}
     if(length(maf.TH)==0)
         {
-            ##########################################print("MAF.TH =0");
+            ############################################print("MAF.TH =0");
             return(list(p.value=NA,statistic=NA,maf.cutoff=0,mac.cutoff=0,no.site.VT=length(which(mac.vec==0))));
         }
     if(length(maf.TH)==1)
@@ -85,7 +85,7 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
       }
     cov.X.VT <- matrix(0,nrow=length(ix.list),ncol=length(ix.list));
     cov.mat <- X.T.times.X;
-    ######################################################################################################################################print('begin timing');
+    ########################################################################################################################################print('begin timing');
     a=Sys.time();
     for(ii in 1:length(maf.TH))
       {
@@ -98,7 +98,7 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
             cov.X.VT[ii,jj] <- as.numeric(t(ix.ii)%*%cov.mat%*%(ix.jj));
           }
       }
-    ######################################################################################################################################print('time TH');
+    ########################################################################################################################################print('time TH');
 
     cor.X.VT <- cov.X.VT/sqrt(diag(cov.X.VT)%*%t(diag(cov.X.VT)));
     if(alternative=='two.sided')
@@ -110,19 +110,19 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
           cor.X.VT <- as.matrix(cor.X.VT[-ix.rm,-ix.rm]);          
           maf.TH <- maf.TH[-ix.rm];
         }
-        ##########################################################################################################print(c("cor of VT",det(cor.X.VT)));
+        ############################################################################################################print(c("cor of VT",det(cor.X.VT)));
         ix.max <- which.max(vt.stat.vec);
         vt.max.stat <- vt.stat.vec[ix.max];
         maf.cutoff <- maf.TH[ix.max];
-        ############################################print(c("ix.max",ix.max));
+        ##############################################print(c("ix.max",ix.max));
         if(length(ix.max)==0) {
             vt.max.stat <- NA;
             maf.cutoff <- maf.TH.old[length(maf.TH.old)];
-            ##########################################print("return here iwth ix.max being null");
-            ##########################################print(c("maf.TH",maf.TH));
+            ############################################print("return here iwth ix.max being null");
+            ############################################print(c("maf.TH",maf.TH));
         }
       }
-    ######################################################################################################################################print(Sys.time()-a)
+    ########################################################################################################################################print(Sys.time()-a)
     if(alternative=='greater')
       {
           vt.stat.vec <-(X.T.times.Y.VT/sqrt(diag(cov.X.VT)));
@@ -183,15 +183,15 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
         }
   }
     if(length(vt.max.stat)==0) {
-        ##########################################print("length(vt.max.stat)==0");
+        ############################################print("length(vt.max.stat)==0");
         vt.max.stat <- NA;
         p.value.analytic <- NA;
         maf.cutoff <- maf.TH.old[length(maf.TH.old)];
     }
     p.value.boot <- p.value;
     p.value <- p.value.analytic;
-    ####################################################################print("in rvmeta.CMH.vt");
-    ####################################################################print(dim(X.T.times.X));
+    ######################################################################print("in rvmeta.CMH.vt");
+    ######################################################################print(dim(X.T.times.X));
     return(list(statistic=vt.max.stat,
                 p.value=p.value,
                 p.value.boot=p.value.boot,
@@ -218,10 +218,10 @@ pmaxnorm <- function(x,mu,sigma)
 pmaxnormsq <- function(x,mu,sigma)
   {
     if(x<0) return(0);
-    ##############################################################################################################################################################print(c(mu,det(sigma)));
+    ################################################################################################################################################################print(c(mu,det(sigma)));
     tmp <- try(pmvnorm(upper=rep(sqrt(x),length(mu)),lower=rep(-sqrt(x),length(mu)),mean=mu,sigma=sigma),silent=TRUE);
-    ##############################################################################################################################################################print('tmp');
-    ##############################################################################################################################################################print(tmp);
+    ################################################################################################################################################################print('tmp');
+    ################################################################################################################################################################print(tmp);
     if(class(tmp)=='try-error') return(NA);
     return(as.numeric(tmp));
   }

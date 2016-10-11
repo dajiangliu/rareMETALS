@@ -27,7 +27,7 @@ conditional.rareMETALS.range <- function(range.name=NULL,score.stat.file,cov.fil
     tabix.all <- paste(tabix.known.variant,tabix.candidate.variant,collapse=",",sep=",");
     raw.data.all <- list();
     capture.output(raw.data.all[[1]] <- rvmeta.readDataByRange( score.stat.file, cov.file,tabix.all)[[1]]);
-    ##########################################################################################################print(raw.data.all);
+    ############################################################################################################print(raw.data.all);
     res.null <- list(gene.name=NA,
                      p.value=NA,
                      statistic=NA,
@@ -261,7 +261,7 @@ conditional.rareMETALS.range <- function(range.name=NULL,score.stat.file,cov.fil
               pos.ref.alt.known.single.out <- c(pos.ref.alt.known.single.out,
                                                 rep(pos.ref.alt.known.out[kk],length(ix.X1)));
               ix.best <- res[[kk]]$ix.best;
-              ######################################################################################print(c("ix.best",ix.best));
+              ########################################################################################print(c("ix.best",ix.best));
               top.singlevar.pos[kk] <- res[[kk]]$pos[ix.X1][ix.best];
               top.singlevar.refalt[kk] <- paste(c(res[[kk]]$ref[ix.X1][ix.best],res[[kk]]$alt[ix.X1][ix.best]),sep="/",collapse="/");
               top.singlevar.pval[kk] <- format(res[[kk]]$singlevar.pval.vec[ix.best],digits=out.digits);

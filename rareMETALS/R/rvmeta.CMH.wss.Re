@@ -24,7 +24,7 @@ rvmeta.CMH.wss <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,co
       if(alternative=='two.sided')
         {
           statistic <- wss.stat^2;
-          ##################################################################################################################print(c('statistic',statistic));
+          ####################################################################################################################print(c('statistic',statistic));
           p.value <- pnorm(-sqrt(statistic))*2;
         }
       if(alternative=='greater')

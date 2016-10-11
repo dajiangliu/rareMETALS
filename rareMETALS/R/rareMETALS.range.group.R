@@ -224,16 +224,16 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               ##approximate correlation matrix between variants;
               covG <- matrix(0,nrow=length(ix.rare),ncol=length(ix.rare));
               nSample.covG <- covG;
-              ####print(length(ix.rare));
+              ######print(length(ix.rare));
               
               for(aa in 1:length(ix.rare)) {
                   for(bb in 1:length(ix.rare)) {
                       for(cc in ix.pop) {
-                          ######print(c(aa,bb,cc));
-                          ######print(dim(cov.mat.list[[cc]]));
+                          ########print(c(aa,bb,cc));
+                          ########print(dim(cov.mat.list[[cc]]));
                           
-                          ######print(cov.mat.list[[cc]][ix.rare[aa],ix.rare[bb] ]);
-                          ######print(c(aa,bb,cc,'okay'));
+                          ########print(cov.mat.list[[cc]][ix.rare[aa],ix.rare[bb] ]);
+                          ########print(c(aa,bb,cc,'okay'));
                           covG[aa,bb] <- covG[aa,bb]+rm.na(sqrt(N.mat[cc,aa]*N.mat[cc,bb])*cov.mat.list[[cc]][aa,bb]);
                           nSample.covG[aa,bb] <- nSample.covG[aa,bb]+sqrt(rm.na(N.mat[cc,aa])*rm.na(N.mat[cc,bb]));
                       }
@@ -270,7 +270,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                 {
                   res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(vstat.list=vstat.list,weight='MZ',ac.vec.list=ac.vec.list,
                                                                                                                                                     maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
-                  ######################print('this is executed');
+                  ########################print('this is executed');
                   res[[kk]] <- c(res.kk,res.extra);
                   res[[kk]]$maf.cutoff <- maf.cutoff;
                 }

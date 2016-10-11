@@ -14,10 +14,10 @@
 #' @param knownCoding knownCoding option allows users to specify if a linear transformation needs to be applied known variants. Possible choices for knownCoding option include identical, burden, randomm-eff.
 #' @return return a list of meta-analysis results
 #' @export
-conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,approxCov=TRUE,correctFlip=TRUE,knownCoding="identity",impute=FALSE)
+conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,knownCoding="identity",impMissing=TRUE)
     {
         cat('Conditional analysis',candidate.variant[1],"\n",sep=" ");
-        res <- conditional.rareMETALS.single.group.core(candidate.variant[1],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,approxCov,correctFlip,knownCoding,impute);
+        res <- conditional.rareMETALS.single.group.core(candidate.variant[1],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,correctFlip,knownCoding,impMissing);
         res.mat <- matrix(nrow=length(candidate.variant),ncol=ncol(res$res.out))
         res.mat[1,] <- res$res.out;
         colnames(res.mat) <- c("CHROM","POS","REF","ALT","SAMPLE_SIZE","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION","POS_REF_ALT_KNOWN","LOG","NOTE");
@@ -28,7 +28,7 @@ conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.fil
                 for(ii in 2:length(candidate.variant))
                     {
                         cat('Conditional analysis',candidate.variant[ii],"\n",sep=" ");
-                        res.ii <- conditional.rareMETALS.single.group.core(candidate.variant[ii],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,approxCov,correctFlip,knownCoding,impute);
+                        res.ii <- conditional.rareMETALS.single.group.core(candidate.variant[ii],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,correctFlip,knownCoding,impMissing);
                         res.mat[ii,] <- res.ii$res.out;
                         res.list[[ii]] <- res.ii$res;
                         
@@ -54,7 +54,7 @@ conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.fil
 #' @param knownCoding knownCoding option allows users to specify if a linear transformation needs to be applied known variants. Possible choices for knownCoding option include identical, burden, randomm-eff.
 #' @return return a list of meta-analysis results
 #' @export
-conditional.rareMETALS.single.group.core <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,approxCov=TRUE,correctFlip=TRUE,knownCoding='identity',impute=FALSE)
+conditional.rareMETALS.single.group.core <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,knownCoding='identity',impMissing=FALSE)
     {
         alpha <- 0.05;maf.cutoff <- 1;no.boot <- 0;test <- "SINGLE";
         both.vec <- set.intersect(candidate.variant,known.variant.vec);
@@ -167,11 +167,9 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 N.mat <- af.mat;
                 ref.list <- list();
                 alt.list <- list();
-                ######print(raw.data$afCase[[1]]);
+                ########print(raw.data$afCase[[1]]);
                 for(ii in 1:length(ix.pop))
-                    {
-
-                        
+                    {   
                         if(length(raw.data$covXZ[[ii]])>0) {
                             warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
                         }
@@ -193,45 +191,72 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 conditional.U.all <- 0;
                 conditional.V.all <- 0;
                 direction.single.vec <- 0;
-
-
                 for(ii in 1:length(ix.pop)) {
-                    
-                        
                     N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
                     N.mat[ii,] <- raw.data$nSample[[ii]];
                     no.sample <- no.sample+N.list[[ii]];
-                    U.stat <- rm.na(raw.data$ustat[[ii]]);
-                    V.stat <- rm.na(raw.data$vstat[[ii]]);
-                    score.stat.vec.list[[ii]] <- (U.stat/V.stat);
-                    ustat.list[[ii]] <- U.stat;
-                    vstat.list[[ii]] <- V.stat;
+                    ## U.stat <- rm.na(raw.data$ustat[[ii]]);
+                    ## V.stat <- rm.na(raw.data$vstat[[ii]]);
+                    ustat.list[[ii]] <- raw.data$ustat[[ii]];
+                    vstat.list[[ii]] <- raw.data$vstat[[ii]];
+                    if(impMissing==FALSE) {
+                        ustat.list[[ii]] <- rm.na(ustat.list[[ii]])
+                        vstat.list[[ii]] <- rm.na(vstat.list[[ii]])
+                    }
                     cov.mat.list[[ii]] <- matrix(raw.data$cov[[ii]][ix.var,ix.var],nrow=length(ix.var),ncol=length(ix.var));
-                    if(approxCov==TRUE) cov.mat.list[[ii]] <- matrix(rm.na(raw.data$cov[[ii]][ix.var,ix.var]),nrow=length(ix.var),ncol=length(ix.var));
+                    V.list[[ii]] <- cov.mat.list[[ii]]*N.list[[ii]];
+                    
+                }
+                impState <- NULL;
+                if(impMissing==TRUE) {
+                    res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat,NULL);   
+                    ustat.list <- res.impute$ustat.list.imp;
+                    vstat.list <- res.impute$vstat.list.imp;
+                    V.list <- res.impute$V.list;
+                    N.mat <- res.impute$N.mat;
+                    impState <- res.impute$impState;
+                }
+                
+                ## res.impMeta <- get.conditional.score.stat(rm.na(res.impute$ustat.list.imp[[jj]]),rm.na(res.impute$V.list[[jj]]),res.impute$N.mat.imp[jj,],ix.X1,ix.X2,res.impute$impState[jj,]);
+                ## conditional.U.all.imp <- conditional.U.all.imp+as.numeric(res.impMeta$conditional.ustat);
+                ## conditional.V.all.imp <- conditional.V.all.imp+as.numeric(res.impMeta$conditional.V);
+                
+                for(ii in 1:length(ix.pop)) {                               
+                    ## N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
+                    ## N.mat[ii,] <- raw.data$nSample[[ii]];
+                    ## no.sample <- no.sample+N.list[[ii]];
+                    ## U.stat <- rm.na(raw.data$ustat[[ii]]);
+                    ## V.stat <- rm.na(raw.data$vstat[[ii]]);
+                    ## score.stat.vec.list[[ii]] <- (U.stat/V.stat);
+                    ## ustat.list[[ii]] <- U.stat;
+                    ## vstat.list[[ii]] <- V.stat;
+                    ## cov.mat.list[[ii]] <- matrix(raw.data$cov[[ii]][ix.var,ix.var],nrow=length(ix.var),ncol=length(ix.var));
+                    ## if(approxCov==TRUE) cov.mat.list[[ii]] <- matrix(rm.na(raw.data$cov[[ii]][ix.var,ix.var]),nrow=length(ix.var),ncol=length(ix.var));                    
                     ustat.tmp <- raw.data$ustat[[ii]];
-                    ustat.tmp[ix.known] <- rm.na(raw.data$ustat[[ii]][ix.known]);
+                    ustat.tmp[ix.known] <- rm.na(raw.data$ustat[[ii]][ix.known]);               
+                    
                     if(knownCoding=="identity") {
-                        res.tmp <- get.conditional.score.stat(ustat.tmp,cov.mat.list[[ii]]*N.list[[ii]],N.list[[ii]],ix.candidate,ix.known)
+                        res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=T),ix.candidate,ix.known)
                         conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
                     }
                     if(knownCoding=="burden") {
                         ustat.tmp <- c(ustat.tmp[ix.candidate],sum(ustat.tmp[ix.known]))
-                        cov.mat.ii <- rbind(cbind(matrix(cov.mat.list[[ii]][ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate)),
-                                                  matrix(rowSums(matrix(cov.mat.list[[ii]][ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known))),nrow=length(ix.candidate),ncol=1)),
-                                            cbind(matrix(rowSums(matrix(cov.mat.list[[ii]][ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known))),ncol=length(ix.candidate),nrow=1),
-                                                  matrix(sum(cov.mat.list[[ii]][ix.known,ix.known]),nrow=1,ncol=1)));
+                        V.ii <- rbind(cbind(matrix(V.list[[ii]][ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate)),
+                                            matrix(rowSums(matrix(V.list[[ii]][ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known))),nrow=length(ix.candidate),ncol=1)),
+                                            cbind(matrix(rowSums(matrix(V.list[[ii]][ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known))),ncol=length(ix.candidate),nrow=1),
+                                                  matrix(sum(V.list[[ii]][ix.known,ix.known]),nrow=1,ncol=1)));
                             
-                        res.tmp <- get.conditional.score.stat(ustat.tmp,cov.mat.ii*N.list[[ii]],N.list[[ii]],ix.candidate,ix.known)
+                        res.tmp <- get.conditional.score.stat(ustat.tmp,V.ii,mean(N.mat[ii,],na.rm=T),ix.candidate,ix.known)
                         conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
                         
                     }
-                    if(knownCoding=="randomEffect") {
-                        res.tmp <- get.conditional.score.stat.RE(ustat.tmp,cov.mat.ii*N.list[[ii]],N.list[[ii]],ix.candidate,ix.known);
-                        conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
-                        conditional.V.ii <- as.numeric(res.tmp$conditional.V);
-                    }
+                    ## if(knownCoding=="randomEffect") {
+                    ##     res.tmp <- get.conditional.score.stat.RE(ustat.tmp,cov.mat.ii*N.list[[ii]],N.list[[ii]],ix.candidate,ix.known);
+                    ##     conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
+                    ##     conditional.V.ii <- as.numeric(res.tmp$conditional.V);
+                    ## }
                     
                     conditional.U.all <- conditional.U.all+rm.na(conditional.U.ii);
                     conditional.V.all <- conditional.V.all+rm.na(conditional.V.ii);

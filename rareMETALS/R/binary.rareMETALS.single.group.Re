@@ -17,10 +17,10 @@ binary.rareMETALS.single.group <- function(score.stat.file,cov.file,range,refalt
   {
     ix.gold <- 1;
     extra.par <- list(ix.gold=ix.gold,QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
-    ##############################print(range);
-    ##############################print(score.stat.file);
+    ################################print(range);
+    ################################print(score.stat.file);
     capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, cov.file, range));
-    ######################################################################print("read data okay");
+    ########################################################################print("read data okay");
     if(length(raw.data.all)==0)
       return(list(list(p.value=NA,
                        skip=1,

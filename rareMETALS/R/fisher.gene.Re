@@ -61,7 +61,7 @@ fisher.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',maf.cu
             {
               
               N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
-              ################################################################################################################################print(N.list[[ii]]);
+              ##################################################################################################################################print(N.list[[ii]]);
               U.stat <- rm.na(raw.data$ustat[[ii]][ix.var]);
               V.stat <- rm.na(raw.data$vstat[[ii]][ix.var]);
               score.stat.vec.list[[ii]] <- rm.na(U.stat/V.stat);              
@@ -120,16 +120,16 @@ fisher.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',maf.cu
                 ac.vec.list[[ii]][ix.1] <- 0;
               }
               no.sample <- no.sample+N.list[[ii]];
-              ################################################################################################################################print(c(ii,ac.vec.list[[ii]]))
+              ##################################################################################################################################print(c(ii,ac.vec.list[[ii]]))
               af.vec <- af.vec+(af.vec.list[[ii]])*(2*N.list[[ii]]);
               ac.vec <- ac.vec+ac.vec.list[[ii]];
             }
           af.vec <- af.vec/sum(2*unlist(N.list));
           maf.vec <- af.vec;
           mac.vec <- ac.vec;
-          ## ######################################################################################################################################print(ac.vec.list);
-          ## ######################################################################################################################################print('main mac.vec');
-          ## ######################################################################################################################################print(mac.vec);
+          ## ########################################################################################################################################print(ac.vec.list);
+          ## ########################################################################################################################################print('main mac.vec');
+          ## ########################################################################################################################################print(mac.vec);
           
           ix.major <- which(af.vec>0.5);
           if(length(ix.major)>0)
@@ -179,7 +179,7 @@ fisher.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',maf.cu
                 }
               if(test=='GRANVIL')
                 {
-                  ##############################################################################################################################print('okay before here');
+                  ################################################################################################################################print('okay before here');
                   res.kk <- (c(fisher.p(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(weight='MZ',ac.vec.list=ac.vec.list,
                                                                                                                                                     maf.vec=maf.vec.rare,mac.vec=mac.vec.rare,weight.by.N=weight.by.N))));
                   res[[kk]] <- c(res.kk,res.extra);
@@ -194,8 +194,8 @@ fisher.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',maf.cu
                 }
               if(test=='VT')
                 {
-                  ######################################################################################################################################print('mac.vec.rare');
-                  ######################################################################################################################################print(mac.vec.rare);
+                  ########################################################################################################################################print('mac.vec.rare');
+                  ########################################################################################################################################print(mac.vec.rare);
                   res.kk <- (c(fisher.p(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='VT',extra.pars=list(ac.vec.list=ac.vec.list,
                                                                                                                                                   maf.vec=maf.vec.rare,mac.vec=mac.vec.rare,max.TH=max.TH,weight.by.N=weight.by.N))));
                   res[[kk]] <- c(res.kk,res.extra);

@@ -1,0 +1,4 @@
+rareMETALS/R/conditional.rareMETALS.single.group.R:                    res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat);
+rareMETALS/R/conditional.rareMETALS.single.group.Re:                    res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat);
+rareMETALS/R/QC.R:imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
+rareMETALS/R/QC.Re:imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
