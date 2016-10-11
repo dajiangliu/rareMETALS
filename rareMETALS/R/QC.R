@@ -389,7 +389,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
     N.mat.imp <- N.mat;
     for(ii in 1:length(ustat.list))
     {
-        N.mat.imp[ii,] <- max(N.mat[ii,],na.rm=T);
+        N.mat.imp[ii,] <- max(rm.na(N.mat[ii,]));
         U.imp <- U.imp+rm.na(ustat.list[[ii]]);
         nSample.U <- nSample.U+rm.na(N.mat[ii,]);
         for(jj in 1:length(ustat.list[[1]]))
