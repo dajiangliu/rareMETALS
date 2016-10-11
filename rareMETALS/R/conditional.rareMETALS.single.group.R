@@ -282,7 +282,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 }          
                 
                 ## make use of imputed statistics in meta-analyses
-                if(impute==TRUE) {
+                if(impMissing==TRUE) {
                     res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat);
                     res.impMeta <- get.conditional.score.stat(res.impute$U.imp,res.impute$V.imp,res.impute$N.meta,ix.candidate,ix.known)
                     conditional.U.all <- as.numeric(res.impMeta$conditional.ustat);
