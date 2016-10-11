@@ -293,7 +293,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 ##     conditional.U.all <- as.numeric(res.impMeta$conditional.ustat);
                 ##     conditional.V.all <- as.numeric(res.impMeta$conditional.V);
                 ## }
-                ## statistic <- conditional.U.all/sqrt(conditional.V.all);
+                 statistic <- conditional.U.all/sqrt(conditional.V.all);
                 
                 
                 if(alternative=="two.sided") {
