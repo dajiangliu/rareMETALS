@@ -4,7 +4,8 @@
 \alias{imputeMeta}
 \title{Impute missing summary association statistics assuming}
 \usage{
-imputeMeta(ustat.list, vstat.list, cov.mat.list, N.mat, beta.vec = NULL)
+imputeMeta(ustat.list, vstat.list, cov.mat.list, N.mat, beta.vec = NULL,
+  ix.known)
 }
 \arguments{
 \item{ustat.list}{the score statistics;}

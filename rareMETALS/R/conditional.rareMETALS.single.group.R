@@ -210,7 +210,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 impState <- NULL;
 
                 if(impMissing==TRUE) {
-                    res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat,NULL);
+                    res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.known);
                     ##print('impute okay');
                     ustat.list <- res.impute$ustat.list.imp;
                     vstat.list <- res.impute$vstat.list.imp;

@@ -382,7 +382,7 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
 #' @param cov.mat.list the list of the covariance matrix
 #' @param N.mat the matrix of sample sizes;each row for a study and each column for a variant site;
 #' @export
-imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
+imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix.known) {
     U.imp <- 0;nSample.U <- 0;
     covG <- matrix(0,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
     nSample.covG <- covG;
@@ -396,8 +396,6 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
         {
             for(kk in 1:jj)
             {
-                ##print(c(ii,jj,kk,"N.mat",N.mat[ii,jj],"N.mat",N.mat[ii,kk],"cov.mat",cov.mat.list[[ii]][jj,kk]));
-                ##print(dim(cov.mat.list[[ii]]));
                 covG[jj,kk] <- covG[jj,kk]+rm.na(sqrt(N.mat[ii,jj]*N.mat[ii,kk])*cov.mat.list[[ii]][jj,kk]);
                 covG[kk,jj] <- covG[jj,kk];
                 nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(rm.na(N.mat[ii,jj])*rm.na(N.mat[ii,kk]));
@@ -406,11 +404,9 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
             
         }
     }
-    ##print(covG);
-    ##print(nSample.covG);
     covG.ori <- covG;    
     covG <- (covG/nSample.covG);
-    ix.missing <- which(is.na(covG),arr.ind=TRUE);
+    ## ix.missing <- which(is.na(covG),arr.ind=TRUE);
     N.meta <- apply(nSample.covG,1,max,na.rm=T);
     N.meta <- rep(max(N.meta),length(U.imp));
     V.imp <- covG*max(N.meta);
@@ -420,13 +416,13 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
     V.list <- list();
     impState <- matrix(0,nrow=length(ustat.list),ncol=length(ustat.list[[1]]));
     for(ii in 1:length(ustat.list)) {
-        ix.miss <- which(is.na(ustat.list[[ii]]));
+        ix.miss <- intersect(which(is.na(ustat.list[[ii]])),ix.known);
         if(length(ix.miss)>0) {
             impState[ii,ix.miss] <- 1;
             cov.mat.list.imp[[ii]][ix.miss,] <- covG[ix.miss,];
             cov.mat.list.imp[[ii]][,ix.miss] <- covG[,ix.miss];
             
-            vstat.list.imp[[ii]][ix.miss] <- sqrt(diag(cov.mat.list.imp[[ii]])[ix.miss]*max(N.mat[ii,],na.rm=T));
+            vstat.list.imp[[ii]][ix.miss] <- sqrt(diag(cov.mat.list.imp[[ii]])[ix.miss]*max(rm.na(N.mat[ii,])));
             
             if(is.null(beta.vec)) {
                 ustat.list.imp[[ii]][ix.miss] <- (U.imp[ix.miss])/(diag(covG.ori)[ix.miss])*(vstat.list.imp[[ii]][ix.miss])^2;
@@ -435,7 +431,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL) {
                 ustat.list.imp[[ii]][ix.miss] <- beta.vec[ix.miss]*vstat.list.imp[[ii]][ix.miss]^2;
             }
         }
-        V.list[[ii]] <- cov.mat.list.imp[[ii]]*max(N.mat[ii,],na.rm=T);
+        V.list[[ii]] <- cov.mat.list.imp[[ii]]*max(rm.na(N.mat[ii,]));
     }    
     return(list(covG=covG,
                 nSample.covG=nSample.covG,
