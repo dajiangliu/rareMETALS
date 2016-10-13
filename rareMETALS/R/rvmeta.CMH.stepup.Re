@@ -66,7 +66,7 @@ rvmeta.CMH.stepup <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec
                    extraPar=as.double(c((res.data$statisticPt)[1],alpha,0,rep(0,no.boot))));
 
     p.value <- res.perm$extraPar[3];
-    #########################################################################################################################################################################################print(res.perm$statisticPt[1:1000]);
+    ###########################################################################################################################################################################################print(res.perm$statisticPt[1:1000]);
     
     return(list(statistic=res.data$statisticPt[1],
                 p.value=p.value));
