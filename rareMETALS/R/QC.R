@@ -417,6 +417,8 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     impState <- matrix(0,nrow=length(ustat.list),ncol=length(ustat.list[[1]]));
     for(ii in 1:length(ustat.list)) {
         ix.miss <- intersect(which(is.na(ustat.list[[ii]])),ix.known);
+        print(c('study',ii));
+        print(ix.miss);
         if(length(ix.miss)>0) {
             impState[ii,ix.miss] <- 1;
             cov.mat.list.imp[[ii]][ix.miss,] <- covG[ix.miss,];
