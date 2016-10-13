@@ -224,19 +224,9 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 ## conditional.V.all.imp <- conditional.V.all.imp+as.numeric(res.impMeta$conditional.V);
                 
                 for(ii in 1:length(ix.pop)) {                               
-                    ## N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
-                    ## N.mat[ii,] <- raw.data$nSample[[ii]];
-                    ## no.sample <- no.sample+N.list[[ii]];
-                    ## U.stat <- rm.na(raw.data$ustat[[ii]]);
-                    ## V.stat <- rm.na(raw.data$vstat[[ii]]);
-                    ## score.stat.vec.list[[ii]] <- (U.stat/V.stat);
-                    ## ustat.list[[ii]] <- U.stat;
-                    ## vstat.list[[ii]] <- V.stat;
-                    ## cov.mat.list[[ii]] <- matrix(raw.data$cov[[ii]][ix.var,ix.var],nrow=length(ix.var),ncol=length(ix.var));
-                    ## if(approxCov==TRUE) cov.mat.list[[ii]] <- matrix(rm.na(raw.data$cov[[ii]][ix.var,ix.var]),nrow=length(ix.var),ncol=length(ix.var));                    
-                    ustat.tmp <- raw.data$ustat[[ii]];
-                    ustat.tmp[ix.known] <- rm.na(raw.data$ustat[[ii]][ix.known]);               
-                    
+                    ## ustat.tmp <- raw.data$ustat[[ii]];
+                    ## ustat.tmp[ix.known] <- rm.na(raw.data$ustat[[ii]][ix.known]);               
+                    ustat.tmp <- ustat.list[[ii]];
                     if(knownCoding=="identity") {
                         if(impMissing==TRUE)
                             res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,res.impute$impState[ii,])
