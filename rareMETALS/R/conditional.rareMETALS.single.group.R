@@ -322,6 +322,8 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 maf.vec <- af.vec;
                 mac.vec <- ac.vec;
                 res.extra$cov.mat.list <- cov.mat.list;
+                res.extra$ustat.list <- ustat.list;
+                res.extra$vstat.list <- vstat.list;
                 res.extra$af.mat <- af.mat;
                 res.extra$ac.mat <- ac.mat;
                 res.extra$N.mat <- N.mat;
