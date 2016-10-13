@@ -2,7 +2,7 @@
 QC <- function(raw.data,QC.par,cov=1)
   {
     
-      ##########################################print(c("QC.par",QC.par));
+      ############################################print(c("QC.par",QC.par));
       hwe.cutoff <- QC.par$hwe.cutoff;
       callrate.cutoff <- QC.par$callrate.cutoff;
       if(length(hwe.cutoff)==0) hwe.cutoff <- 0;
@@ -35,11 +35,11 @@ QC <- function(raw.data,QC.par,cov=1)
                       
                       if(length(ix.bug)>0)
                           {
-                              ## ##########################################print("bug");
+                              ## ############################################print("bug");
                               ## ix.rm <- c(ix.rm,ix.bug);
-                              ## ##########################################print(c("study",ii));
-                              ## ##########################################print(res.diag);
-                              ## ##########################################print(res.vstat)
+                              ## ############################################print(c("study",ii));
+                              ## ############################################print(res.diag);
+                              ## ############################################print(res.vstat)
                               log.mat[ix.bug,ii] <- "bug";
                               warning(msg);
                           }
@@ -50,10 +50,10 @@ QC <- function(raw.data,QC.par,cov=1)
                   {
                       raw.data$ustat[[ii]][ix.rm] <- NA;
                       raw.data$vstat[[ii]][ix.rm] <- NA;
-                      ##########################################print("out");
+                      ############################################print("out");
                       if(cov==1)
                           {
-                              ##########################################print("this is exec");
+                              ############################################print("this is exec");
                               raw.data$cov[[ii]][ix.rm,ix.rm] <- NA;
                           }
                       raw.data$ref[[ii]][ix.rm] <- NA;
@@ -85,7 +85,7 @@ QC <- function(raw.data,QC.par,cov=1)
 #' @export
 flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.var,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
     {
-        ################################print(c("REF","ALT",refaltList$ref[ix.var],refaltList$alt[ix.var]))
+        ##################################print(c("REF","ALT",refaltList$ref[ix.var],refaltList$alt[ix.var]))
         if((is.na(refaltList$ref[ix.var]) | is.na(refaltList$alt[ix.var])) & analyzeRefAltListOnly )
             {
                 ii <- ix.pop;
@@ -115,7 +115,7 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
             {
                 ii <- ix.pop;                
                 ix.include <- rep(0,length(raw.data$ustat));
-                ################################print("NotInRefAltList");
+                ##################################print("NotInRefAltList");
                 log.mat.var[ii] <- "NotInRefAltList";
                 return(list(raw.data=raw.data,
                             log.mat.var=log.mat.var,
@@ -349,8 +349,8 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                     }
                 if(checkAF==TRUE)
                     {
-                        ##############################print(c("raw.data$af[[ii]][ix.var]",raw.data$af[[ii]][ix.var]));
-                        ##############################print(c("af.gold[ix.var]",af.gold[ix.var]));
+                        ################################print(c("raw.data$af[[ii]][ix.var]",raw.data$af[[ii]][ix.var]));
+                        ################################print(c("af.gold[ix.var]",af.gold[ix.var]));
                         af.diff.new <- abs(raw.data$af[[ii]][ix.var]-af.gold[ix.var]);
                         if(is.na(af.diff.new)) af.diff.new <- 0;
                         if(af.diff.new>af.diff.max)
@@ -417,8 +417,8 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     impState <- matrix(0,nrow=length(ustat.list),ncol=length(ustat.list[[1]]));
     for(ii in 1:length(ustat.list)) {
         ix.miss <- intersect(which(is.na(ustat.list[[ii]])),ix.known);
-        print(c('study',ii));
-        print(ix.miss);
+        ##print(c('study',ii));
+        ##print(ix.miss);
         if(length(ix.miss)>0) {
             impState[ii,ix.miss] <- 1;
             cov.mat.list.imp[[ii]][ix.miss,] <- covG[ix.miss,];
