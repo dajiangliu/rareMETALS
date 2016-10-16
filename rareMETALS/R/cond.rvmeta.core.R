@@ -74,18 +74,16 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
     }
     
     gamma.est <- as.vector(ginv(X2.T.times.X2)%*%X2.T.times.Y);
-    
+    sigma.sq.est <- var.Y-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
     U <- X1.T.times.Y-X1.T.times.X2%*%gamma.est;
     if(length(ix.X2.type)>0) {
         V <- X1.T.times.X1-X1.T.times.X2.type%*%ginv(X2.T.times.X2.type)%*%X2.T.times.X1.type;
         ##sigma.sq.est <- var.Y-2/N*t(gamma.est)%*%X2.T.times.Y+1/N*t(gamma.est)%*%X2.T.times.X2%*%(gamma.est);    
-        sigma.sq.est <- var.Y-(t(X2.T.times.Y.type)%*%ginv(X2.T.times.X2.type)%*%X2.T.times.Y.type)/N;
-        ##print("sigma.sq.est");
-        ##print(sigma.sq.est);
+        ##sigma.sq.est <- var.Y-(t(X2.T.times.Y.type)%*%ginv(X2.T.times.X2.type)%*%X2.T.times.Y.type)/N;
     }
     if(length(ix.X2.type)==0) {
         V <- X1.T.times.X1;
-        sigma.sq.est <- var.Y-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
+        
         
     }
     V <- V*as.numeric(sigma.sq.est);
