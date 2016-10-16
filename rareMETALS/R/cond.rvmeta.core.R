@@ -44,6 +44,7 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
     ix.X1 <- ix.candidate;
     ix.X2 <- ix.known;
     var.Y <- 1;
+    print(c("N",N));
     if(length(which(is.na(ustat)))+length(which(is.na(X.T.times.X)))>0)
     {
         return(list(conditional.ustat=NA,
@@ -66,6 +67,7 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
         X1.T.times.X2.type <- matrix(X.T.times.X[ix.X1,ix.X2.type],nrow=length(ix.X1),ncol=length(ix.X2.type));
         
         X2.T.times.Y.type <- X.T.times.Y[ix.X2.type];
+        print("ix.X2.type");
         print(ix.X2.type);
         print(X.T.times.Y[ix.X2.type]);
     }
