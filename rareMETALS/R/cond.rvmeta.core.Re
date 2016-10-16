@@ -44,6 +44,8 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
     ix.X1 <- ix.candidate;
     ix.X2 <- ix.known;
     var.Y <- 1;
+    N <- as.integer(mean(N,na.rm=T));
+    ##print(c("N",N));
     if(length(which(is.na(ustat)))+length(which(is.na(X.T.times.X)))>0)
     {
         return(list(conditional.ustat=NA,
@@ -64,18 +66,30 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
         X2.T.times.X2.type <- matrix((X.T.times.X[ix.X2.type,ix.X2.type]),nrow=length(ix.X2.type),ncol=length(ix.X2.type));
         X2.T.times.X1.type <- matrix(X.T.times.X[ix.X2.type,ix.X1],nrow=length(ix.X2.type),ncol=length(ix.X1));
         X1.T.times.X2.type <- matrix(X.T.times.X[ix.X1,ix.X2.type],nrow=length(ix.X1),ncol=length(ix.X2.type));
+        
+        X2.T.times.Y.type <- X.T.times.Y[ix.X2.type];
+        print("ix.X2.type");
+        print(ix.X2.type);
+        print(X.T.times.Y[ix.X2.type]);
     }
     
     gamma.est <- as.vector(ginv(X2.T.times.X2)%*%X2.T.times.Y);
-    sigma.sq.est <- var.Y-2/N*t(gamma.est)%*%X2.T.times.Y+1/N*t(gamma.est)%*%X2.T.times.X2%*%(gamma.est);
+    
     U <- X1.T.times.Y-X1.T.times.X2%*%gamma.est;
     if(length(ix.X2.type)>0) {
         V <- X1.T.times.X1-X1.T.times.X2.type%*%ginv(X2.T.times.X2.type)%*%X2.T.times.X1.type;
+        ##sigma.sq.est <- var.Y-2/N*t(gamma.est)%*%X2.T.times.Y+1/N*t(gamma.est)%*%X2.T.times.X2%*%(gamma.est);    
+        sigma.sq.est <- var.Y-(t(X2.T.times.Y.type)%*%ginv(X2.T.times.X2.type)%*%X2.T.times.Y.type)/N;
+        print("sigma.sq.est");
+        print(sigma.sq.est);
     }
     if(length(ix.X2.type)==0) {
         V <- X1.T.times.X1;
+        sigma.sq.est <- var.Y-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
+        
     }
-    
+    V <- V*as.numeric(sigma.sq.est);
+
     return(list(conditional.ustat=U,
                 conditional.V=V));
     

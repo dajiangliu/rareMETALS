@@ -167,7 +167,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 N.mat <- af.mat;
                 ref.list <- list();
                 alt.list <- list();V.list <- list();
-                ##############print(raw.data$afCase[[1]]);
+                ################print(raw.data$afCase[[1]]);
                 for(ii in 1:length(ix.pop))
                     {   
                         if(length(raw.data$covXZ[[ii]])>0) {
@@ -211,7 +211,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
 
                 if(impMissing==TRUE) {
                     res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.known);
-                    ######print('impute okay');
+                    ########print('impute okay');
                     ustat.list <- res.impute$ustat.list.imp;
                     vstat.list <- res.impute$vstat.list.imp;
                     V.list <- res.impute$V.list;
@@ -219,7 +219,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     impState <- res.impute$impState;
                     cov.mat.list <- res.impute$cov.mat.list.imp;
                 }
-                ######print(res.impute);
+                ########print(res.impute);
                 ## res.impMeta <- get.conditional.score.stat(rm.na(res.impute$ustat.list.imp[[jj]]),rm.na(res.impute$V.list[[jj]]),res.impute$N.mat.imp[jj,],ix.X1,ix.X2,res.impute$impState[jj,]);
                 ## conditional.U.all.imp <- conditional.U.all.imp+as.numeric(res.impMeta$conditional.ustat);
                 ## conditional.V.all.imp <- conditional.V.all.imp+as.numeric(res.impMeta$conditional.V);
@@ -234,7 +234,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                         if(impMissing==FALSE)
                             res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,NULL)
 
-                        ######print("condition okay");
+                        ########print("condition okay");
                         
                         conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
@@ -278,7 +278,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     ref.list[[ii]] <- refaltList$ref;
                     alt.list[[ii]] <- refaltList$alt;
                     anno.list[[ii]] <- refaltList$anno;
-                    ######print(c(ii,'okay'));
+                    ########print(c(ii,'okay'));
                 }          
                 
                 ## ## make use of imputed statistics in meta-analyses
@@ -296,17 +296,17 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     statistic <- statistic^2;
                     p.value <- pchisq(statistic,df=1,lower.tail=FALSE);
                 }
-                ######print(c(statistic,p.value));
+                ########print(c(statistic,p.value));
                 beta1.est <- conditional.U.all/conditional.V.all;
                 beta1.sd <- sqrt(1/conditional.V.all);
                 maf.vec <- rep(0,length(af.vec.list[[1]]));
                 af.vec <- maf.vec;            
                 mac.vec <- 0;
                 ac.vec <- 0;
-                ######print('af.mat');
-                ######print(af.mat);
-                ######print('N.mat');
-                ######print(N.mat);
+                ########print('af.mat');
+                ########print(af.mat);
+                ########print('N.mat');
+                ########print(N.mat);
                 af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
                 ac.vec <- colSums(ac.mat,na.rm=TRUE);
                 N.vec <- colSums(N.mat,na.rm=TRUE);

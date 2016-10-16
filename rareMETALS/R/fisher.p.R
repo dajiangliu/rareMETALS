@@ -19,7 +19,7 @@ fisher.p <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,N.
         res[[ii]] <- rvmeta.CMH(score.stat.vec.list.new,maf.vec.list.new,cov.mat.list.new,var.Y.list.new,N.list.new,alternative,no.boot,alpha,rv.test,c(extra.pars,list(mac.vec.list=mac.vec.list.new,maf.vec=maf.vec,mac.vec=mac.vec,af.vec.list=maf.vec.list.new,ac.vec.list=mac.vec.list.new,max.TH=extra.pars$max.TH)));
         p.value.vec[ii] <- res[[ii]]$p.value;
       }
-    ####################################################################################################################print(extra.pars$weight);
+    ######################################################################################################################print(extra.pars$weight);
     if(length(extra.pars$weight.by.N)==0) extra.pars$weight.by.N <- "N";
     if(extra.pars$weight.by.N=="N")
       {
