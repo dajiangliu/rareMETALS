@@ -53,9 +53,7 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
     }
     X2.T.times.Y <- X.T.times.Y[ix.X2];
     X1.T.times.Y <- X.T.times.Y[ix.X1];
-
     ix.type <- ix.X2;
-    
     ## if(!is.null(impState)) ix.type <- which(impState==0);
     ## if(is.null(impState)) ix.type <- ix.X2;
     ix.X2.type <- intersect(ix.type,ix.X2);
@@ -87,8 +85,8 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
         V <- X1.T.times.X1;        
     }
     V <- V*as.numeric(sigma.sq.est);
-
     return(list(conditional.ustat=U,
+                sigma.sq.est=sigma.sq.est,
                 conditional.V=V));
     
 }
