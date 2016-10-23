@@ -53,9 +53,11 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
     }
     X2.T.times.Y <- X.T.times.Y[ix.X2];
     X1.T.times.Y <- X.T.times.Y[ix.X1];
+
+    ix.type <- ix.X2;
     
-    if(!is.null(impState)) ix.type <- which(impState==0);
-    if(is.null(impState)) ix.type <- ix.X2;
+    ## if(!is.null(impState)) ix.type <- which(impState==0);
+    ## if(is.null(impState)) ix.type <- ix.X2;
     ix.X2.type <- intersect(ix.type,ix.X2);
     X2.T.times.X1 <- matrix(X.T.times.X[ix.X2,ix.X1],nrow=length(ix.X2),ncol=length(ix.X1));
     X1.T.times.X2 <- matrix(X.T.times.X[ix.X1,ix.X2],nrow=length(ix.X1),ncol=length(ix.X2));
@@ -82,9 +84,7 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
         ##sigma.sq.est <- var.Y-(t(X2.T.times.Y.type)%*%ginv(X2.T.times.X2.type)%*%X2.T.times.Y.type)/N;
     }
     if(length(ix.X2.type)==0) {
-        V <- X1.T.times.X1;
-        
-        
+        V <- X1.T.times.X1;        
     }
     V <- V*as.numeric(sigma.sq.est);
 
@@ -92,7 +92,6 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
                 conditional.V=V));
     
 }
-
 #' This is the function to obtain conditional score statistics when conditional on the genes that are detected by SKAT test;
 #'
 #' @param ustat The non-standardized score statistics
