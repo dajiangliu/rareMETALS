@@ -500,28 +500,33 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     corG <- cov2cor(covG);
     Id <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
     diag(Id) <- 1;
-    corG.reg <- corG+lambda*Id;
-    sdG <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
-    diag(sdG) <- sqrt(diag(as.matrix(covG)));
-    covG.reg <- sdG%*%corG.reg%*%sdG;
+    ##corG.reg <- corG+lambda*Id;
+    ##sdG <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
+    ##diag(sdG) <- sqrt(diag(as.matrix(covG)));
+    ##covG.reg <- sdG%*%corG.reg%*%sdG;
     
     ## ix.missing <- which(is.na(covG),arr.ind=TRUE);
     N.meta.ori <- apply(N.mat,2,sum,na.rm=T);
     ##N.meta <- apply(nSample.covG,1,max,na.rm=T);
     N.meta <- rep(max(N.meta.ori),length(N.meta.ori));
     U.meta.imp <- U.meta*(rm.na(N.meta/N.meta.ori));
-    V.tmp <- diag(sqrt(N.meta))%*%covG.reg%*%diag(sqrt(N.meta))
+    V.tmp <- diag(sqrt(N.meta))%*%covG%*%diag(sqrt(N.meta))
     beta.imp <- ginv(V.tmp)%*%U.meta.imp;
     scalar <- matrix(0,nrow=length(ustat.list[[1]]),ncol=length(ustat.list[[1]]));
     diag(scalar) <- (rm.na(N.meta/N.meta.ori));    
     cov.U.meta.imp <- scalar%*%covG.ori%*%scalar;
     cov.beta.imp <- ginv(V.tmp)%*%cov.U.meta.imp%*%ginv(V.tmp);
     V.meta.imp <- ginv(cov.beta.imp);
+    cor.meta.imp <- cov2cor(V.meta.imp)+lambda*Id;
+    sd.meta.imp <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
+    diag(sd.meta.imp) <- sqrt(diag(V.meta.imp));
+    V.meta.imp <- sd.meta.imp%*%cor.meta.imp%*%sd.meta.imp;
+    
     U.meta.imp <- V.meta.imp%*%beta.imp;
     return(list(covG=covG,
                 nSample.covG=nSample.covG,
                 N.mat.imp=N.mat.imp,
-                covG.reg=covG.reg,
+                ##covG.reg=covG.reg,
                 N.meta.ori=N.meta.ori,
                 N.meta=N.meta,
                 scalar.diag=diag(scalar),
