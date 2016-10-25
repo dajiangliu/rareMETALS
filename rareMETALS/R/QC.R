@@ -517,12 +517,13 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     cov.U.meta.imp <- scalar%*%covG.ori%*%scalar;
     cov.beta.imp <- ginv(V.tmp)%*%cov.U.meta.imp%*%ginv(V.tmp);
     V.meta.imp <- ginv(cov.beta.imp);
+    
+    U.meta.imp <- V.meta.imp%*%beta.imp;
     cor.meta.imp <- cov2cor(V.meta.imp)+lambda*Id;
     sd.meta.imp <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
     diag(sd.meta.imp) <- sqrt(diag(V.meta.imp));
     V.meta.imp <- sd.meta.imp%*%cor.meta.imp%*%sd.meta.imp;
     
-    U.meta.imp <- V.meta.imp%*%beta.imp;
     return(list(covG=covG,
                 nSample.covG=nSample.covG,
                 N.mat.imp=N.mat.imp,
