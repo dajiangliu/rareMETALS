@@ -401,12 +401,13 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
                 nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(rm.na(N.mat[ii,jj])*rm.na(N.mat[ii,kk]));
                 nSample.covG[kk,jj] <- nSample.covG[jj,kk];
             }
-            
         }
     }
+    
     covG.ori <- covG;    
     covG <- (covG/nSample.covG);
     ## ix.missing <- which(is.na(covG),arr.ind=TRUE);
+    N.meta.ori <- apply(N.mat,2,sum,na.rm=T);
     N.meta <- apply(nSample.covG,1,max,na.rm=T);
     N.meta <- rep(max(N.meta),length(U.imp));
     V.imp <- covG*max(N.meta);
@@ -415,17 +416,16 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     cov.mat.list.imp <- cov.mat.list;
     V.list <- list();
     impState <- matrix(0,nrow=length(ustat.list),ncol=length(ustat.list[[1]]));
+    U.meta.imp <- 0;V.meta.imp <- 0;
     for(ii in 1:length(ustat.list)) {
         ix.miss <- intersect(which(is.na(ustat.list[[ii]])),ix.known);
-        ######print(c('study',ii));
-        ######print(ix.miss);
+        U.meta.imp <- U.meta.imp+rm.na(ustat.list[[ii]]);
+        
         if(length(ix.miss)>0) {
             impState[ii,ix.miss] <- 1;
             cov.mat.list.imp[[ii]][ix.miss,] <- covG[ix.miss,];
-            cov.mat.list.imp[[ii]][,ix.miss] <- covG[,ix.miss];
-            
+            cov.mat.list.imp[[ii]][,ix.miss] <- covG[,ix.miss];           
             vstat.list.imp[[ii]][ix.miss] <- sqrt(diag(cov.mat.list.imp[[ii]])[ix.miss]*max(rm.na(N.mat[ii,])));
-            
             if(is.null(beta.vec)) {
                 ustat.list.imp[[ii]][ix.miss] <- (U.imp[ix.miss])/(diag(covG.ori)[ix.miss])*(vstat.list.imp[[ii]][ix.miss])^2;
             }
@@ -437,7 +437,8 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
         diag(Id) <- 1;
         cov.mat.list.imp[[ii]] <- cov.mat.list.imp[[ii]]+lambda*Id;
         V.list[[ii]] <- cov.mat.list.imp[[ii]]*max(rm.na(N.mat[ii,]));
-    }    
+    }
+    V.meta.imp <- t(rm.na(N.meta/N.meta.ori))%*%covG%*%(rm.na(N.meta/N.meta.ori));
     return(list(covG=covG,
                 nSample.covG=nSample.covG,
                 V.imp=V.imp,
@@ -445,6 +446,8 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
                 V.list=V.list,
                 impState=impState,
                 N.mat=N.mat.imp,
+                U.meta.imp=U.meta.imp,
+                V.meta.imp=V.meta.imp,
                 ustat.list.imp=ustat.list.imp,
                 vstat.list.imp=vstat.list.imp,
                 cov.mat.list.imp=cov.mat.list.imp,
