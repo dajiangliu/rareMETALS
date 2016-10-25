@@ -476,10 +476,12 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     covG <- matrix(0,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
     nSample.covG <- covG;
     N.mat.imp <- N.mat;
+    U.meta <- 0;
     for(ii in 1:length(ustat.list))
     {
         N.mat.imp[ii,] <- max(rm.na(N.mat[ii,]));
-        U.imp <- U.imp+rm.na(ustat.list[[ii]]);
+        U.meta <- U.meta+rm.na(ustat.list[[ii]]);
+        
         nSample.U <- nSample.U+rm.na(N.mat[ii,]);
         for(jj in 1:length(ustat.list[[1]]))
         {
@@ -506,7 +508,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     ## ix.missing <- which(is.na(covG),arr.ind=TRUE);
     N.meta.ori <- apply(N.mat,2,sum,na.rm=T);
     N.meta <- apply(nSample.covG,1,max,na.rm=T);
-    U.meta.imp <- U.meta.imp*(rm.na(N.meta/N.meta.ori));
+    U.meta.imp <- U.meta*(rm.na(N.meta/N.meta.ori));
     V.tmp <- diag(sqrt(N.meta))%*%covG.reg%*%diag(sqrt(N.meta))
     beta.imp <- ginv(V.tmp)%*%U.meta.imp;
     scalar <- matrix(0,nrow=length(ustat.list[[1]]),ncol=length(ustat.list[[1]]));
