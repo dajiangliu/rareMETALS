@@ -440,7 +440,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     }
     scalar <- matrix(0,nrow=length(ustat.list[[1]]),ncol=length(ustat.list[[1]]));
     diag(scalar) <- (rm.na(N.meta/N.meta.ori));
-    V.meta.imp <- scalar%*%covG%*%scalar;
+    V.meta.imp <- scalar%*%covG.ori%*%scalar;
     return(list(covG=covG,
                 nSample.covG=nSample.covG,
                 V.imp=V.imp,
