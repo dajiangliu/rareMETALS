@@ -439,9 +439,14 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
         V.list[[ii]] <- cov.mat.list.imp[[ii]]*max(rm.na(N.mat[ii,]));
     }
     U.meta.imp <- U.meta.imp*(rm.na(N.meta/N.meta.ori));
+    V.tmp <- covG*max(N.meta);
+    beta.imp <- ginv(V.tmp)%*%U.meta.imp;
     scalar <- matrix(0,nrow=length(ustat.list[[1]]),ncol=length(ustat.list[[1]]));
     diag(scalar) <- (rm.na(N.meta/N.meta.ori));
-    V.meta.imp <- scalar%*%covG.ori%*%scalar;
+    
+    cov.U.meta.imp <- scalar%*%covG.ori%*%scalar;
+    cov.beta.imp <- ginv(V.tmp)%*%cov.U.meta.imp%*%ginv(V.tmp);
+    V.meta.imp <- ginv(cov.beta.imp);
     return(list(covG=covG,
                 nSample.covG=nSample.covG,
                 V.imp=V.imp,
