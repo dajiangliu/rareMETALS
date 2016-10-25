@@ -507,7 +507,8 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     
     ## ix.missing <- which(is.na(covG),arr.ind=TRUE);
     N.meta.ori <- apply(N.mat,2,sum,na.rm=T);
-    N.meta <- apply(nSample.covG,1,max,na.rm=T);
+    ##N.meta <- apply(nSample.covG,1,max,na.rm=T);
+    N.meta <- rep(max(N.meta.ori),length(N.meta.ori));
     U.meta.imp <- U.meta*(rm.na(N.meta/N.meta.ori));
     V.tmp <- diag(sqrt(N.meta))%*%covG.reg%*%diag(sqrt(N.meta))
     beta.imp <- ginv(V.tmp)%*%U.meta.imp;
