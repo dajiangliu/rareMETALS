@@ -510,7 +510,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     ##N.meta <- apply(nSample.covG,1,max,na.rm=T);
     N.meta <- rep(max(N.meta.ori),length(N.meta.ori));
     U.meta.imp <- U.meta*(rm.na(N.meta/N.meta.ori));
-    V.tmp <- diag(sqrt(N.meta))%*%covG%*%diag(sqrt(N.meta))
+    V.tmp <- diag((N.meta/N.meta.ori))%*%covG.ori%*%diag((N.meta/N.meta.ori))
     beta.imp <- ginv(V.tmp)%*%U.meta.imp;
     scalar <- matrix(0,nrow=length(ustat.list[[1]]),ncol=length(ustat.list[[1]]));
     diag(scalar) <- (rm.na(N.meta/N.meta.ori));    
@@ -519,10 +519,10 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     V.meta.imp <- ginv(cov.beta.imp);
     
     U.meta.imp <- V.meta.imp%*%beta.imp;
-    cor.meta.imp <- cov2cor(V.meta.imp)+lambda*Id;
-    sd.meta.imp <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
-    diag(sd.meta.imp) <- sqrt(diag(V.meta.imp));
-    V.meta.imp <- sd.meta.imp%*%cor.meta.imp%*%sd.meta.imp;
+    ## cor.meta.imp <- cov2cor(V.meta.imp)+lambda*Id;
+    ## sd.meta.imp <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
+    ## diag(sd.meta.imp) <- sqrt(diag(V.meta.imp));
+    ## V.meta.imp <- sd.meta.imp%*%cor.meta.imp%*%sd.meta.imp;
     
     return(list(covG=covG,
                 nSample.covG=nSample.covG,
