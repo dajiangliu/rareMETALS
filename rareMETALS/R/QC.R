@@ -522,6 +522,7 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
                 N.mat.imp=N.mat.imp,
                 covG=covG,
                 covG.reg=covG.reg,
+                scalar.diag=diag(scalar),
                 U.meta.imp=U.meta.imp,
                 V.meta.imp=V.meta.imp,
                 N.meta.imp=N.meta));
