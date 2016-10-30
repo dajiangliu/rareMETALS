@@ -584,17 +584,12 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     ##print(t(V.XZ%*%ginv(V.ZZ)))
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
     conditional.V <- regMat(conditional.V,0.1);
-
-
-
-    
     ##rescale it to match other studies;
 
-    conditional.ustat <- conditional.ustat*(nSample.U[ix.candidate]);
-    tmp <- matrix(0,nrow=length(ix.candidate),ncol=length(ix.candidate));
-    diag(tmp) <- nSample.U[ix.candidate];
-    conditional.V <- tmp%*%conditional.V%*%tmp;
-
+    ## conditional.ustat <- conditional.ustat*(nSample.U[ix.candidate]);
+    ## tmp <- matrix(0,nrow=length(ix.candidate),ncol=length(ix.candidate));
+    ## diag(tmp) <- nSample.U[ix.candidate];
+    ## conditional.V <- tmp%*%conditional.V%*%tmp;
     
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V));
