@@ -159,8 +159,10 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
           a <- Sys.time();
           print(c('vt.max.stat',vt.max.stat));
           if(!is.na(vt.max.stat)){
+              
             p.value.analytic <- pvt(vt.max.stat,mu=rep(0,nrow(cor.X.VT)),sigma=cor.X.VT,alternative);
-          }
+            print(c('p.value.analytic',p.value.analytic));
+        }
         }
       if(no.boot>0)
         {
