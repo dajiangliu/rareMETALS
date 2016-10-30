@@ -580,7 +580,7 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     var.U.ZY <- V.ZZ/(nSample.covG[ix.known,ix.known]);
     cov.U.XY.U.ZY <- V.XZ/matrix(nSample.covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     print(cov.U.XY.U.ZY);
-    print(t(V.XZ)-2*t(V.XZ%*%ginv(V.ZZ)));
+    print(t(V.XZ%*%ginv(V.ZZ)))
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-2*t(V.XZ%*%ginv(V.ZZ))%*%cov.U.XY.U.ZY%*%(V.XZ%*%ginv(V.ZZ));
     
     return(list(conditional.ustat=conditional.ustat,
