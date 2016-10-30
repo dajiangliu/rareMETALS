@@ -32,13 +32,16 @@ pvt.core <- function(x,mu,sigma,alternative=c('two.sided','greater'))
             for(jj in 1:ncol(mat.ii))
               {
                 sigma.jj <- sigma[mat.ii[,jj],mat.ii[,jj]];## of dimension ii x ii;
+                
                 sum.ii <- sum.ii+2*as.numeric(pmvnorm(upper=rep(-sqrt(x),ii),lower=rep(-Inf,ii),mean=mu[mat.ii[,jj]],sigma=sigma.jj));
-              }
+                print(c(ii,jj,sum.ii));
+            }
             if(ii%%2==1)
               sum.all <- sum.all+sum.ii;
             if(ii%%2==0)
               sum.all <- sum.all-sum.ii;
           }
+        print(c('sum.all',sum.all));
         return(sum.all);
       }
     
@@ -50,13 +53,12 @@ pvt <- function(statistic,mu,sigma,alternative=c('greater','less','two.sided'))
     if(alternative=='two.sided')
       {
         p.tmp <- 1-pmaxnormsq(statistic,mu,sigma);
+        print(c('p.tmp',p.tmp));
         if(!is.na(p.tmp)){
           if(p.tmp>0) p.value <- p.tmp;
           
           if(p.tmp==0)
             {              
-              ################################################################################################print('p.tmp VT is 0');
-              ##################################################################################################print(sigma);
               p.value <- pvt.core(statistic,mu,sigma,'two.sided')
             }
         }

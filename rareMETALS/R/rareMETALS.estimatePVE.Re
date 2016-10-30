@@ -22,7 +22,7 @@ rareMETALS.estimatePVE <- function(score.stat.file,cov.file,range,range.name,ref
     if(length(res.meta$integratedData[[1]])>0) {
         datLocus <- (res.meta$integratedData[[1]]);
         corGLocus <- (res.meta$res.list[[1]])$r2.approx;
-        ########print(corGLocus);
+        ##########print(corGLocus);
         covXLocus <- rm.na(datLocus$cov[[1]]);
         
         varLocusSNP <- 0;
@@ -35,13 +35,13 @@ rareMETALS.estimatePVE <- function(score.stat.file,cov.file,range,range.name,ref
         ix.rm <- which(colSums(is.na(datLocus$cov[[1]]))==nrow(datLocus$cov[[1]]));
             
         if(length(ix.rm)>0) {
-            ## ########print("ix.rm >0");
-            ## ########print(ix.rm);
-            ########print(length(ustatLocus))
+            ## ##########print("ix.rm >0");
+            ## ##########print(ix.rm);
+            ##########print(length(ustatLocus))
             ustatLocus <- ustatLocus[-ix.rm];
             vstatLocus <- vstatLocus[-ix.rm];
-            ## ########print(length(ustatLocus));
-            ## ########print(corGLocus);
+            ## ##########print(length(ustatLocus));
+            ## ##########print(corGLocus);
             afLocus <- afLocus[-ix.rm];
             covXLocus <- matrix(covXLocus[-ix.rm,-ix.rm],nrow=length(ustatLocus),ncol=length(ustatLocus));
             corGLocus <- matrix(corGLocus[-ix.rm,-ix.rm],nrow=length(ustatLocus),ncol=length(ustatLocus));

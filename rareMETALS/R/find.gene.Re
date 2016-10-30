@@ -13,7 +13,7 @@ find.gene.chrpos <- function(candidate.gene)
     pos.start <- res$pos.start;
     pos.end <- res$pos.end;
     ix <- match(candidate.gene,gene);
-    ################################################################################################print(ix);
+    ##################################################################################################print(ix);
     tabix <- paste(chr[ix],paste(pos.start[ix],pos.end[ix],sep="-"),sep=":");
     return(list(tabix=tabix,
                 pos.start=paste(chr[ix],pos.start[ix],sep=":",collapse=":"),

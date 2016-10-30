@@ -2,7 +2,7 @@
 QC <- function(raw.data,QC.par,cov=1)
   {
     
-      ##############################################print(c("QC.par",QC.par));
+      ################################################print(c("QC.par",QC.par));
       hwe.cutoff <- QC.par$hwe.cutoff;
       callrate.cutoff <- QC.par$callrate.cutoff;
       if(length(hwe.cutoff)==0) hwe.cutoff <- 0;
@@ -35,11 +35,11 @@ QC <- function(raw.data,QC.par,cov=1)
                       
                       if(length(ix.bug)>0)
                           {
-                              ## ##############################################print("bug");
+                              ## ################################################print("bug");
                               ## ix.rm <- c(ix.rm,ix.bug);
-                              ## ##############################################print(c("study",ii));
-                              ## ##############################################print(res.diag);
-                              ## ##############################################print(res.vstat)
+                              ## ################################################print(c("study",ii));
+                              ## ################################################print(res.diag);
+                              ## ################################################print(res.vstat)
                               log.mat[ix.bug,ii] <- "bug";
                               warning(msg);
                           }
@@ -50,10 +50,10 @@ QC <- function(raw.data,QC.par,cov=1)
                   {
                       raw.data$ustat[[ii]][ix.rm] <- NA;
                       raw.data$vstat[[ii]][ix.rm] <- NA;
-                      ##############################################print("out");
+                      ################################################print("out");
                       if(cov==1)
                           {
-                              ##############################################print("this is exec");
+                              ################################################print("this is exec");
                               raw.data$cov[[ii]][ix.rm,ix.rm] <- NA;
                           }
                       raw.data$ref[[ii]][ix.rm] <- NA;
@@ -85,7 +85,7 @@ QC <- function(raw.data,QC.par,cov=1)
 #' @export
 flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.var,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
     {
-        ####################################print(c("REF","ALT",refaltList$ref[ix.var],refaltList$alt[ix.var]))
+        ######################################print(c("REF","ALT",refaltList$ref[ix.var],refaltList$alt[ix.var]))
         if((is.na(refaltList$ref[ix.var]) | is.na(refaltList$alt[ix.var])) & analyzeRefAltListOnly )
             {
                 ii <- ix.pop;
@@ -115,7 +115,7 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
             {
                 ii <- ix.pop;                
                 ix.include <- rep(0,length(raw.data$ustat));
-                ####################################print("NotInRefAltList");
+                ######################################print("NotInRefAltList");
                 log.mat.var[ii] <- "NotInRefAltList";
                 return(list(raw.data=raw.data,
                             log.mat.var=log.mat.var,
@@ -349,8 +349,8 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                     }
                 if(checkAF==TRUE)
                     {
-                        ##################################print(c("raw.data$af[[ii]][ix.var]",raw.data$af[[ii]][ix.var]));
-                        ##################################print(c("af.gold[ix.var]",af.gold[ix.var]));
+                        ####################################print(c("raw.data$af[[ii]][ix.var]",raw.data$af[[ii]][ix.var]));
+                        ####################################print(c("af.gold[ix.var]",af.gold[ix.var]));
                         af.diff.new <- abs(raw.data$af[[ii]][ix.var]-af.gold[ix.var]);
                         if(is.na(af.diff.new)) af.diff.new <- 0;
                         if(af.diff.new>af.diff.max)
@@ -375,6 +375,95 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                     ix.include=ix.include));
     }
 
+## #' Impute missing summary association statistics assuming
+## #'
+## #' @param ustat.list the score statistics;
+## #' @param vstat.list the vstat list;
+## #' @param cov.mat.list the list of the covariance matrix
+## #' @param N.mat the matrix of sample sizes;each row for a study and each column for a variant site;
+## #' @export
+## imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix.known,lambda=0.01) {
+##     U.imp <- 0;nSample.U <- 0;
+##     covG <- matrix(0,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
+##     nSample.covG <- covG;
+##     N.mat.imp <- N.mat;
+##     for(ii in 1:length(ustat.list))
+##     {
+##         N.mat.imp[ii,] <- max(rm.na(N.mat[ii,]));
+##         U.imp <- U.imp+rm.na(ustat.list[[ii]]);
+##         nSample.U <- nSample.U+rm.na(N.mat[ii,]);
+##         for(jj in 1:length(ustat.list[[1]]))
+##         {
+##             for(kk in 1:jj)
+##             {
+##                 covG[jj,kk] <- covG[jj,kk]+rm.na(sqrt(N.mat[ii,jj]*N.mat[ii,kk])*cov.mat.list[[ii]][jj,kk]);
+##                 covG[kk,jj] <- covG[jj,kk];
+##                 nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(rm.na(N.mat[ii,jj])*rm.na(N.mat[ii,kk]));
+##                 nSample.covG[kk,jj] <- nSample.covG[jj,kk];
+##             }
+##         }
+##     }
+    
+##     covG.ori <- covG;    
+##     covG <- (covG/nSample.covG);
+##     ## ix.missing <- which(is.na(covG),arr.ind=TRUE);
+##     N.meta.ori <- apply(N.mat,2,sum,na.rm=T);
+##     N.meta <- apply(nSample.covG,1,max,na.rm=T);
+##     N.meta <- rep(max(N.meta),length(U.imp));
+##     V.imp <- covG*max(N.meta);
+##     ustat.list.imp <- ustat.list;
+##     vstat.list.imp <- vstat.list;
+##     cov.mat.list.imp <- cov.mat.list;
+##     V.list <- list();
+##     impState <- matrix(0,nrow=length(ustat.list),ncol=length(ustat.list[[1]]));
+##     U.meta.imp <- 0;V.meta.imp <- 0;
+##     for(ii in 1:length(ustat.list)) {
+##         ix.miss <- intersect(which(is.na(ustat.list[[ii]])),ix.known);
+##         U.meta.imp <- U.meta.imp+rm.na(ustat.list[[ii]]);
+        
+##         if(length(ix.miss)>0) {
+##             impState[ii,ix.miss] <- 1;
+##             cov.mat.list.imp[[ii]][ix.miss,] <- covG[ix.miss,];
+##             cov.mat.list.imp[[ii]][,ix.miss] <- covG[,ix.miss];           
+##             vstat.list.imp[[ii]][ix.miss] <- sqrt(diag(cov.mat.list.imp[[ii]])[ix.miss]*max(rm.na(N.mat[ii,])));
+##             if(is.null(beta.vec)) {
+##                 ustat.list.imp[[ii]][ix.miss] <- (U.imp[ix.miss])/(diag(covG.ori)[ix.miss])*(vstat.list.imp[[ii]][ix.miss])^2;
+##             }
+##             if(!is.null(beta.vec)) {
+##                 ustat.list.imp[[ii]][ix.miss] <- beta.vec[ix.miss]*vstat.list.imp[[ii]][ix.miss]^2;
+##             }
+##         }
+##         Id <- matrix(0,nrow=nrow(cov.mat.list.imp[[ii]]),ncol=ncol(cov.mat.list.imp[[ii]]));
+##         diag(Id) <- 1;
+##         cov.mat.list.imp[[ii]] <- cov.mat.list.imp[[ii]]+lambda*Id;
+##         V.list[[ii]] <- cov.mat.list.imp[[ii]]*max(rm.na(N.mat[ii,]));
+##     }
+##     U.meta.imp <- U.meta.imp*(rm.na(N.meta/N.meta.ori));
+##     V.tmp <- diag(sqrt(N.meta))%*%covG%*%diag(sqrt(N.meta))
+##     beta.imp <- ginv(V.tmp)%*%U.meta.imp;
+##     scalar <- matrix(0,nrow=length(ustat.list[[1]]),ncol=length(ustat.list[[1]]));
+##     diag(scalar) <- (rm.na(N.meta/N.meta.ori));
+    
+##     cov.U.meta.imp <- scalar%*%covG.ori%*%scalar;
+##     cov.beta.imp <- ginv(V.tmp)%*%cov.U.meta.imp%*%ginv(V.tmp);
+##     V.meta.imp <- ginv(cov.beta.imp);
+##     U.meta.imp <- V.meta.imp%*%beta.imp;
+##     return(list(covG=covG,
+##                 nSample.covG=nSample.covG,
+##                 V.imp=V.imp,
+##                 U.imp=U.imp,
+##                 V.list=V.list,
+##                 impState=impState,
+##                 N.mat=N.mat.imp,
+##                 U.meta.imp=U.meta.imp,
+##                 V.meta.imp=V.meta.imp,
+##                 ustat.list.imp=ustat.list.imp,
+##                 vstat.list.imp=vstat.list.imp,
+##                 cov.mat.list.imp=cov.mat.list.imp,
+##                 N.vec=apply(N.mat,1,max,na.rm=T),
+##                 N.meta=N.meta));
+## }
+
 #' Impute missing summary association statistics assuming
 #'
 #' @param ustat.list the score statistics;
@@ -387,10 +476,12 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
     covG <- matrix(0,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
     nSample.covG <- covG;
     N.mat.imp <- N.mat;
+    U.meta <- 0;
     for(ii in 1:length(ustat.list))
     {
         N.mat.imp[ii,] <- max(rm.na(N.mat[ii,]));
-        U.imp <- U.imp+rm.na(ustat.list[[ii]]);
+        U.meta <- U.meta+rm.na(ustat.list[[ii]]);
+        
         nSample.U <- nSample.U+rm.na(N.mat[ii,]);
         for(jj in 1:length(ustat.list[[1]]))
         {
@@ -401,53 +492,130 @@ imputeMeta <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix
                 nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(rm.na(N.mat[ii,jj])*rm.na(N.mat[ii,kk]));
                 nSample.covG[kk,jj] <- nSample.covG[jj,kk];
             }
-            
         }
     }
+    
     covG.ori <- covG;    
     covG <- (covG/nSample.covG);
+    corG <- cov2cor(covG);
+    Id <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
+    diag(Id) <- 1;
+    ##corG.reg <- corG+lambda*Id;
+    ##sdG <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
+    ##diag(sdG) <- sqrt(diag(as.matrix(covG)));
+    ##covG.reg <- sdG%*%corG.reg%*%sdG;
+    
     ## ix.missing <- which(is.na(covG),arr.ind=TRUE);
-    N.meta <- apply(nSample.covG,1,max,na.rm=T);
-    N.meta <- rep(max(N.meta),length(U.imp));
-    V.imp <- covG*max(N.meta);
-    ustat.list.imp <- ustat.list;
-    vstat.list.imp <- vstat.list;
-    cov.mat.list.imp <- cov.mat.list;
-    V.list <- list();
-    impState <- matrix(0,nrow=length(ustat.list),ncol=length(ustat.list[[1]]));
-    for(ii in 1:length(ustat.list)) {
-        ix.miss <- intersect(which(is.na(ustat.list[[ii]])),ix.known);
-        ####print(c('study',ii));
-        ####print(ix.miss);
-        if(length(ix.miss)>0) {
-            impState[ii,ix.miss] <- 1;
-            cov.mat.list.imp[[ii]][ix.miss,] <- covG[ix.miss,];
-            cov.mat.list.imp[[ii]][,ix.miss] <- covG[,ix.miss];
-            
-            vstat.list.imp[[ii]][ix.miss] <- sqrt(diag(cov.mat.list.imp[[ii]])[ix.miss]*max(rm.na(N.mat[ii,])));
-            
-            if(is.null(beta.vec)) {
-                ustat.list.imp[[ii]][ix.miss] <- (U.imp[ix.miss])/(diag(covG.ori)[ix.miss])*(vstat.list.imp[[ii]][ix.miss])^2;
-            }
-            if(!is.null(beta.vec)) {
-                ustat.list.imp[[ii]][ix.miss] <- beta.vec[ix.miss]*vstat.list.imp[[ii]][ix.miss]^2;
-            }
-        }
-        Id <- matrix(0,nrow=nrow(cov.mat.list.imp[[ii]]),ncol=ncol(cov.mat.list.imp[[ii]]));
-        diag(Id) <- 1;
-        cov.mat.list.imp[[ii]] <- cov.mat.list.imp[[ii]]+lambda*Id;
-        V.list[[ii]] <- cov.mat.list.imp[[ii]]*max(rm.na(N.mat[ii,]));
-    }    
+    N.meta.ori <- apply(N.mat,2,sum,na.rm=T);
+    ##N.meta <- apply(nSample.covG,1,max,na.rm=T);
+    N.meta <- rep(max(N.meta.ori),length(N.meta.ori));
+    U.meta.imp <- U.meta*(rm.na(N.meta/N.meta.ori));
+    V.tmp <- diag(sqrt(N.meta))%*%covG%*%diag(sqrt(N.meta))
+    beta.imp <- ginv(V.tmp)%*%U.meta.imp;
+    scalar <- matrix(0,nrow=length(ustat.list[[1]]),ncol=length(ustat.list[[1]]));
+    diag(scalar) <- (rm.na(N.meta/N.meta.ori));    
+    cov.U.meta.imp <- scalar%*%covG.ori%*%scalar;
+    cov.beta.imp <- ginv(V.tmp)%*%cov.U.meta.imp%*%ginv(V.tmp);
+    V.meta.imp <- ginv(cov.beta.imp);
+    
+    U.meta.imp <- V.meta.imp%*%beta.imp;
+    ## cor.meta.imp <- cov2cor(V.meta.imp)+lambda*Id;
+    ## sd.meta.imp <- matrix(0,nrow=nrow(covG),ncol=ncol(covG));
+    ## diag(sd.meta.imp) <- sqrt(diag(V.meta.imp));
+    ## V.meta.imp <- sd.meta.imp%*%cor.meta.imp%*%sd.meta.imp;
+    
     return(list(covG=covG,
                 nSample.covG=nSample.covG,
-                V.imp=V.imp,
-                U.imp=U.imp,
-                V.list=V.list,
-                impState=impState,
-                N.mat=N.mat.imp,
-                ustat.list.imp=ustat.list.imp,
-                vstat.list.imp=vstat.list.imp,
-                cov.mat.list.imp=cov.mat.list.imp,
-                N.vec=apply(N.mat,1,max,na.rm=T),
-                N.meta=N.meta));
+                N.mat.imp=N.mat.imp,
+                ##covG.reg=covG.reg,
+                N.meta.ori=N.meta.ori,
+                N.meta=N.meta,
+                scalar.diag=diag(scalar),
+                U.meta.imp=U.meta.imp,
+                V.meta.imp=V.meta.imp,
+                N.meta.imp=N.meta));
+}
+
+
+
+#' Impute missing summary association statistics assuming
+#'
+#' @param ustat.list the score statistics;
+#' @param vstat.list the vstat list;
+#' @param cov.mat.list the list of the covariance matrix
+#' @param N.mat the matrix of sample sizes;each row for a study and each column for a variant site;
+#' @export
+imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix.candidate,ix.known) {
+    U.imp <- 0;nSample.U <- 0;
+    covG <- matrix(0,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
+    nSample.covG <- covG;
+    N.mat.imp <- N.mat;
+    U.meta <- 0;
+    for(ii in 1:length(ustat.list))
+    {
+        N.mat.imp[ii,] <- max(rm.na(N.mat[ii,]));
+        U.meta <- U.meta+rm.na(ustat.list[[ii]]);
+        
+        nSample.U <- nSample.U+rm.na(N.mat[ii,]);
+        for(jj in 1:length(ustat.list[[1]]))
+        {
+            for(kk in 1:jj)
+            {
+                covG[jj,kk] <- covG[jj,kk]+rm.na(sqrt(N.mat[ii,jj]*N.mat[ii,kk])*cov.mat.list[[ii]][jj,kk]);
+                covG[kk,jj] <- covG[jj,kk];
+                nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(rm.na(N.mat[ii,jj])*rm.na(N.mat[ii,kk]));
+                nSample.covG[kk,jj] <- nSample.covG[jj,kk];
+            }
+        }
+    }
+    U.meta <- U.meta/nSample.U;
+    U.XY <- U.meta[ix.candidate];
+    U.ZY <- U.meta[ix.known];
+    covG <- covG/nSample.covG;
+    V.XZ <- matrix(covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
+    V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
+    V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
+    conditional.ustat <- U.XY-V.XZ%*%ginv(V.ZZ)%*%U.ZY;
+    
+    var.U.XY <- V.XX/(nSample.covG[ix.candidate,ix.candidate]);
+    var.U.ZY <- V.ZZ/(nSample.covG[ix.known,ix.known]);
+    cov.U.XY.U.ZY <- V.XZ/matrix(nSample.covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
+    print(cov.U.XY.U.ZY);
+    print(t(V.XZ%*%ginv(V.ZZ)))
+    conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
+    ##conditional.V <- regMat(conditional.V,0.1);
+
+
+
+    
+    ##rescale it to match other studies;
+
+    conditional.ustat <- conditional.ustat*(nSample.U[ix.candidate]);
+    tmp <- matrix(0,nrow=length(ix.candidate),ncol=length(ix.candidate));
+    diag(tmp) <- nSample.U[ix.candidate];
+    conditional.V <- tmp%*%conditional.V%*%tmp;
+
+    
+    return(list(conditional.ustat=conditional.ustat,
+                conditional.V=conditional.V));
+    ## return(list(covG=covG,
+    ##             nSample.covG=nSample.covG,
+    ##             N.mat.imp=N.mat.imp,
+    ##             ##covG.reg=covG.reg,
+    ##             N.meta.ori=N.meta.ori,
+    ##             N.meta=N.meta,
+    ##             scalar.diag=diag(scalar),
+    ##             U.meta.imp=U.meta.imp,
+    ##             V.meta.imp=V.meta.imp,
+    ##             N.meta.imp=N.meta));
+}
+regMat <- function(M,lambda) {
+    cor.tmp <- cov2cor(M);
+    sd.mat <- matrix(0,nrow=nrow(M),ncol=ncol(M));
+    id.mat <- matrix(0,nrow=nrow(M),ncol=ncol(M));
+    diag(id.mat) <- 1;
+    diag(sd.mat) <- sqrt(abs(diag(M)));
+    cor.tmp <- cor.tmp+lambda*id.mat;
+    M.reg <- sd.mat%*%(cor.tmp)%*%sd.mat;
+    return(M.reg);
 }

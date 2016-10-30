@@ -6,20 +6,20 @@ conditional.rareMETALS.gene.basic <- function(ANNO,score.stat.file,cov.file,gene
     ##res.find <- find.gene(variant.list,window.size);
     ## range.vec <- res.find$range.vec;
     ## gene.name <- res.find$gene.vec;
-    ######################################################################################################################print(gene);
+    ########################################################################################################################print(gene);
     gene.name <- gene;
     tabix.gene <- find.gene.chrpos(gene);
-    ######################################################################################################################print(tabix.gene);
+    ########################################################################################################################print(tabix.gene);
     tabix.known.variant <- get.tabix.range(known.variant.vec);
-    ######################################################################################################################print(tabix.known.variant);
+    ########################################################################################################################print(tabix.known.variant);
     range.vec <- paste(tabix.gene,tabix.known.variant,sep=",");
-    ######################################################################################################################print(range.vec);
+    ########################################################################################################################print(range.vec);
     raw.data.all <- list();
     for(ii in 1:length(range.vec))
       {
         capture.output(raw.data.all[[ii]] <- rvmeta.readDataByRange( score.stat.file, cov.file,range.vec[ii])[[1]]);
       }
-    ######################################################################################################################print(raw.data.all);
+    ########################################################################################################################print(raw.data.all);
     res.null <- list(gene.name=NA,
                      p.value=NA,
                      statistic=NA,
@@ -74,14 +74,14 @@ conditional.rareMETALS.gene.basic <- function(ANNO,score.stat.file,cov.file,gene
         ix.var <- sort(unique(ix.var));
         ix.tmp <- match(variant.list,(raw.data$pos)[ix.var]);
         ix.var <- c(ix.var[-ix.tmp],ix.var[ix.tmp]);##make sure the last few variants are to be conditioned on;
-        ######################################################################################################################print(c(length(ix.var),length(ix.tmp)));
+        ########################################################################################################################print(c(length(ix.var),length(ix.tmp)));
         if(length(ix.var)==length(ix.tmp))
           {
             res.null$gene.name <- gene.name[kk];
             res[[kk]] <- res.null;
           }
         if(length(ix.var)>length(ix.tmp)) {
-          ######################################################################################################################print("this is exec");
+          ########################################################################################################################print("this is exec");
           ix.pop <- 1:length(raw.data$nSample);
           score.stat.vec.list <- list();mac.vec.list <- list();maf.vec.list <- list();cov.mat.list <- list();var.Y.list <- list();N.list <- list();mean.Y.list <- list();pos.list <- list();anno.list <- list();ac.vec.list <- list();af.vec.list <- list();
           ref.list <- list();
@@ -177,7 +177,7 @@ conditional.rareMETALS.gene.basic <- function(ANNO,score.stat.file,cov.file,gene
           
           if(length(ix.rare)==length(ix.tmp))
             {
-              ######################################################################################################################print(c(length(ix.rare),length(ix.tmp)));
+              ########################################################################################################################print(c(length(ix.rare),length(ix.tmp)));
               res.null$gene.name <- gene.name[kk];
               res[[kk]] <- res.null;
             }

@@ -29,7 +29,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
     tabix.candidate.variant <- get.tabix.range(candidate.variant.vec);
     tabix.all <- paste(tabix.known.variant,tabix.candidate.variant,collapse=",",sep=",");
     raw.data.all <- list();
-    ##################################print('reading data');
+    ####################################print('reading data');
     capture.output(raw.data.all[[1]] <- rvmeta.readDataByRange( score.stat.file, cov.file,tabix.all)[[1]]);
     res.null <- list(gene.name=NA,
                      p.value=NA,
@@ -80,7 +80,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
         ix.var <- c(ix.var,match(known.variant.vec,raw.data$pos));
         ix.var <- sort(unique(ix.var));
         ix.tmp <- match(known.variant.vec,(raw.data$pos)[ix.var]);
-        ##################################print(c('ix.tmp',ix.tmp));
+        ####################################print(c('ix.tmp',ix.tmp));
         ix.var <- c(ix.var[-ix.tmp],ix.var[ix.tmp]);##make sure the last few variants are to be conditioned on;
         if(length(ix.var)==length(ix.tmp))
           {
@@ -99,7 +99,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
           ac.mat <- N.mat;
           for(ii in 1:length(ix.pop))
             {
-                ##########################print(ii);
+                ############################print(ii);
                 N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
                 N.mat[ii,] <- raw.data$nSample[[ii]][ix.var];
                 no.sample <- no.sample+N.list[[ii]];
@@ -120,7 +120,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
             }
           ix.match <- match(raw.data$pos[ix.var],refaltList$pos);
           ref.gold <- refaltList$ref[ix.match];alt.gold <- refaltList$alt[ix.match];af.gold <- refaltList$af[ix.match];checkAF <- refaltList$checkAF;anno.gold <- refaltList$anno[ix.match];pos.gold <- refaltList$pos[ix.match];
-          ##################################print(c('pos.gold',pos.gold));
+          ####################################print(c('pos.gold',pos.gold));
           if(length(checkAF)==0) checkAF <- FALSE;
           refaltList <- list(ref=ref.gold,alt=alt.gold,af=af.gold,checkAF=checkAF,af.diff.max=refaltList$af.diff.max,anno=anno.gold,pos=pos.gold);
           
