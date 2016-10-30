@@ -583,7 +583,11 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     print(cov.U.XY.U.ZY);
     print(t(V.XZ%*%ginv(V.ZZ)))
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-2*cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ));
+    conditional.V <- regMat(conditional.V,0.1);
 
+
+
+    
     ##rescale it to match other studies;
 
     conditional.ustat <- conditional.ustat*(nSample.U[ix.candidate]);
@@ -604,4 +608,14 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     ##             U.meta.imp=U.meta.imp,
     ##             V.meta.imp=V.meta.imp,
     ##             N.meta.imp=N.meta));
+}
+regMat <- function(M,lambda) {
+    cor.tmp <- cov2cor(M);
+    sd.mat <- matrix(0,nrow=nrow(M),ncol=ncol(M));
+    id.mat <- matrix(0,nrow=nrow(M),ncol=ncol(M));
+    diag(id.mat) <- 1;
+    diag(sd.mat) <- sqrt(abs(diag(M)));
+    cor.tmp <- cor.tmp+lambda*id.mat;
+    M.reg <- sd.mat%*%(cor.tmp)%*%sd.mat;
+    return(M.reg);
 }
