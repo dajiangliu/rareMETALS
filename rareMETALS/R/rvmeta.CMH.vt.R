@@ -40,6 +40,7 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
     if(maf.TH[1]==0) {maf.TH <- maf.TH[-1];}
     if(length(maf.TH)==0)
         {
+            print('return here length(maf.TH)==0');
             ####################################################print("MAF.TH =0");
             return(list(p.value=NA,statistic=NA,maf.cutoff=0,mac.cutoff=0,no.site.VT=length(which(mac.vec==0))));
         }
@@ -65,6 +66,7 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
             statistic <- U.stat/sqrt(V.stat.sq);
             p.value <- pnorm(statistic,lower.tail=TRUE);
           }
+        print('return 1 maf.TH');
         return(list(p.value=p.value,
                     statistic=statistic,
                     maf.cutoff=maf.TH,
@@ -155,6 +157,7 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
       if(1)
         {
           a <- Sys.time();
+          print(c('vt.max.stat',vt.max.stat));
           if(!is.na(vt.max.stat)){
             p.value.analytic <- pvt(vt.max.stat,mu=rep(0,nrow(cor.X.VT)),sigma=cor.X.VT,alternative);
           }
@@ -183,15 +186,14 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
         }
   }
     if(length(vt.max.stat)==0) {
-        ####################################################print("length(vt.max.stat)==0");
+        
         vt.max.stat <- NA;
         p.value.analytic <- NA;
         maf.cutoff <- maf.TH.old[length(maf.TH.old)];
     }
     p.value.boot <- p.value;
     p.value <- p.value.analytic;
-    ##############################################################################print("in rvmeta.CMH.vt");
-    ##############################################################################print(dim(X.T.times.X));
+    
     return(list(statistic=vt.max.stat,
                 p.value=p.value,
                 p.value.boot=p.value.boot,
