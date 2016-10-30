@@ -576,12 +576,19 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
     V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
     conditional.ustat <- U.XY-V.XZ%*%ginv(V.ZZ)%*%U.ZY;
+    
     var.U.XY <- V.XX/(nSample.covG[ix.candidate,ix.candidate]);
     var.U.ZY <- V.ZZ/(nSample.covG[ix.known,ix.known]);
     cov.U.XY.U.ZY <- V.XZ/matrix(nSample.covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     print(cov.U.XY.U.ZY);
     print(t(V.XZ%*%ginv(V.ZZ)))
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-2*cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ));
+
+    ##rescale it to match other studies;
+
+    conditional.ustat <- conditional.ustat*(nSample.U[ix.candidate]);
+    conditional.V <- t(nSample.U[ix.candidate])%*%conditional.V%*%(nSample.U[ix.candidate]);
+
     
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V));
