@@ -216,6 +216,8 @@ rvmeta.CMH.vt <- function(X.T.times.Y.centered.list,X.T.times.X.list,mac.vec,cov
 pmaxnorm <- function(x,mu,sigma)
   {
     tmp <- try(as.numeric(pmvnorm(upper=rep(x,length(mu)),lower=rep(-Inf,length(mu)),mu,sigma)),silent=TRUE);
+    print('try pmvnorm');
+    print(tmp);
     if(length(attr(tmp,'class'))>0) return(NA);
     return(tmp);
   }
