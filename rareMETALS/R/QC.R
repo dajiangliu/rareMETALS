@@ -583,7 +583,7 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     ##print(cov.U.XY.U.ZY);
     ##print(t(V.XZ%*%ginv(V.ZZ)))
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
-    ##conditional.V <- regMat(conditional.V,0.1);
+    conditional.V <- regMat(conditional.V,0.1);
 
 
 
