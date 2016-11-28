@@ -90,6 +90,7 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
                 conditional.V=V));
     
 }
+
 #' This is the function to obtain conditional score statistics when conditional on the genes that are detected by SKAT test;
 #'
 #' @param ustat The non-standardized score statistics

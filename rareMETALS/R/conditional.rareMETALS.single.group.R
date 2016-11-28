@@ -167,7 +167,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 N.mat <- af.mat;
                 ref.list <- list();
                 alt.list <- list();V.list <- list();
-                ##################print(raw.data$afCase[[1]]);
+
                 for(ii in 1:length(ix.pop))
                     {   
                         if(length(raw.data$covXZ[[ii]])>0) {
@@ -211,7 +211,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
 
                 if(impMissing==TRUE) {
                     res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.known);
-                    ##########print('impute okay');
+
                     ustat.list <- res.impute$ustat.list.imp;
                     vstat.list <- res.impute$vstat.list.imp;
                     V.list <- res.impute$V.list;
@@ -219,23 +219,14 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     impState <- res.impute$impState;
                     cov.mat.list <- res.impute$cov.mat.list.imp;
                 }
-                ##########print(res.impute);
-                ## res.impMeta <- get.conditional.score.stat(rm.na(res.impute$ustat.list.imp[[jj]]),rm.na(res.impute$V.list[[jj]]),res.impute$N.mat.imp[jj,],ix.X1,ix.X2,res.impute$impState[jj,]);
-                ## conditional.U.all.imp <- conditional.U.all.imp+as.numeric(res.impMeta$conditional.ustat);
-                ## conditional.V.all.imp <- conditional.V.all.imp+as.numeric(res.impMeta$conditional.V);
                 
                 for(ii in 1:length(ix.pop)) {                               
-                    ## ustat.tmp <- raw.data$ustat[[ii]];
-                    ## ustat.tmp[ix.known] <- rm.na(raw.data$ustat[[ii]][ix.known]);               
                     ustat.tmp <- ustat.list[[ii]];
                     if(knownCoding=="identity") {
                         if(impMissing==TRUE)
                             res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,res.impute$impState[ii,])
                         if(impMissing==FALSE)
-                            res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,NULL)
-
-                        ##########print("condition okay");
-                        
+                            res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,NULL)                        
                         conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
                     }
@@ -251,12 +242,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
                         
                     }
-                    ## if(knownCoding=="randomEffect") {
-                    ##     res.tmp <- get.conditional.score.stat.RE(ustat.tmp,cov.mat.ii*N.list[[ii]],N.list[[ii]],ix.candidate,ix.known);
-                    ##     conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
-                    ##     conditional.V.ii <- as.numeric(res.tmp$conditional.V);
-                    ## }
-                    
+                       
                     conditional.U.all <- conditional.U.all+rm.na(conditional.U.ii);
                     conditional.V.all <- conditional.V.all+rm.na(conditional.V.ii);
                     
@@ -281,16 +267,14 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     ##########print(c(ii,'okay'));
                 }          
                 
-                ## ## make use of imputed statistics in meta-analyses
-                ## if(impMissing==TRUE) {
-                ##     res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat);
-                ##     res.impMeta <- get.conditional.score.stat(res.impute$U.imp,res.impute$V.imp,res.impute$N.meta,ix.candidate,ix.known)
-                ##     conditional.U.all <- as.numeric(res.impMeta$conditional.ustat);
-                ##     conditional.V.all <- as.numeric(res.impMeta$conditional.V);
-                ## }
-                 statistic <- conditional.U.all/sqrt(conditional.V.all);
-                
-                
+                ## make use of imputed statistics in meta-analyses
+                if(impMissing==TRUE) {
+                    res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.candidate,ix.known);
+                    conditional.U.all <- as.numeric(res.impute$conditional.ustat);
+                    conditional.V.all <- as.numeric(res.impute$conditional.V);
+                }
+                statistic <- conditional.U.all/sqrt(conditional.V.all);
+                                
                 if(alternative=="two.sided") {
                     
                     statistic <- statistic^2;
