@@ -582,7 +582,7 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     cov.U.XY.U.ZY <- V.XZ/matrix(nSample.covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
     ##sigma.sq.est <- 1-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
-    sigma.sq.est <- 1-(t(U.ZY)%*%ginv(var.U.ZY)%*%U.ZY);
+    sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
     conditional.V <- conditional.V*sigma.sq.est;
 
     lambda <- 0.1;
