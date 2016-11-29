@@ -576,15 +576,15 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
     V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
     conditional.ustat <- U.XY-V.XZ%*%ginv(V.ZZ)%*%U.ZY;
-    
+    beta.ZY <- ginv(V.ZZ)%*%U.ZY;
     var.U.XY <- V.XX/(nSample.covG[ix.candidate,ix.candidate]);
     var.U.ZY <- V.ZZ/(nSample.covG[ix.known,ix.known]);
     cov.U.XY.U.ZY <- V.XZ/matrix(nSample.covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
     lambda <- 0.1;
-    frac.missing <- mean(is.na(N.mat[,ix.known]));
+    lambda <- mean(is.na(N.mat[,ix.known]))+median(abs(beta.ZY));
     ##lambda <- 0.3;
-    conditional.V <- regMat(conditional.V,frac.missing);
+    conditional.V <- regMat(conditional.V,lambda);
     
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V));
