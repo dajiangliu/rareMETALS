@@ -590,6 +590,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V,
+                U.ZY=U.ZY,
+                var.U.ZY=var.U.ZY,
                 sigma.sq.est=sigma.sq.est));
 }
 regMat <- function(M,lambda) {
