@@ -589,7 +589,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     conditional.V <- regMat(conditional.V,lambda);
     
     return(list(conditional.ustat=conditional.ustat,
-                conditional.V=conditional.V));
+                conditional.V=conditional.V,
+                sigma.sq.est=sigma.sq.est));
 }
 regMat <- function(M,lambda) {
     cor.tmp <- cov2cor(M);
