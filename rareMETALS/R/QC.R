@@ -657,9 +657,9 @@ imputeConditional.tmp <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.
     beta.diff <- beta.obs-beta.exp;
     
     ##sigma.sq.est <- 1-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
-    ##sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
+    sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
     ##conditional.V <- conditional.V*sigma.sq.est;
-    var.beta.obs.beta.exp <- var.beta.obs.beta.exp;
+    var.beta.obs.beta.exp <- var.beta.obs.beta.exp*sigma.sq.est;
     conditional.ustat <- ginv(var.beta.obs.beta.exp)%*%beta.diff
     conditional.V <- ginv(var.beta.obs.beta.exp);
     ## lambda <- 0.1;
