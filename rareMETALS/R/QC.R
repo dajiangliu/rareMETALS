@@ -668,6 +668,8 @@ imputeConditional.tmp <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V,
                 U.ZY=U.ZY,
+                U.XY=U.XY,
+                V.XX=V.XX,
                 beta.obs=beta.obs,
                 covG=covG,
                 beta.exp=beta.exp,
