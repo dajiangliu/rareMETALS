@@ -209,24 +209,11 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 }
                 impState <- NULL;
 
-                if(impMissing==TRUE) {
-                    res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.known);
-
-                    ustat.list <- res.impute$ustat.list.imp;
-                    vstat.list <- res.impute$vstat.list.imp;
-                    V.list <- res.impute$V.list;
-                    N.mat <- res.impute$N.mat;
-                    impState <- res.impute$impState;
-                    cov.mat.list <- res.impute$cov.mat.list.imp;
-                }
                 
                 for(ii in 1:length(ix.pop)) {                               
                     ustat.tmp <- ustat.list[[ii]];
                     if(knownCoding=="identity") {
-                        if(impMissing==TRUE)
-                            res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,res.impute$impState[ii,])
-                        if(impMissing==FALSE)
-                            res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,NULL)                        
+                        res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,NULL)                        
                         conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
                     }
@@ -264,33 +251,27 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     ref.list[[ii]] <- refaltList$ref;
                     alt.list[[ii]] <- refaltList$alt;
                     anno.list[[ii]] <- refaltList$anno;
-                    ##########print(c(ii,'okay'));
                 }          
                 
-                ## make use of imputed statistics in meta-analyses
                 if(impMissing==TRUE) {
                     res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.candidate,ix.known);
                     conditional.U.all <- as.numeric(res.impute$conditional.ustat);
                     conditional.V.all <- as.numeric(res.impute$conditional.V);
                 }
-                statistic <- conditional.U.all/sqrt(conditional.V.all);
-                                
+                statistic <- conditional.U.all/sqrt(conditional.V.all);                                
                 if(alternative=="two.sided") {
                     
                     statistic <- statistic^2;
                     p.value <- pchisq(statistic,df=1,lower.tail=FALSE);
                 }
-                ##########print(c(statistic,p.value));
+                
                 beta1.est <- conditional.U.all/conditional.V.all;
                 beta1.sd <- sqrt(1/conditional.V.all);
                 maf.vec <- rep(0,length(af.vec.list[[1]]));
                 af.vec <- maf.vec;            
                 mac.vec <- 0;
                 ac.vec <- 0;
-                ##########print('af.mat');
-                ##########print(af.mat);
-                ##########print('N.mat');
-                ##########print(N.mat);
+                
                 af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
                 ac.vec <- colSums(ac.mat,na.rm=TRUE);
                 N.vec <- colSums(N.mat,na.rm=TRUE);
