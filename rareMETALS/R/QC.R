@@ -578,8 +578,6 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
     conditional.ustat <- U.XY-V.XZ%*%ginv(V.ZZ)%*%U.ZY;
     beta.ZY <- ginv(V.ZZ)%*%U.ZY;
-    ##var.U.XY <- V.XX/(nSample.covG[ix.candidate,ix.candidate]);
-    ##var.U.ZY <- V.ZZ/(nSample.covG[ix.known,ix.known]);
     scaleMat <- as.matrix(diag(as.matrix(nSample.covG))%*%t(diag(as.matrix(nSample.covG))));
     var.U.XY <- covG.ori[ix.candidate,ix.candidate]/(scaleMat[ix.candidate,ix.candidate]);
     var.U.ZY <- covG.ori[ix.known,ix.known]/(scaleMat[ix.known,ix.known]);
@@ -588,8 +586,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     ##sigma.sq.est <- 1-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
     sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
     ##conditional.V <- conditional.V;
-
-    lambda <- 0.1;
+    frac.missing <- min(colSums(N.mat,na.rm=T))/max(colSums(N.mat,na.rm=T));
+    lambda <- frac.missing/2;
     conditional.V <- regMat(conditional.V,lambda);
     
     return(list(conditional.ustat=conditional.ustat,
