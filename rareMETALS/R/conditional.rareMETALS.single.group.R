@@ -298,9 +298,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
         res.single.out <- cbind(matrix(unlist(strsplit(pos.single.out,split=":")),ncol=2,byrow=TRUE),ref.single.out,alt.single.out,N.vec[ix.candidate],p.value.single.out,af.single.out,beta1.est.single.out,beta1.sd.single.out,direction.single.out,pos.ref.alt.known.single.out,log.out,note);
         colnames(res.single.out) <- c("CHROM","POS","REF","ALT","SAMPLESIZE","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION","POS_REF_ALT_KNOWN","LOG","NOTE");
         return(list(res=res.extra,
-                    res.out=res.single.out));
-        
-        
+                    res.out=res.single.out));        
     }
 r2cov.mat <- function(r2.mat,maf.vec)
     {
