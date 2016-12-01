@@ -588,8 +588,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     lambda <- .1;
     conditional.V <- regMat(conditional.V,lambda);
     N.out <- sum(apply(N.mat.imp,1,max,na.rm=T));
-    conditional.ustat <- conditional.ustat*N;
-    conditional.V <- conditional.V*N^2;
+    conditional.ustat <- conditional.ustat*N.out;
+    conditional.V <- conditional.V*N.out^2;
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V,
                 U.ZY=U.ZY,
