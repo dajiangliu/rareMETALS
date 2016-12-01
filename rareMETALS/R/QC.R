@@ -673,6 +673,7 @@ imputeConditional.tmp <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.
                 var.U.XY=var.U.XY,
                 var.U.ZY=var.U.ZY,
                 beta.obs=beta.obs,
+                var.beta.obs.beta.exp=var.beta.obs.beta.exp,
                 covG=covG,
                 beta.exp=beta.exp,
                 sigma.sq.est=sigma.sq.est,
