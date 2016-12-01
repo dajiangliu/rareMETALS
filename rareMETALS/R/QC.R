@@ -571,22 +571,27 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     U.meta <- U.meta/nSample.U;
     U.XY <- U.meta[ix.candidate];
     U.ZY <- U.meta[ix.known];
+    covG.ori <- covG;
     covG <- covG/nSample.covG;
     V.XZ <- matrix(covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
     V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
     conditional.ustat <- U.XY-V.XZ%*%ginv(V.ZZ)%*%U.ZY;
     beta.ZY <- ginv(V.ZZ)%*%U.ZY;
-    var.U.XY <- V.XX/(nSample.covG[ix.candidate,ix.candidate]);
-    var.U.ZY <- V.ZZ/(nSample.covG[ix.known,ix.known]);
-    cov.U.XY.U.ZY <- V.XZ/matrix(nSample.covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
+    ##var.U.XY <- V.XX/(nSample.covG[ix.candidate,ix.candidate]);
+    ##var.U.ZY <- V.ZZ/(nSample.covG[ix.known,ix.known]);
+    scaleMat <- as.matrix(diag(as.matrix(nSample.covG))%*%t(diag(as.matrix(nSample.covG))));
+    var.U.XY <- covG.ori/(scaleMat[ix.candidate,ix.candidate]);
+    var.U.ZY <- covG.ori/(scaleMat[ix.known,ix.known]);
+
+    cov.U.XY.U.ZY <- covG.ori/matrix(scaleMat[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
     ##sigma.sq.est <- 1-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
     sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
-    ##conditional.V <- conditional.V*sigma.sq.est;
+    conditional.V <- conditional.V*sigma.sq.est;
 
-    lambda <- 0.1;
-    conditional.V <- regMat(conditional.V,lambda);
+    #lambda <- 0.1;
+    #conditional.V <- regMat(conditional.V,lambda);
     
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V,
@@ -657,19 +662,13 @@ imputeConditional.tmp <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.
     beta.obs <- ginv(V.XX)%*%U.XY;
     beta.exp <- ginv(V.XX)%*%V.XZ%*%ginv(V.ZZ)%*%U.ZY;
     var.beta.obs.beta.exp <- ginv(V.XX)%*%var.U.XY%*%ginv(V.XX)+ginv(V.XX)%*%V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX)-ginv(V.XX)%*%cov.U.XY.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX)-t(ginv(V.XX)%*%cov.U.XY.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX));
-    beta.diff <- beta.obs-beta.exp;
 
-    ## print('beta.obs');
-    ## print(ginv(V.XX)%*%var.U.XY%*%ginv(V.XX));
-    
-    ##sigma.sq.est <- 1-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
+    beta.diff <- beta.obs-beta.exp;
     sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
-    ##conditional.V <- conditional.V*sigma.sq.est;
+
     var.beta.obs.beta.exp <- var.beta.obs.beta.exp*sigma.sq.est;
     conditional.ustat <- ginv(var.beta.obs.beta.exp)%*%beta.diff
     conditional.V <- ginv(var.beta.obs.beta.exp);
-    ## lambda <- 0.1;
-    ## conditional.V <- regMat(conditional.V,lambda);
     
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V,
