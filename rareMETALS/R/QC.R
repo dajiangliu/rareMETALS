@@ -649,8 +649,11 @@ imputeConditional.tmp <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.
     beta.ZY <- ginv(V.ZZ)%*%U.ZY;
     var.U.XY <- V.XX/(nSample.covG[ix.candidate,ix.candidate]);
     var.U.ZY <- V.ZZ/(nSample.covG[ix.known,ix.known]);
-    cov.U.XY.U.ZY <- V.XZ/matrix(nSample.covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
-    conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
+    ##cov.U.XY.U.ZY <- V.XZ/matrix(nSample.covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
+    nCov.mat <- matrix((diag(as.matrix(nSample.covG))[ix.candidate])%*%t(diag(as.matrix(nSample.covG))[ix.known]),nrow=length(ix.candidate),ncol=length(ix.known));
+    cov.U.XY.U.ZY <- matrix((nSample.covG[ix.candidate,ix.known])*(covG[ix.candidate,ix.known])/nCov.mat,nrow=length(ix.candidate),ncol=length(ix.known));
+    
+    ##conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
     beta.obs <- ginv(V.XX)%*%U.XY;
     beta.exp <- ginv(V.XX)%*%V.XZ%*%ginv(V.ZZ)%*%U.ZY;
     var.beta.obs.beta.exp <- ginv(V.XX)%*%var.U.XY%*%ginv(V.XX)+ginv(V.XX)%*%V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX)-ginv(V.XX)%*%cov.U.XY.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX)-t(ginv(V.XX)%*%cov.U.XY.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX));
