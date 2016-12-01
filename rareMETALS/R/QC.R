@@ -655,6 +655,9 @@ imputeConditional.tmp <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.
     beta.exp <- ginv(V.XX)%*%V.XZ%*%ginv(V.ZZ)%*%U.ZY;
     var.beta.obs.beta.exp <- ginv(V.XX)%*%var.U.XY%*%ginv(V.XX)+ginv(V.XX)%*%V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX)-ginv(V.XX)%*%cov.U.XY.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX)-t(ginv(V.XX)%*%cov.U.XY.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)%*%ginv(V.XX));
     beta.diff <- beta.obs-beta.exp;
+
+    ## print('beta.obs');
+    ## print(ginv(V.XX)%*%var.U.XY%*%ginv(V.XX));
     
     ##sigma.sq.est <- 1-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
     sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
@@ -673,6 +676,7 @@ imputeConditional.tmp <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.
                 var.U.XY=var.U.XY,
                 var.U.ZY=var.U.ZY,
                 beta.obs=beta.obs,
+                var.beta.obs=ginv(V.XX)%*%var.U.XY%*%ginv(V.XX),
                 var.beta.obs.beta.exp=var.beta.obs.beta.exp,
                 covG=covG,
                 beta.exp=beta.exp,
