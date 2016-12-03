@@ -99,7 +99,7 @@ rareMETALS.single <- function(score.stat.file,cov.file,range,alternative=c('two.
                 if(match.ref.alt)
                   {
                     U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
-                    ############print(c('rm1-ustat',U.stat));
+                    ##############print(c('rm1-ustat',U.stat));
                     V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
                     nref.var <- nref.var+rm.na(raw.data$nref[[ii]][ix.var]);
                     nalt.var <- nalt.var+rm.na(raw.data$nalt[[ii]][ix.var]);

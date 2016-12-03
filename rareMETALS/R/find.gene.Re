@@ -13,7 +13,7 @@ find.gene.chrpos <- function(candidate.gene)
     pos.start <- res$pos.start;
     pos.end <- res$pos.end;
     ix <- match(candidate.gene,gene);
-    ##################################################################################################print(ix);
+    ####################################################################################################print(ix);
     tabix <- paste(chr[ix],paste(pos.start[ix],pos.end[ix],sep="-"),sep=":");
     return(list(tabix=tabix,
                 pos.start=paste(chr[ix],pos.start[ix],sep=":",collapse=":"),
@@ -47,12 +47,12 @@ get.gene.inWindow <- function(known.variant.vec,window.size=1e6)
     data(refFlat.resource);
     res <- res.refFlat;
     gene <- res$gene;
-    chr <- res$chr;
+    chr <- as.character(res$chr);
     pos.start <- res$pos.start;
     pos.end <- res$pos.end;
     variant.list.split <- matrix(unlist(strsplit(known.variant.vec,split=":")),ncol=2,byrow=TRUE);
     pos.variant.list <- as.integer(variant.list.split[,2]);
-    chr.variant.list <- as.integer(variant.list.split[,1]);
+    chr.variant.list <- as.character(variant.list.split[,1]);
     pos.window.start <- max(pos.variant.list-window.size);
     pos.window.end <- min(pos.variant.list+window.size);
     ix.gene <- which(chr==chr.variant.list[1] & pos.start>pos.window.start & pos.end<pos.window.end);
@@ -78,12 +78,12 @@ find.top.variant <- function(candidate.variant.vec,window.size,singlevar.result,
   {
       chr.pos.tmp <- matrix(unlist(strsplit(candidate.variant.vec,split=":")),byrow=TRUE,ncol=2);
     
-    chr.candidate <- as.numeric(chr.pos.tmp[,1]);
+    chr.candidate <- as.character(chr.pos.tmp[,1]);
     pos.candidate <- as.numeric(chr.pos.tmp[,2]);
     
     chrpos.result <- matrix(unlist(strsplit(singlevar.result$POS,split=":")),byrow=TRUE,ncol=2);
     ##chrpos.result <- cbind(singlevar.result$CHROM,singlevar.result$POS);
-    chr.result <- as.numeric(chrpos.result[,1]);
+    chr.result <- as.character(chrpos.result[,1]);
     pos.result <- as.numeric(chrpos.result[,2]);
     
     p.value.vec <- 0;known.variant.collapsed.vec <- 0;candidate.variant.tabix.vec <- 0;anno.known.variant.vec <- 0;anno.candidate.variant.vec <- 0;ix.rm <- integer(0);

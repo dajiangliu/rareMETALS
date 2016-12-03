@@ -167,7 +167,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 N.mat <- af.mat;
                 ref.list <- list();
                 alt.list <- list();V.list <- list();
-                ################print(raw.data$afCase[[1]]);
+
                 for(ii in 1:length(ix.pop))
                     {   
                         if(length(raw.data$covXZ[[ii]])>0) {
@@ -209,33 +209,11 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 }
                 impState <- NULL;
 
-                if(impMissing==TRUE) {
-                    res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.known);
-                    ########print('impute okay');
-                    ustat.list <- res.impute$ustat.list.imp;
-                    vstat.list <- res.impute$vstat.list.imp;
-                    V.list <- res.impute$V.list;
-                    N.mat <- res.impute$N.mat;
-                    impState <- res.impute$impState;
-                    cov.mat.list <- res.impute$cov.mat.list.imp;
-                }
-                ########print(res.impute);
-                ## res.impMeta <- get.conditional.score.stat(rm.na(res.impute$ustat.list.imp[[jj]]),rm.na(res.impute$V.list[[jj]]),res.impute$N.mat.imp[jj,],ix.X1,ix.X2,res.impute$impState[jj,]);
-                ## conditional.U.all.imp <- conditional.U.all.imp+as.numeric(res.impMeta$conditional.ustat);
-                ## conditional.V.all.imp <- conditional.V.all.imp+as.numeric(res.impMeta$conditional.V);
                 
                 for(ii in 1:length(ix.pop)) {                               
-                    ## ustat.tmp <- raw.data$ustat[[ii]];
-                    ## ustat.tmp[ix.known] <- rm.na(raw.data$ustat[[ii]][ix.known]);               
                     ustat.tmp <- ustat.list[[ii]];
                     if(knownCoding=="identity") {
-                        if(impMissing==TRUE)
-                            res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,res.impute$impState[ii,])
-                        if(impMissing==FALSE)
-                            res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,NULL)
-
-                        ########print("condition okay");
-                        
+                        res.tmp <- get.conditional.score.stat(ustat.tmp,V.list[[ii]],mean(N.mat[ii,],na.rm=TRUE),ix.candidate,ix.known,NULL)                        
                         conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
                     }
@@ -251,12 +229,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                         conditional.V.ii <- as.numeric(res.tmp$conditional.V)
                         
                     }
-                    ## if(knownCoding=="randomEffect") {
-                    ##     res.tmp <- get.conditional.score.stat.RE(ustat.tmp,cov.mat.ii*N.list[[ii]],N.list[[ii]],ix.candidate,ix.known);
-                    ##     conditional.U.ii <- as.numeric(res.tmp$conditional.ustat);
-                    ##     conditional.V.ii <- as.numeric(res.tmp$conditional.V);
-                    ## }
-                    
+                       
                     conditional.U.all <- conditional.U.all+rm.na(conditional.U.ii);
                     conditional.V.all <- conditional.V.all+rm.na(conditional.V.ii);
                     
@@ -278,35 +251,32 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     ref.list[[ii]] <- refaltList$ref;
                     alt.list[[ii]] <- refaltList$alt;
                     anno.list[[ii]] <- refaltList$anno;
-                    ########print(c(ii,'okay'));
                 }          
                 
-                ## ## make use of imputed statistics in meta-analyses
-                ## if(impMissing==TRUE) {
-                ##     res.impute <- imputeMeta(ustat.list,vstat.list,cov.mat.list,N.mat);
-                ##     res.impMeta <- get.conditional.score.stat(res.impute$U.imp,res.impute$V.imp,res.impute$N.meta,ix.candidate,ix.known)
-                ##     conditional.U.all <- as.numeric(res.impMeta$conditional.ustat);
-                ##     conditional.V.all <- as.numeric(res.impMeta$conditional.V);
-                ## }
-                 statistic <- conditional.U.all/sqrt(conditional.V.all);
-                
-                
+                if(impMissing==TRUE) {
+                    print(ustat.list);
+                    print(cov.mat.list);
+                    print('before');
+                    res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.candidate,ix.known);
+                    
+                    conditional.U.all <- as.numeric(res.impute$conditional.ustat);
+                    conditional.V.all <- as.numeric(res.impute$conditional.V);
+                    print('after');
+                }
+                statistic <- conditional.U.all/sqrt(conditional.V.all);                                
                 if(alternative=="two.sided") {
                     
                     statistic <- statistic^2;
                     p.value <- pchisq(statistic,df=1,lower.tail=FALSE);
                 }
-                ########print(c(statistic,p.value));
+                
                 beta1.est <- conditional.U.all/conditional.V.all;
                 beta1.sd <- sqrt(1/conditional.V.all);
                 maf.vec <- rep(0,length(af.vec.list[[1]]));
                 af.vec <- maf.vec;            
                 mac.vec <- 0;
                 ac.vec <- 0;
-                ########print('af.mat');
-                ########print(af.mat);
-                ########print('N.mat');
-                ########print(N.mat);
+                
                 af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
                 ac.vec <- colSums(ac.mat,na.rm=TRUE);
                 N.vec <- colSums(N.mat,na.rm=TRUE);
@@ -319,6 +289,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 res.extra$ac.mat <- ac.mat;
                 res.extra$N.mat <- N.mat;
                 res.extra$log.mat <- log.mat;
+                res.extra$raw.data.ori <- res.extra$raw.data.ori;
                 p.value.single.out <- format(p.value,digit=out.digits);
                 pos.single.out <- paste(pos.gold[ix.candidate],sep='');
                 direction.single.out <- paste(direction.single.vec,sep='',collapse='');
@@ -333,9 +304,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
         res.single.out <- cbind(matrix(unlist(strsplit(pos.single.out,split=":")),ncol=2,byrow=TRUE),ref.single.out,alt.single.out,N.vec[ix.candidate],p.value.single.out,af.single.out,beta1.est.single.out,beta1.sd.single.out,direction.single.out,pos.ref.alt.known.single.out,log.out,note);
         colnames(res.single.out) <- c("CHROM","POS","REF","ALT","SAMPLESIZE","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION","POS_REF_ALT_KNOWN","LOG","NOTE");
         return(list(res=res.extra,
-                    res.out=res.single.out));
-        
-        
+                    res.out=res.single.out));        
     }
 r2cov.mat <- function(r2.mat,maf.vec)
     {

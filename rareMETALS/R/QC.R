@@ -2,7 +2,7 @@
 QC <- function(raw.data,QC.par,cov=1)
   {
     
-      ##################################################print(c("QC.par",QC.par));
+      ####################################################print(c("QC.par",QC.par));
       hwe.cutoff <- QC.par$hwe.cutoff;
       callrate.cutoff <- QC.par$callrate.cutoff;
       if(length(hwe.cutoff)==0) hwe.cutoff <- 0;
@@ -35,11 +35,11 @@ QC <- function(raw.data,QC.par,cov=1)
                       
                       if(length(ix.bug)>0)
                           {
-                              ## ##################################################print("bug");
+                              ## ####################################################print("bug");
                               ## ix.rm <- c(ix.rm,ix.bug);
-                              ## ##################################################print(c("study",ii));
-                              ## ##################################################print(res.diag);
-                              ## ##################################################print(res.vstat)
+                              ## ####################################################print(c("study",ii));
+                              ## ####################################################print(res.diag);
+                              ## ####################################################print(res.vstat)
                               log.mat[ix.bug,ii] <- "bug";
                               warning(msg);
                           }
@@ -50,10 +50,10 @@ QC <- function(raw.data,QC.par,cov=1)
                   {
                       raw.data$ustat[[ii]][ix.rm] <- NA;
                       raw.data$vstat[[ii]][ix.rm] <- NA;
-                      ##################################################print("out");
+                      ####################################################print("out");
                       if(cov==1)
                           {
-                              ##################################################print("this is exec");
+                              ####################################################print("this is exec");
                               raw.data$cov[[ii]][ix.rm,ix.rm] <- NA;
                           }
                       raw.data$ref[[ii]][ix.rm] <- NA;
@@ -85,7 +85,7 @@ QC <- function(raw.data,QC.par,cov=1)
 #' @export
 flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.var,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
     {
-        ########################################print(c("REF","ALT",refaltList$ref[ix.var],refaltList$alt[ix.var]))
+        ##########################################print(c("REF","ALT",refaltList$ref[ix.var],refaltList$alt[ix.var]))
         if((is.na(refaltList$ref[ix.var]) | is.na(refaltList$alt[ix.var])) & analyzeRefAltListOnly )
             {
                 ii <- ix.pop;
@@ -115,7 +115,7 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
             {
                 ii <- ix.pop;                
                 ix.include <- rep(0,length(raw.data$ustat));
-                ########################################print("NotInRefAltList");
+                ##########################################print("NotInRefAltList");
                 log.mat.var[ii] <- "NotInRefAltList";
                 return(list(raw.data=raw.data,
                             log.mat.var=log.mat.var,
@@ -549,8 +549,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     nSample.covG <- matrix(1,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
     ##nSample.covG <- covG;
     N.mat.imp <- N.mat;
-    print("N.mat");
-    print(N.mat)
+    ##print("N.mat");
+    ##print(N.mat)
     U.meta <- 0;
     for(ii in 1:length(ustat.list))
     {
@@ -566,22 +566,22 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
                 covG[kk,jj] <- covG[jj,kk];
                 nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(as.numeric(rm.na(N.mat[ii,jj]))*as.numeric(rm.na(N.mat[ii,kk])));
                 nSample.covG[kk,jj] <- nSample.covG[jj,kk];
-                ## print(c('nSample.covG',ii,jj,kk,rm.na(N.mat[ii,jj]),rm.na(N.mat[ii,kk]),sqrt(as.numeric(rm.na(N.mat[ii,jj]))*as.numeric(rm.na(N.mat[ii,kk])))))
-                ## print(c("rm.na(N.mat[ii,kk])",rm.na(N.mat[ii,kk])));
-                ## print(nSample.covG[jj,kk]);
+                ## ##print(c('nSample.covG',ii,jj,kk,rm.na(N.mat[ii,jj]),rm.na(N.mat[ii,kk]),sqrt(as.numeric(rm.na(N.mat[ii,jj]))*as.numeric(rm.na(N.mat[ii,kk])))))
+                ## ##print(c("rm.na(N.mat[ii,kk])",rm.na(N.mat[ii,kk])));
+                ## ##print(nSample.covG[jj,kk]);
             }
         }
     }
     U.meta <- U.meta/nSample.U;
     U.XY <- U.meta[ix.candidate];
     U.ZY <- U.meta[ix.known];
-    print("covG");
-    print(covG);
+    ##print("covG");
+    ##print(covG);
     covG.ori <- covG;
     covG <- rm.na(covG/nSample.covG);    
-    print("covG standardized");
-    print(covG);
-    print(nSample.covG);
+    ##print("covG standardized");
+    ##print(covG);
+    ##print(nSample.covG);
     V.XZ <- matrix(covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
     V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
@@ -601,8 +601,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     N.out <- sum(apply(N.mat.imp,1,max,na.rm=T));
     conditional.ustat <- conditional.ustat*N.out;
     conditional.V <- conditional.V*N.out^2;
-    print(conditional.ustat);
-    print(conditional.V);
+    ##print(conditional.ustat);
+    ##print(conditional.V);
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V,
                 U.ZY=U.ZY,
