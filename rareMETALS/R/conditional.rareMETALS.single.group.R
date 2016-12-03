@@ -286,6 +286,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 res.extra$ac.mat <- ac.mat;
                 res.extra$N.mat <- N.mat;
                 res.extra$log.mat <- log.mat;
+                res.extra$raw.data.ori <- res.extra$raw.data.ori;
                 p.value.single.out <- format(p.value,digit=out.digits);
                 pos.single.out <- paste(pos.gold[ix.candidate],sep='');
                 direction.single.out <- paste(direction.single.vec,sep='',collapse='');
