@@ -546,8 +546,8 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
 imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=NULL,ix.candidate,ix.known) {
     U.imp <- 0;nSample.U <- 0;
     covG <- matrix(0,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
-    nSample.covG <- matrix(0.99,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
-    nSample.covG <- covG;
+    nSample.covG <- matrix(1,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
+    ##nSample.covG <- covG;
     N.mat.imp <- N.mat;
     U.meta <- 0;
     for(ii in 1:length(ustat.list))
