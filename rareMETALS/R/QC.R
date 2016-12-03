@@ -564,11 +564,11 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
             {
                 covG[jj,kk] <- covG[jj,kk]+rm.na(sqrt(N.mat[ii,jj]*N.mat[ii,kk])*cov.mat.list[[ii]][jj,kk]);
                 covG[kk,jj] <- covG[jj,kk];
-                nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(rm.na(N.mat[ii,jj])*rm.na(N.mat[ii,kk]));
+                nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(as.numeric(rm.na(N.mat[ii,jj]))*as.numeric(rm.na(N.mat[ii,kk])));
                 nSample.covG[kk,jj] <- nSample.covG[jj,kk];
-                print(c('nSample.covG',ii,jj,kk,rm.na(N.mat[ii,jj]),rm.na(N.mat[ii,kk]),sqrt(as.numeric(rm.na(N.mat[ii,jj]))*as.numeric(rm.na(N.mat[ii,kk])))))
-                print(c("rm.na(N.mat[ii,kk])",rm.na(N.mat[ii,kk])));
-                print(nSample.covG[jj,kk]);
+                ## print(c('nSample.covG',ii,jj,kk,rm.na(N.mat[ii,jj]),rm.na(N.mat[ii,kk]),sqrt(as.numeric(rm.na(N.mat[ii,jj]))*as.numeric(rm.na(N.mat[ii,kk])))))
+                ## print(c("rm.na(N.mat[ii,kk])",rm.na(N.mat[ii,kk])));
+                ## print(nSample.covG[jj,kk]);
             }
         }
     }
