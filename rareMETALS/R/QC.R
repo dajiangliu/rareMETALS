@@ -590,6 +590,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     N.out <- sum(apply(N.mat.imp,1,max,na.rm=T));
     conditional.ustat <- conditional.ustat*N.out;
     conditional.V <- conditional.V*N.out^2;
+    print(conditional.ustat);
+    print(conditional.V);
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V,
                 U.ZY=U.ZY,
