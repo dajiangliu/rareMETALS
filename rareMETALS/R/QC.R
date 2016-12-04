@@ -573,8 +573,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
             }
         }
     }
-    ##print('Umeta');
-    ##print(U.meta);
+    print('Umeta');
+    print(U.meta);
     U.meta <- U.meta/nSample.U;
     U.XY <- U.meta[ix.candidate];
     U.ZY <- U.meta[ix.known];
@@ -586,8 +586,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     ##print('covG.ori');
     ##print(covG.ori);
     covG <- rm.na(covG/nSample.covG);    
-    ####print("covG standardized");
-    ####print(covG);
+    print("covG standardized");
+    print(covG);
     ####print(nSample.covG);
     V.XZ <- matrix(covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
