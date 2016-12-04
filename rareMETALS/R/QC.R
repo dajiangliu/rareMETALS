@@ -572,6 +572,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
             }
         }
     }
+    print('Umeta');
+    print(U.meta);
     U.meta <- U.meta/nSample.U;
     U.XY <- U.meta[ix.candidate];
     U.ZY <- U.meta[ix.known];
