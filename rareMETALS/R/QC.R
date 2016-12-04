@@ -562,7 +562,7 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
         {
             for(kk in 1:jj)
             {
-                covG[jj,kk] <- covG[jj,kk]+rm.na(sqrt(N.mat[ii,jj]*N.mat[ii,kk])*cov.mat.list[[ii]][jj,kk]);
+                covG[jj,kk] <- covG[jj,kk]+rm.na(sqrt(as.numeric(N.mat[ii,jj])*as.numeric(N.mat[ii,kk]))*cov.mat.list[[ii]][jj,kk]);
                 covG[kk,jj] <- covG[jj,kk];
                 nSample.covG[jj,kk] <- nSample.covG[jj,kk]+sqrt(as.numeric(rm.na(N.mat[ii,jj]))*as.numeric(rm.na(N.mat[ii,kk])));
                 nSample.covG[kk,jj] <- nSample.covG[jj,kk];
