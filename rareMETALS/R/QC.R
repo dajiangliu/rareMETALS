@@ -578,6 +578,10 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     ##print("covG");
     ##print(covG);
     covG.ori <- covG;
+    print('Umeta');
+    print(U.meta);
+    print('covG.ori');
+    print(covG.ori);
     covG <- rm.na(covG/nSample.covG);    
     ##print("covG standardized");
     ##print(covG);
