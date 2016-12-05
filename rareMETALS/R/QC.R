@@ -604,11 +604,11 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     conditional.V <- conditional.V*as.numeric(sigma.sq.est);
     ## frac.missing <- min(colSums(N.mat,na.rm=T))/max(colSums(N.mat,na.rm=T));
     lambda <- .1;
-    ##print('after regularization');
-    ##print(conditional.V);
+    print('before regularization');
+    print(conditional.V);
     conditional.V <- regMat(conditional.V,lambda);
-    ##print('after regularization');
-    ##print(conditional.V);
+    print('after regularization');
+    print(conditional.V);
     
     N.out <- sum(apply(N.mat.imp,1,max,na.rm=T));
     conditional.ustat <- conditional.ustat*N.out;
