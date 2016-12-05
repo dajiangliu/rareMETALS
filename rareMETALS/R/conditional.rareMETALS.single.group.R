@@ -265,9 +265,10 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 }
                 statistic <- conditional.U.all/sqrt(conditional.V.all);                                
                 if(alternative=="two.sided") {
-                    
                     statistic <- statistic^2;
-                    if(statistic==Inf | statistic==-Inf) statistic <- NA;
+                    if(!is.na(statistic)) {
+                        if(statistic==Inf | statistic==-Inf) statistic <- NA;
+                    }
                     p.value <- pchisq(statistic,df=1,lower.tail=FALSE);
                 }
                 
