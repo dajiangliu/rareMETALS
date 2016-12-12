@@ -9,13 +9,11 @@ conditional.rareMETALS.gene.byLocus <- function(ANNO,gene.name,score.stat.file,c
     known.variant.vec <- res.find$known.variant.collapsed.vec;
     p.value.known.variant.vec <- res.find$p.value.known.variant.vec;
     anno.known.variant.vec <- res.find$anno.known.variant.vec;
-    ##############################################################################################################################################print(p.value.known.variant.vec);
     gene.name <- res.find$gene.name;
     candidate.variant.tabix.vec.tmp <- res.find$candidate.variant.tabix.vec;
     raw.data.all <- list();
     capture.output(raw.data.all <- rvmeta.readDataByRange(score.stat.file,NULL,candidate.variant.tabix.vec.tmp));
     res.list <- list();
-    ## Get tabix for variants in gene
     candidate.variant.tabix.vec <- character(0);
     
     ix.rm <- integer(0);

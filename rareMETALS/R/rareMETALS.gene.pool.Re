@@ -3,7 +3,6 @@ rareMETALS.gene.pool <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVI
     capture.output(raw.data.all <- rvmeta.readDataByGene( score.stat.file, cov.file, gene.file,gene));
     if(length(raw.data.all)==0)
       {
-        ############################################################################################################################################################################print('no gene');
         return(list(list(p.value=NA,
                          skip=1,
                          statistic=NA,
@@ -126,7 +125,6 @@ rareMETALS.gene.pool <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVI
                 alt=NA,
                 pos=NA);
             }
-          ##############################################################################################################################################################################print(c("ix.rare",ix.rare));
           if(length(ix.rare)>=1)
             {
               for(ii in 1:length(ix.pop))
@@ -174,7 +172,6 @@ rareMETALS.gene.pool <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVI
                 }
               if(test=='VT')
                 {
-                  ##res.kk <- (c(rvmeta.CMH(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='VT',extra.pars=list())));
                   res.kk <- (c(rvmeta.approx.mega(score.stat.vec.list,maf.vec.list,cov.mat.list,mean.Y.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='VT',extra.pars=list())));
                   res[[kk]] <- c(res.kk,
                                  list(anno=anno.list[[ix.gold]],

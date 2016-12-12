@@ -1,8 +1,6 @@
 RVMETA.conditional <- function(scenario=c('gene','region'),score.stat.file,cov.file,gene,test=c('GRANVIL','WSS','SKAT-O','SKAT','VT'),maf.cutoff,no.boot=10000,alternative=c('two.sided','greater','less'),alpha=0.05,extra.pars=list(option=character(0),ix.X1=integer(0),ix.X2=integer(0)))
   {
-      if(length(test)>1) test <- "GRANVIL";##set to default;
       capture.output(raw.data.all <- rvmeta.readData( score.stat.file, cov.file, gene));
-      ###############################################################################################################################################################################################print('read data ok');
       if(length(raw.data.all)==0)
           return(list(p.value=NA,
                       statistic=NA,
@@ -73,7 +71,6 @@ RVMETA.conditional <- function(scenario=c('gene','region'),score.stat.file,cov.f
                   }
                   var.Y.list[[ii]] <- 1;
                   mean.Y.list[[ii]] <- 0;
-                  maf.vec.list.all[[ii]] <- rm.na((1-raw.data$maf[[ii]]));## this is to be commented out for the general release;
                   pos.list.all[[ii]] <- (raw.data$pos);
                   anno.list.all[[ii]] <- (raw.data$anno);
               }
@@ -96,22 +93,17 @@ RVMETA.conditional <- function(scenario=c('gene','region'),score.stat.file,cov.f
                                                rv.test='SINGLE',
                                                extra.pars=list());
                   ix.top.all <- which.min(res.single.all$p.value);
-                  #############################################################################################################################################################################################print(c("ALL P_VALUE",(res.single.all$p.value)));
-                  #############################################################################################################################################################################################print(c(ix.top.all,res.single.all$p.value[ix.top.all]));
                   ix.rare <- which(maf.vec.all<maf.cutoff);
                   ix.var.rare <- as.integer(set.intersect(ix.var,ix.rare));
                   if(length(which(ix.var.rare==ix.top.all))>0)
                   {
-                      #############################################################################################################################################################################################print("intersection >0");
                       ix.tmp <- which(ix.var.rare==ix.top.all);
                       ix.cond <- c(ix.var.rare[-ix.tmp],ix.var.rare[ix.tmp]);
                   }
                   if(length(which(ix.var.rare==ix.top.all))==0)
                   {
-                      #############################################################################################################################################################################################print("intersection 0");
                       ix.cond <- c(ix.var.rare,ix.top.all);
                   }
-                  #############################################################################################################################################################################################print(c('IX COND',ix.cond));
                   score.stat.vec.list.cond <- list();
                   cov.mat.list.cond <- list();
                   maf.vec.list.cond <- list();

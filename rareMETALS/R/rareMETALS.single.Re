@@ -61,7 +61,6 @@ rareMETALS.single <- function(score.stat.file,cov.file,range,alternative=c('two.
                   hsq.est=NA,
                   nearby=NA,
                   pos=NA));
-    ##if(raw.data$afCase
     for(ix.var in 1:length(raw.data$ref[[ix.gold]]))
       {
         direction.by.study.var <- rep("?",length(ix.pop));
@@ -99,7 +98,6 @@ rareMETALS.single <- function(score.stat.file,cov.file,range,alternative=c('two.
                 if(match.ref.alt)
                   {
                     U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
-                    ##################print(c('rm1-ustat',U.stat));
                     V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
                     nref.var <- nref.var+rm.na(raw.data$nref[[ii]][ix.var]);
                     nalt.var <- nalt.var+rm.na(raw.data$nalt[[ii]][ix.var]);
@@ -122,8 +120,6 @@ rareMETALS.single <- function(score.stat.file,cov.file,range,alternative=c('two.
                   }
                 if(mono)
                   {
-                      ##U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
-                    ##V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
                     nref.var <- nref.var+raw.data$nref[[ii]][ix.var];
                     nalt.var <- nalt.var+raw.data$nalt[[ii]][ix.var];
                     nhet.var <- nhet.var+raw.data$nhet[[ii]][ix.var];

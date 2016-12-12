@@ -5,7 +5,6 @@ rvmeta.approx.mega <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,mea
     X.T.times.Y.centered <- rep(0,length(maf.vec.list[[1]]));
     X.T.times.X <- 0*diag(maf.vec.list[[1]]);
     maf.vec <- rep(0,length(score.stat.vec.list[[1]]));
-    ##################################################################################################################################################################################################print(length(maf.vec));
     if(length(maf.vec)<=1 & rv.test!='SINGLE')
       {
         return(list(p.value=NA,
@@ -19,8 +18,6 @@ rvmeta.approx.mega <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,mea
                     beta1.conf.upper=NA));
       }
     direction.by.study.matrix <- matrix(rep("+",length(score.stat.vec.list[[1]])*length(score.stat.vec.list)),nrow=length(score.stat.vec.list));
-    ##############################################################################################################################################################################################print('yes direction.by.study.matrix');
-    ##############################################################################################################################################################################################print(direction.by.study.matrix[1,]);
     direction.by.study <- '';    
     for(ii in 1:length(score.stat.vec.list))
       {
@@ -77,10 +74,7 @@ rvmeta.approx.mega <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,mea
       {
         weight <- extra.pars$weight;
         if(length(weight)!=1) weight <- 'MB';
-        ##############################################################################################################################################################################################print(X.T.times.Y.centered);
-        ##############################################################################################################################################################################################print(X.T.times.X.list);
         res <- rvmeta.CMH.wss(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,weight);
-        ##############################################################################################################################################################################################print('crash after');
       }
     if(rv.test=='VT')
       {
@@ -136,7 +130,6 @@ rvmeta.approx.mega <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,mea
         beta1.conf.upper <- beta1.est+1.96*beta1.sd;
         hsq.est <- beta1.est^2*diag(X.T.times.X.centered);
       }
-    ############################################################################################################################################################################################print(direction.by.study);
     res.return <- c(res,                    
                     list(X.T.times.X=X.T.times.X,
                          direction.by.study=direction.by.study,

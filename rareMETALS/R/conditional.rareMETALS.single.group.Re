@@ -195,8 +195,6 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                     N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
                     N.mat[ii,] <- raw.data$nSample[[ii]];
                     no.sample <- no.sample+N.list[[ii]];
-                    ## U.stat <- rm.na(raw.data$ustat[[ii]]);
-                    ## V.stat <- rm.na(raw.data$vstat[[ii]]);
                     ustat.list[[ii]] <- raw.data$ustat[[ii]];
                     vstat.list[[ii]] <- raw.data$vstat[[ii]];
                     if(impMissing==FALSE) {
@@ -254,14 +252,10 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 }          
                 
                 if(impMissing==TRUE) {
-                    ####print(ustat.list);
-                    ####print(cov.mat.list);
-                    ####print('before');
                     res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.candidate,ix.known);
                     
                     conditional.U.all <- as.numeric(res.impute$conditional.ustat);
                     conditional.V.all <- as.numeric(res.impute$conditional.V);
-                    ####print('after');
                 }
                 statistic <- conditional.U.all/sqrt(conditional.V.all);                                
                 if(alternative=="two.sided") {
