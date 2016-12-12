@@ -14,12 +14,10 @@ fisher.p <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,N.
         N.list.new[[1]] <- N.list[[ii]];
         mac.vec.list.new[[1]] <- (maf.vec.list[[ii]])*(N.list[[ii]])*2;
         mac.vec <- mac.vec.list.new[[1]];
-        ##mac.vec.list.new[[1]] <- mac.vec;
         maf.vec <- maf.vec.list.new[[1]];
         res[[ii]] <- rvmeta.CMH(score.stat.vec.list.new,maf.vec.list.new,cov.mat.list.new,var.Y.list.new,N.list.new,alternative,no.boot,alpha,rv.test,c(extra.pars,list(mac.vec.list=mac.vec.list.new,maf.vec=maf.vec,mac.vec=mac.vec,af.vec.list=maf.vec.list.new,ac.vec.list=mac.vec.list.new,max.TH=extra.pars$max.TH)));
         p.value.vec[ii] <- res[[ii]]$p.value;
       }
-    ############################################################################################################################print(extra.pars$weight);
     if(length(extra.pars$weight.by.N)==0) extra.pars$weight.by.N <- "N";
     if(extra.pars$weight.by.N=="N")
       {
@@ -30,7 +28,6 @@ fisher.p <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,N.
       {
         N.vec <- unlist(N.list);
         statistic <- sum(-2*N.vec*log(p.value.vec),na.rm=TRUE);
-        ##p.value <- pchisq(statistic,df=2*length(p.value.vec),lower.tail=FALSE);
         p.value <- try(davies(statistic,lambda=rep(N.vec,2))$Qq,silent=TRUE);
         if(p.value==0)
           {

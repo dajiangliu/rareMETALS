@@ -3,7 +3,6 @@ rvmeta.CMH.wss <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,co
     if(length(alternative)>1) alternative <- "two.sided";
     if(length(weight)>1) weight <- "MB";
     res.list <- list();
-    ##maf.vec <- rep(0,length(maf.vec.list[[1]]));
     score.stat.numer <- 0;
     score.stat.denom.sq <- 0;
     if(weight=='MZ') w <- rep(1,length(X.T.times.Y.centered.list[[1]]));
@@ -24,7 +23,6 @@ rvmeta.CMH.wss <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,co
       if(alternative=='two.sided')
         {
           statistic <- wss.stat^2;
-          ####################################################################################################################################print(c('statistic',statistic));
           p.value <- pnorm(-sqrt(statistic))*2;
         }
       if(alternative=='greater')

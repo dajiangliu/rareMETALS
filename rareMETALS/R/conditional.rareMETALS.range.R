@@ -27,7 +27,6 @@ conditional.rareMETALS.range <- function(range.name=NULL,score.stat.file,cov.fil
     tabix.all <- paste(tabix.known.variant,tabix.candidate.variant,collapse=",",sep=",");
     raw.data.all <- list();
     capture.output(raw.data.all[[1]] <- rvmeta.readDataByRange( score.stat.file, cov.file,tabix.all)[[1]]);
-    ############################################################################################################################print(raw.data.all);
     res.null <- list(gene.name=NA,
                      p.value=NA,
                      statistic=NA,
@@ -77,7 +76,6 @@ conditional.rareMETALS.range <- function(range.name=NULL,score.stat.file,cov.fil
         ix.var <- c(ix.var,match(known.variant.vec,raw.data$pos));
         ix.var <- sort(unique(ix.var));
         ix.tmp <- match(known.variant.vec,(raw.data$pos)[ix.var]);
-        ix.var <- c(ix.var[-ix.tmp],ix.var[ix.tmp]);##make sure the last few variants are to be conditioned on;
         if(length(ix.var)==length(ix.tmp))
           {
             res.null$gene.name <- range.name[kk];
@@ -112,7 +110,6 @@ conditional.rareMETALS.range <- function(range.name=NULL,score.stat.file,cov.fil
               alt.list[[ii]] <- (raw.data$alt)[[ii]][ix.var];
               anno.list[[ii]] <- (raw.data$anno)[ix.var];
             }
-          ##flip of alleles if needed
           if(length(ix.pop)>1)
             {
               for(ii in 1:length(ix.var))
@@ -152,7 +149,6 @@ conditional.rareMETALS.range <- function(range.name=NULL,score.stat.file,cov.fil
           
           maf.vec <- rep(0,length(af.vec.list[[1]]));
           af.vec <- maf.vec;
-          mac.vec <- 0;ac.vec <- 0;##no.sample <- 0;
           for(ii in 1:length(ix.pop))
             {
               af.vec <- af.vec+(af.vec.list[[ii]])*(2*N.list[[ii]]);
@@ -261,7 +257,6 @@ conditional.rareMETALS.range <- function(range.name=NULL,score.stat.file,cov.fil
               pos.ref.alt.known.single.out <- c(pos.ref.alt.known.single.out,
                                                 rep(pos.ref.alt.known.out[kk],length(ix.X1)));
               ix.best <- res[[kk]]$ix.best;
-              ########################################################################################################print(c("ix.best",ix.best));
               top.singlevar.pos[kk] <- res[[kk]]$pos[ix.X1][ix.best];
               top.singlevar.refalt[kk] <- paste(c(res[[kk]]$ref[ix.X1][ix.best],res[[kk]]$alt[ix.X1][ix.best]),sep="/",collapse="/");
               top.singlevar.pval[kk] <- format(res[[kk]]$singlevar.pval.vec[ix.best],digits=out.digits);

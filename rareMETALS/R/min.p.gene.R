@@ -60,7 +60,6 @@ min.p.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',maf.cut
             {
               
               N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
-              ##################################################################################################################################################print(N.list[[ii]]);
               U.stat <- rm.na(raw.data$ustat[[ii]][ix.var]);
               V.stat <- rm.na(raw.data$vstat[[ii]][ix.var]);
               score.stat.vec.list[[ii]] <- rm.na(U.stat/V.stat);              
@@ -87,7 +86,6 @@ min.p.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',maf.cut
                         }
                       if((is.na(alt.list[[ix.gold]][ii]) | (alt.list[[ix.gold]][ii])=='0' | (alt.list[[ix.gold]][ii])==".") & (!is.na(alt.list[[jj]][ii]) & (alt.list[[jj]][ii]!="0") & (alt.list[[jj]][ii]!=".")))
                         {
-                          ##ref.list[[ix.gold]][ii] <- ref.list[[jj]][ii];
                           alt.list[[ix.gold]][ii] <- alt.list[[jj]][ii];
                         }
                       if(!is.na(ref.list[[jj]][ii]) & !is.na(ref.list[[ix.gold]][ii]))
@@ -119,16 +117,12 @@ min.p.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',maf.cut
                 ac.vec.list[[ii]][ix.1] <- 0;
               }
               no.sample <- no.sample+N.list[[ii]];
-              ##################################################################################################################################################print(c(ii,ac.vec.list[[ii]]))
               af.vec <- af.vec+(af.vec.list[[ii]])*(2*N.list[[ii]]);
               ac.vec <- ac.vec+ac.vec.list[[ii]];
             }
           af.vec <- af.vec/sum(2*unlist(N.list));
           maf.vec <- af.vec;
           mac.vec <- ac.vec;
-          ## ########################################################################################################################################################print(ac.vec.list);
-          ## ########################################################################################################################################################print('main mac.vec');
-          ## ########################################################################################################################################################print(mac.vec);
           
           ix.major <- which(af.vec>0.5);
           if(length(ix.major)>0)
@@ -192,26 +186,13 @@ min.p.gene <- function(ANNO,score.stat.file,cov.file,gene,test='GRANVIL',maf.cut
                 }
               if(test=='VT')
                 {
-                  ########################################################################################################################################################print('mac.vec.rare');
-                  ########################################################################################################################################################print(mac.vec.rare);
                   res.kk <- (c(min.p(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='VT',extra.pars=list(ac.vec.list=ac.vec.list,
                                                                                                                                                   maf.vec=maf.vec.rare,mac.vec=mac.vec.rare,max.TH=extra.pars$max.TH))));
                   res[[kk]] <- c(res.kk,res.extra);
                 }
-              ## gene.name.out[kk] <- res[[kk]]$gene.name;
-              ## p.value.out[kk] <- format(res[[kk]]$p.value,digits=4);
-              ## statistic.out[kk] <- format(res[[kk]]$statistic,digits=4);
-              ## no.site.out[kk] <- res[[kk]]$no.site;
-              ## beta1.est.out[kk] <- format(res[[kk]]$beta1.est,digits=4);
-              ## beta1.sd.out[kk] <- format(res[[kk]]$beta1.sd,digits=4);
-              ## maf.cutoff.out[kk] <- format(res[[kk]]$maf.cutoff,digits=4);
-              ## direction.burden.by.study.out[kk] <- res[[kk]]$direction.burden.by.study;
-              ## direction.meta.single.var.out[kk] <- res[[kk]]$direction.meta.single.var;          
-              ## pos.ref.alt.out[kk] <- paste(res[[kk]]$pos,res[[kk]]$ref,res[[kk]]$alt,sep='/',collapse=',');
             }
         }
     }
-    ## res.out <- cbind(gene.name.out,p.value.out,statistic.out,no.site.out,beta1.est.out,beta1.sd.out,maf.cutoff.out,direction.burden.by.study.out,direction.meta.single.var.out,pos.ref.alt.out);
     return(list(res.list=res));
   }
 r2cov.mat <- function(r2.mat,maf.vec)

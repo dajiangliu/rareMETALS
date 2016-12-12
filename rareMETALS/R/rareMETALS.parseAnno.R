@@ -18,7 +18,6 @@ rareMETALS.parseAnno <- function(x){
                 codon <- str_replace(codon, pattern = "^\\(", replacement = "")
                 codon <- str_split(codon, "->")[[1]]
                 codon <- unlist(sapply(str_split(codon, "/"), `[`, 2))
-                                        #####################print(codon)
                 
                 codonNum <- str_split(m, ":")[[1]]
                 codonNum <- str_extract(codonNum, "^Codon[0-9]+")

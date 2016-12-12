@@ -254,19 +254,21 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 }          
                 
                 if(impMissing==TRUE) {
-                    ##print(ustat.list);
-                    ##print(cov.mat.list);
-                    ##print('before');
+                    ####print(ustat.list);
+                    ####print(cov.mat.list);
+                    ####print('before');
                     res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.candidate,ix.known);
                     
                     conditional.U.all <- as.numeric(res.impute$conditional.ustat);
                     conditional.V.all <- as.numeric(res.impute$conditional.V);
-                    ##print('after');
+                    ####print('after');
                 }
                 statistic <- conditional.U.all/sqrt(conditional.V.all);                                
                 if(alternative=="two.sided") {
-                    
                     statistic <- statistic^2;
+                    if(!is.na(statistic)) {
+                        if(statistic==Inf | statistic==-Inf) statistic <- NA;
+                    }
                     p.value <- pchisq(statistic,df=1,lower.tail=FALSE);
                 }
                 

@@ -15,7 +15,6 @@ rareMETALS.single.correctRefAlt <- function(score.stat.file,cov.file,range,refal
     ix.gold <- 1;
     extra.par <- list(ix.gold=ix.gold,QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
     capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, cov.file, range));
-    ########################################################################################print("read data okay");
     if(length(raw.data.all)==0)
       return(list(list(p.value=NA,
                        skip=1,
@@ -27,7 +26,6 @@ rareMETALS.single.correctRefAlt <- function(score.stat.file,cov.file,range,refal
     if(length(extra.par$ix.gold)==0) ix.gold <- 1;
     raw.data <- raw.data.all[[1]];
     raw.data.ori <- raw.data;
-    ##log.mat <- matrix("",nrow=length(raw.data$ref[[ix.gold]]),ncol=length(raw.data$ref));
     if(length(extra.par$QC.par)>0) 
       raw.data <- QC(raw.data,extra.par$QC.par,cov=0);
     log.mat <- raw.data$log.mat;
@@ -70,25 +68,20 @@ rareMETALS.single.correctRefAlt <- function(score.stat.file,cov.file,range,refal
     alt.gold <- refaltList$alt;
     maf.sd.vec <- 0;maf.maxdiff.vec <- 0;ix.maf.maxdiff.vec <- 0;
     maf.pop.ori <- 0;
-    ########################################################################################print(c('no.var',length(raw.data$ref[[ix.gold]])));
     QC.by.study <- "";
     for(ix.var in 1:length(raw.data$ref[[ix.gold]]))
       {
         if(ix.var/1000==as.integer(ix.var/1000))
           {
-            ########################################################################################print(ix.var);
           }
         direction.by.study.var <- rep("^",length(ix.pop));
         U.stat <- 0;V.stat.sq <- 0;maf.pop <- 0;
         nref.var <- 0;nhet.var <- 0;nalt.var <- 0;
         ix.include <- rep(0,length(ix.pop));
-        ########################################################################################print(raw.data.ori$pos[ix.var]);
         for(ii in 1:length(ix.pop))
           {
-            ##determine whether a variant is monomorphic:
             
             if(!is.na(raw.data.ori$ref[[ii]][ix.var]) | !is.na(raw.data.ori$alt[[ii]][ix.var]))
-                {                ##check if AF is 0;if AF is 0, no QC;
                     if(rm.na(raw.data$af[[ii]][ix.var])==0 | rm.na(raw.data$af[[ii]][ix.var])==1)
                         {
                             U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
@@ -137,7 +130,6 @@ rareMETALS.single.correctRefAlt <- function(score.stat.file,cov.file,range,refal
                 if(mono)
                   {
                     ix.include[ii] <- 1;
-                    ##log.mat[ix.var,ii] <- paste(log.mat[ix.var,ii],"0",sep="",collapse="");
                   }
                 if(!match.ref.alt & !flip.ref.alt & !mono)
                   {
@@ -161,7 +153,6 @@ rareMETALS.single.correctRefAlt <- function(score.stat.file,cov.file,range,refal
             maf.pop[ii] <- ((raw.data$af[[ii]])[ix.var]);
             maf.pop.ori[ii] <- (raw.data$af[[ii]])[ix.var];
           }
-        ########################################################################################print(maf.pop);
         maf.vec[ix.var] <- sum(maf.pop*no.sample.mat[,ix.var],na.rm=TRUE)/sum(no.sample.mat[,ix.var],na.rm=TRUE);
         maf.sd.vec[ix.var] <- sqrt(sum((no.sample.mat[,ix.var])*((maf.pop.ori-maf.vec[ix.var])^2),na.rm=TRUE)/sum(no.sample.mat[,ix.var],na.rm=TRUE));
         maf.maxdiff.tmp <- max(abs(maf.pop.ori-maf.vec[ix.var]),na.rm=TRUE);

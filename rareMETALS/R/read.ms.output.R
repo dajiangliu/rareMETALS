@@ -50,7 +50,6 @@ readms.output <- function( txt=NA, file.ms.output=NA ) {
     if( !is.na(file.ms.output) ) txt <- scan(file=file.ms.output,
        what=character(0), sep="\n", quiet=TRUE)
     if( is.na(txt[1]) ){
-    	####################################################################################################################################################################################################print("Usage: read.ms.output(txt), or read.ms.output(file=filename)")
     	return()
     	}
     nsam <- as.integer( strsplit(txt[1], split=" ")[[1]][2] )
@@ -67,11 +66,9 @@ readms.output <- function( txt=NA, file.ms.output=NA ) {
     times <- sapply(strsplit(txt[marker], split="\t"), function(vec){ as.numeric(vec[2:3])} )
 
     
-    ## THE OUTPUT TEXT FOR EACH DRAW SHOULD CONTAIN THE WORD "segsites"
     marker <- grep("segsites", txt)
     stopifnot(length(marker) == ndraws)
 
-    ## GET NUMBERS OF SEGREGATING SITES IN EACH DRAW
     segsites <- sapply(strsplit(txt[marker], split=" "), function(vec) as.integer(vec[2]) )
     for(draw in seq(along=marker)) {
         if(!(draw %% 100)) cat(draw, " ")
@@ -81,9 +78,7 @@ readms.output <- function( txt=NA, file.ms.output=NA ) {
             haplotypes <- txt[(marker[draw] + 2):(marker[draw] + 2 + nsam - 1)]
             haplotypes <- strsplit(haplotypes, split="")
             h <- sapply(haplotypes, function(el) c(as.integer(el)))
-            ## IF THERE'S 1 SEGREGATING SITE, THIS WON'T BE A MATRIX 
             if(segsites[draw] == 1) h <- as.matrix(h)
-            ## OTHERWISE, IT NEEDS TO BE TRANSPOSED
             else h <- t(h)
         }
         else {

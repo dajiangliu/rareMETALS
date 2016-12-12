@@ -94,7 +94,6 @@ rareMETALS.range.core <- function(score.stat.file,cov.file,range,range.name,test
     gene.name.out <- range.name;p.value.out <- rep(NA,length(range.name));statistic.out <- rep(NA,length(range.name));no.site.out <- rep(NA,length(range.name));beta1.est.out <- rep(NA,length(range.name));beta1.sd.out <- rep(NA,length(range.name));maf.cutoff.out <- rep(NA,length(range.name));direction.burden.by.study.out <- rep(NA,length(range.name));direction.meta.single.var.out <- rep(NA,length(range.name));pos.ref.alt.out <- rep(NA,length(range.name));top.singlevar.pval <- rep(NA,length(range.name));top.singlevar.refalt <- rep(NA,length(range.name));top.singlevar.pos <- rep(NA,length(range.name));top.singlevar.af <- rep(NA,length(range.name));integratedData <- list();
     for(kk in 1:length(raw.data.all))
       {
-        ##################################################################################################print("this is executed");
         raw.data <- raw.data.all[[kk]];
         raw.data.ori <- raw.data;
         raw.data$gene <- range.name[kk];
@@ -192,31 +191,14 @@ rareMETALS.range.core <- function(score.stat.file,cov.file,range,range.name,test
                   }
               }
           }          
-          ## res.check.mono <- check.mono(af.vec.list,ac.vec.list,N.list)
-          ## af.vec.list <- res.check.mono$af.vec.list;
-          ## ac.vec.list <- res.check.mono$ac.vec.list;
 
-          ## maf.vec <- rep(0,length(af.vec.list[[1]]));
-          ## af.vec <- maf.vec;
-          ## mac.vec <- 0;ac.vec <- 0;
 
           af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
           ac.vec <- colSums(ac.mat,na.rm=TRUE);
-          ##af.vec <- af.vec/sum(2*unlist(N.list));
           maf.vec <- af.vec;
           mac.vec <- ac.vec;          
-          ## for(ii in 1:length(ix.pop))
-          ##   {
-          ##     af.vec <- af.vec+(af.vec.list[[ii]])*(2*N.list[[ii]]);
-          ##     ac.vec <- ac.vec+ac.vec.list[[ii]];
-          ##   }
           
-          ## af.vec <- af.vec/sum(2*unlist(N.list));
-          ## maf.vec <- af.vec;
-          ## mac.vec <- ac.vec;
-          ##############################################################################################print(c('af.vec',af.vec));
           ix.major <- which(af.vec>0.5);
-          ################################################################################################print(ix.major);
           if(length(ix.major)>0)
             {
               maf.vec[ix.major] <- 1-maf.vec[ix.major];
@@ -284,9 +266,7 @@ rareMETALS.range.core <- function(score.stat.file,cov.file,range,range.name,test
                 }
               if(test=='VT')
                 {
-                  ################################################################################################################################print('this is executed');
                   res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='VT',extra.pars=list(vstat.list=vstat.list,ac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare,max.TH=max.VT))));
-                  ################################################################################################################################print("this is okay");
                   res[[kk]] <- c(res.kk,res.extra);
                 }
               gene.name.out[kk] <- res[[kk]]$gene.name;
@@ -300,15 +280,10 @@ rareMETALS.range.core <- function(score.stat.file,cov.file,range,range.name,test
               direction.meta.single.var.out[kk] <- res[[kk]]$direction.meta.single.var;          
               pos.ref.alt.out[kk] <- paste(res[[kk]]$pos,res[[kk]]$ref,res[[kk]]$alt,sep='/',collapse=',');
               ix.best <- res[[kk]]$ix.best;
-              ########################################################################################################print(c("ix.best",ix.best));
               top.singlevar.pos[kk] <- res[[kk]]$pos[ix.best];
               top.singlevar.refalt[kk] <- paste(c(res[[kk]]$ref[ix.best],res[[kk]]$alt[ix.best]),sep="/",collapse="/");
               top.singlevar.pval[kk] <- format(res[[kk]]$singlevar.pval.vec[ix.best],digits=out.digits);
               top.singlevar.af[kk] <- format(res[[kk]]$singlevar.af.vec[ix.best],digits=out.digits);
-              ##  [1] "ref"      "alt"      "nSample"  "af"       "ac"       "callrate"
-              ##  [7] "hwe"      "nref"     "nhet"     "nalt"     "ustat"    "vstat"
-              ## [13] "effect"   "pVal"     "cov"      "pos"      "anno"     "covXZ"
-              ## [19] "covZZ"    "hweCase"  "hweCtrl"  "afCase"   "afCtrl"  
               ref.out <- list(res[[kk]]$ref);
               alt.out <- list(res[[kk]]$alt);
               nSample.out <- list(rep(res[[kk]]$nSample,length(ref.out[[1]])));

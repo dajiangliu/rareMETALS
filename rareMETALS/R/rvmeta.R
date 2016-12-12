@@ -13,7 +13,6 @@ RVMETA.pool <- function(scenario=c('gene','region'),score.stat.file,cov.file,gen
     ref <- character(0);
     alt <- ref;
     direction.by.study <- character(0);
-    ##specify gold standard population;
     ix.gold <- extra.pars$ix.gold;
     if(length(extra.pars$ix.gold)==0) {
       ix.gold <- 1;
@@ -131,7 +130,6 @@ RVMETA.pool <- function(scenario=c('gene','region'),score.stat.file,cov.file,gen
               if(length(ix.0)>0) raw.data$af[[ii]][ix.0] <- 1;
               var.Y.list[[ii]] <- 1;
               mean.Y.list[[ii]] <- 0;
-              maf.vec.list[[ii]] <- rm.na((raw.data$af[[ii]])[ix.var]);## this is to be commented out for the general release;
               pos.list[[ii]] <- (raw.data$pos)[ix.var];
               ref.list[[ii]] <- (raw.data$ref)[[ii]][ix.var];
               alt.list[[ii]] <- (raw.data$alt)[[ii]][ix.var];
@@ -188,7 +186,6 @@ RVMETA.pool <- function(scenario=c('gene','region'),score.stat.file,cov.file,gen
           
           ix.rare <- which(maf.vec<maf.cutoff);
           maf.vec.rare <- maf.vec[ix.rare];
-          ############################################################################################################################################################################################print(c('ix.rare',ix.rare));
           if(length(ix.rare)>1)
             {
               for(ii in 1:length(ix.pop))
@@ -253,10 +250,7 @@ RVMETA.pool <- function(scenario=c('gene','region'),score.stat.file,cov.file,gen
                 }
               if(test=='SINGLE')
                 {
-                  ##############################################################################################################################################################################################print('begin single');
                   res.kk <- rvmeta.approx.mega(score.stat.vec.list,maf.vec.list,cov.mat.list,mean.Y.list,var.Y.list,N.list,alternative,no.boot,alpha,rv.test='SINGLE',extra.pars=list());
-                  ##############################################################################################################################################################################################print('end single');
-                  ##############################################################################################################################################################################################print(res.kk);
                   statistic <- c(statistic,res.kk$statistic);
                   direction.by.study <- c(direction.by.study,res.kk$direction.by.study)
                   p.value <- c(p.value,res.kk$p.value);
@@ -303,7 +297,6 @@ RVMETA.pool <- function(scenario=c('gene','region'),score.stat.file,cov.file,gen
     }
     if(test=='SINGLE' || test=='SINGLE-inVAR')
     {
-      ############################################################################################################################################################################################print(direction.by.study);
         res <- list(p.value=p.value,
                     statistic=statistic,
                     direction=direction,
