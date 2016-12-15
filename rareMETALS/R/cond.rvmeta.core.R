@@ -62,11 +62,9 @@ get.conditional.score.stat <- function(ustat,X.T.times.X,N,ix.candidate,ix.known
     if(length(ix.X2.type)>0) {
         X2.T.times.X2.type <- matrix((X.T.times.X[ix.X2.type,ix.X2.type]),nrow=length(ix.X2.type),ncol=length(ix.X2.type));
         X2.T.times.X1.type <- matrix(X.T.times.X[ix.X2.type,ix.X1],nrow=length(ix.X2.type),ncol=length(ix.X1));
-        X1.T.times.X2.type <- matrix(X.T.times.X[ix.X1,ix.X2.type],nrow=length(ix.X1),ncol=length(ix.X2.type));
-        
+        X1.T.times.X2.type <- matrix(X.T.times.X[ix.X1,ix.X2.type],nrow=length(ix.X1),ncol=length(ix.X2.type));        
         X2.T.times.Y.type <- X.T.times.Y[ix.X2.type];
     }
-    
     gamma.est <- as.vector(ginv(X2.T.times.X2)%*%X2.T.times.Y);
     sigma.sq.est <- var.Y-(t(X2.T.times.Y)%*%ginv(X2.T.times.X2)%*%X2.T.times.Y)/N;
     U <- X1.T.times.Y-X1.T.times.X2%*%gamma.est;

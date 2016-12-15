@@ -222,7 +222,6 @@ calcGeneLevelTest <- function(ustat,V,maf.vec,N,test="GRANVIL") {
     }
     if(test=='VT') {
         res <- rvmeta.CMH.vt(list(ustat),list(V),mac.vec,list(V/N),list(1),list(N),'two.sided',0,0.05,extra.pars=list(max.TH=10));
-
     }
     return(res);
 
