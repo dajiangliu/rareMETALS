@@ -393,15 +393,11 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
             }
         }
     }
-    print('Umeta');
-    print(U.meta);
     U.meta <- U.meta/nSample.U;
     U.XY <- U.meta[ix.candidate];
     U.ZY <- U.meta[ix.known];
     covG.ori <- covG;
     covG <- rm.na(covG/nSample.covG);    
-    print("covG standardized");
-    print(covG);
     V.XZ <- matrix(covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
     V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
@@ -415,23 +411,17 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
     conditional.V <- conditional.V*as.numeric(sigma.sq.est);
     lambda <- .1;
-    print('before regularization');
-    print(conditional.V);
     conditional.V <- regMat(conditional.V,lambda);
-    print('after regularization');
-    print(conditional.V);
     
     N.out <- sum(apply(N.mat.imp,1,max,na.rm=T));
     conditional.ustat <- conditional.ustat*N.out;
     conditional.V <- conditional.V*N.out^2;
-    print(c("condtitional.ustat",conditional.ustat));
-    print("conditional.V");
-    print(conditional.V);
     
     return(list(conditional.ustat=conditional.ustat,
                 conditional.V=conditional.V,
                 U.ZY=U.ZY,
                 var.U.ZY=var.U.ZY,
+                N=N.out,
                 sigma.sq.est=sigma.sq.est));
 }
 regMat <- function(M,lambda) {

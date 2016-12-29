@@ -16,7 +16,7 @@
 #' @param correctFlip Correcting for flipped alleles; Default is TRUE; If FALSE, studies with incorrect REF/ALT alleles will be labelled as missing, and dropped from meta-analyses
 #' @param analyzeRefAltListOnly Only analyze variants that are included in the refaltList; Default is TRUE; If FALSE, variant sites in the dataset but not specified in the refaltList will be labelled as missing and dropped from studies;
 #' @export
-conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,cov.file,candidate.variant.vec,known.variant.vec,test='GRANVIL',maf.cutoff,alternative=c('two.sided','greater','less'),refaltList,out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
+conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,cov.file,candidate.variant.vec,known.variant.vec,test='GRANVIL',maf.cutoff,alternative=c('two.sided','greater','less'),refaltList,out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,impMissing=TRUE)
   {
     ANNO <- "gene";
     no.boot <- 0;
@@ -215,6 +215,20 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
               beta1.est.out[kk] <- format(res[[kk]]$beta1.est,digits=out.digits);
               beta1.sd.out[kk] <- format(res[[kk]]$beta1.sd,digits=out.digits);
               maf.cutoff.out[kk] <- format(res[[kk]]$maf.cutoff,digits=out.digits);
+              if(impMissing==TRUE) {
+                  res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.X1,ix.X2);
+                  res.tmp <- calcGeneLevelTest(res.impute$conditional.ustat,res.impute$conditional.V,maf.vec.rare[ix.X1],as.numeric(res.impute$N.out),test)
+                  p.value.out[kk] <- format(res.tmp[[kk]]$p.value,digits=out.digits);
+                  statistic.out[kk] <- format(res.tmp[[kk]]$statistic,digits=out.digits);
+                  no.site.out[kk] <- res.tmp[[kk]]$no.site;
+                  beta1.est.out[kk] <- format(res.tmp[[kk]]$beta1.est,digits=out.digits);
+                  beta1.sd.out[kk] <- format(res.tmp[[kk]]$beta1.sd,digits=out.digits);
+                  if(test=='VT')
+                      maf.cutoff.out[kk] <- format(res.tmp[[kk]]$maf.cutoff,digits=out.digits);
+                  if(test!='VT') maf.cutoff.out[kk] <- maf.cutoff;
+              }
+
+              
 
               direction.burden.by.study.out[kk] <- res[[kk]]$direction.burden.by.study;
               direction.meta.single.var.out[kk] <- res[[kk]]$direction.meta.single.var;          
