@@ -14,6 +14,7 @@ rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,c
           return(list(statistic=NA,
                       p.value=NA,
                       p.value.liu=NA,
+                      no.site=NA,
                       p.value.imhof=NA,
                       p.value.davies=NA,
                       X.T.times.Y=X.T.times.Y,
@@ -50,6 +51,7 @@ rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,c
           {
             return(list(statistic=NA,
                         p.value=NA,
+                        no.site=NA,
                         p.value.liu=NA,
                         p.value.imhof=NA,
                         p.value.davies=NA,
@@ -67,6 +69,7 @@ rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,c
             if(length(attr(p.value.davies,'class'))+length(attr(p.value.liu,'class'))+length(attr(p.value.imhof,'class'))>0)
               return(list(statistic=NA,
                           p.value=NA,
+                          no.site=NA,
                           p.value.liu=NA,
                           p.value.imhof=NA,
                           p.value.davies=NA,
