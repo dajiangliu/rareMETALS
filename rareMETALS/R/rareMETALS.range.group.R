@@ -191,6 +191,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               cov.mat.list <- tmp.major$cov.mat.list;
             }
           ix.rare <- which(maf.vec<maf.cutoff & maf.vec>0);
+          
           maf.vec.rare <- maf.vec[ix.rare];
           mac.vec.rare <- mac.vec[ix.rare];
           refaltList.rare <- list(ref=refaltList$ref[ix.rare],
@@ -217,8 +218,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                     pos.list[[ii]] <- pos.list[[ix.gold]][ix.rare];
                     ref.list[[ii]] <- ref.list[[ix.gold]][ix.rare];
                     alt.list[[ii]] <- alt.list[[ix.gold]][ix.rare];
-                    
-              }
+                }
               
               N.mat <- matrix(N.mat[,ix.rare],nrow=nrow(N.mat),ncol=length(ix.rare));
               covG <- matrix(0,nrow=length(ix.rare),ncol=length(ix.rare));
@@ -227,7 +227,6 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               for(aa in 1:length(ix.rare)) {
                   for(bb in 1:length(ix.rare)) {
                       for(cc in ix.pop) {
-                          
                           covG[aa,bb] <- covG[aa,bb]+rm.na(sqrt(N.mat[cc,aa]*N.mat[cc,bb])*cov.mat.list[[cc]][aa,bb]);
                           nSample.covG[aa,bb] <- nSample.covG[aa,bb]+sqrt(rm.na(N.mat[cc,aa])*rm.na(N.mat[cc,bb]));
                       }

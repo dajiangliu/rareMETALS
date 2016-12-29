@@ -1,8 +1,8 @@
 Package: rareMETALS
 Type: Package
 Title: Meta-Analysis of Gene-level Rare Variant Association Test
-Version: 6.6
-Date: 2016-09-20
+Version: 6.7
+Date: 2016-12-29
 Author: Dajiang J. Liu, Xiaowei Zhan & Goncalo R. Abecasis
 Maintainer: Dajiang J. Liu <dajiang.liu@outlook.com>
 Description: rareMETALS implements our methodologies for performing rare
