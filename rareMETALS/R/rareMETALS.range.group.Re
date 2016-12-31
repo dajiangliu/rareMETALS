@@ -102,6 +102,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
       {
         raw.data <- raw.data.all[[kk]];
         raw.data.ori <- raw.data;
+        raw.data$pos <- gsub("_.*","",raw.data$pos);
         refaltList <- refaltList.ori;
         raw.data$gene <- range.name[kk];
         QC.par <- list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff);
