@@ -8,7 +8,7 @@ conditional.rareMETALS.single.group.core(candidate.variant, score.stat.file,
   cov.file, known.variant.vec, refaltList, maf.cutoff,
   alternative = c("two.sided", "greater", "less"), out.digits = 4,
   callrate.cutoff = 0, hwe.cutoff = 0, correctFlip = TRUE,
-  knownCoding = "identity", impMissing = FALSE)
+  knownCoding = "identity", impMissing = TRUE)
 }
 \arguments{
 \item{candidate.variant}{Candidate variant position;}
