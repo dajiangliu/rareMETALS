@@ -94,6 +94,8 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
         kk <- 1;    
         candidate.variant <- candidate.variant;
         raw.data <- raw.data.all[[1]];
+        raw.data$pos <- gsub("_.*","",raw.data$pos);
+
         raw.data.ori <- raw.data;
         if(length(extra.pars$QC.par)>0) 
             raw.data <- QC(raw.data,extra.pars$QC.par,cov=1);

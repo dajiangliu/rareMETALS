@@ -227,7 +227,6 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
               if(impMissing==TRUE) {
                   
                   res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.X1,ix.X2);
-                  print(res.impute);
                   res.tmp <- calcGeneLevelTest(res.impute$conditional.ustat,res.impute$conditional.V,maf.vec.rare[ix.X1],as.numeric(res.impute$N),test)
                   p.value.out[kk] <- format(res.tmp$p.value,digits=out.digits);
                   statistic.out[kk] <- format(res.tmp$statistic,digits=out.digits);
