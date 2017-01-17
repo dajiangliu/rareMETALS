@@ -407,13 +407,19 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     var.U.XY <- covG.ori[ix.candidate,ix.candidate]/(scaleMat[ix.candidate,ix.candidate]);
     var.U.ZY <- covG.ori[ix.known,ix.known]/(scaleMat[ix.known,ix.known]);
     cov.U.XY.U.ZY <- covG.ori[ix.candidate,ix.known]/matrix(scaleMat[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
-
+    print(1);
     print(var.U.XY);
+    print(2);
     print(V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ))
+    print(3);
     print(cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ)));
+    print(4);
     print((V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY));
-    
+
+   
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
+    print("conditional.V")
+    print(conditional.V);
     sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
     conditional.V <- conditional.V*as.numeric(sigma.sq.est);
     lambda <- .1;
@@ -431,7 +437,9 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
                 sigma.sq.est=sigma.sq.est));
 }
 regMat <- function(M,lambda) {
-    cor.tmp <- cov2cor(M);
+    cor.tmp <- rm.na(cov2cor(M));
+    ## print('cor.tmp');
+    ## print(cor.tmp);
     sd.mat <- matrix(0,nrow=nrow(M),ncol=ncol(M));
     id.mat <- matrix(0,nrow=nrow(M),ncol=ncol(M));
     diag(id.mat) <- 1;
