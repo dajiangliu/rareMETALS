@@ -438,6 +438,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
 }
 regMat <- function(M,lambda) {
     cor.tmp <- cov2cor(M);
+    print('cor.tmp');
+    print(cor.tmp);
     sd.mat <- matrix(0,nrow=nrow(M),ncol=ncol(M));
     id.mat <- matrix(0,nrow=nrow(M),ncol=ncol(M));
     diag(id.mat) <- 1;
