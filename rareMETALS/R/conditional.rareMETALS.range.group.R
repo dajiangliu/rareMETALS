@@ -102,8 +102,8 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                 N.mat[ii,] <- raw.data$nSample[[ii]][ix.var];
                 no.sample <- no.sample+N.list[[ii]];
                 U.stat <- rm.na(raw.data$ustat[[ii]][ix.var]);
-                ustat.list <- raw.data$ustat[[ii]][ix.var];
-                vstat.list <- raw.data$vstat[[ii]][ix.var];
+                ustat.list[[ii]] <- raw.data$ustat[[ii]][ix.var];
+                vstat.list[[ii]] <- raw.data$vstat[[ii]][ix.var];
                 V.stat <- rm.na(raw.data$vstat[[ii]][ix.var]);
                 score.stat.vec.list[[ii]] <- rm.na(U.stat/V.stat);
                 cov.mat.list[[ii]] <- as.matrix(rm.na(as.matrix(raw.data$cov[[ii]])[ix.var,ix.var]));
