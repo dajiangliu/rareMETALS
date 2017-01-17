@@ -181,6 +181,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                     ref.list[[ii]] <- ref.gold[ix.rare];
                     alt.list[[ii]] <- alt.gold[ix.rare];
                 }
+              N.mat <- N.mat[,ix.rare];
               res.extra <- list(anno=anno.gold,
                                 pos=pos.gold[ix.rare],
                                 ref=ref.gold[ix.rare],
@@ -228,7 +229,9 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                   print(ustat.list);
                   print("vstat.list");
                   print(vstat.list);
-                  
+                  print("cov.mat.list");
+                  print(cov.mat.list);
+                  print(dim(N.mat));
                   
                   res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.X1,ix.X2);
                   res.tmp <- calcGeneLevelTest(res.impute$conditional.ustat,res.impute$conditional.V,maf.vec.rare[ix.X1],as.numeric(res.impute$N.out),test)
