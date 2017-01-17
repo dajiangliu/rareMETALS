@@ -229,13 +229,13 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                   res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.X1,ix.X2);
                   print(res.impute);
                   res.tmp <- calcGeneLevelTest(res.impute$conditional.ustat,res.impute$conditional.V,maf.vec.rare[ix.X1],as.numeric(res.impute$N),test)
-                  p.value.out[kk] <- format(res.tmp[[kk]]$p.value,digits=out.digits);
-                  statistic.out[kk] <- format(res.tmp[[kk]]$statistic,digits=out.digits);
-                  no.site.out[kk] <- res.tmp[[kk]]$no.site;
-                  beta1.est.out[kk] <- format(res.tmp[[kk]]$beta1.est,digits=out.digits);
-                  beta1.sd.out[kk] <- format(res.tmp[[kk]]$beta1.sd,digits=out.digits);
+                  p.value.out[kk] <- format(res.tmp$p.value,digits=out.digits);
+                  statistic.out[kk] <- format(res.tmp$statistic,digits=out.digits);
+                  no.site.out[kk] <- res.tmp$no.site;
+                  beta1.est.out[kk] <- format(res.tmp$beta1.est,digits=out.digits);
+                  beta1.sd.out[kk] <- format(res.tmp$beta1.sd,digits=out.digits);
                   if(test=='VT')
-                      maf.cutoff.out[kk] <- format(res.tmp[[kk]]$maf.cutoff,digits=out.digits);
+                      maf.cutoff.out[kk] <- format(res.tmp$maf.cutoff,digits=out.digits);
                   if(test!='VT') maf.cutoff.out[kk] <- maf.cutoff;
               }
 
