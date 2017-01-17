@@ -407,10 +407,13 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     var.U.XY <- covG.ori[ix.candidate,ix.candidate]/(scaleMat[ix.candidate,ix.candidate]);
     var.U.ZY <- covG.ori[ix.known,ix.known]/(scaleMat[ix.known,ix.known]);
     cov.U.XY.U.ZY <- covG.ori[ix.candidate,ix.known]/matrix(scaleMat[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
-
+    print(1);
     print(var.U.XY);
+    print(2);
     print(V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ))
+    print(3);
     print(cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ)));
+    print(4);
     print((V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY));
 
    
