@@ -68,6 +68,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
     kk <- 1;
       {
         raw.data <- raw.data.all[[kk]];
+        raw.data$pos <- gsub("_.*","",raw.data$pos);
         raw.data.ori <- raw.data;
         if(length(extra.pars$QC.par)>0) 
           raw.data <- QC(raw.data,extra.pars$QC.par,cov=1);        
@@ -88,6 +89,8 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
           score.stat.vec.list <- list();mac.vec.list <- list();maf.vec.list <- list();cov.mat.list <- list();var.Y.list <- list();N.list <- list();mean.Y.list <- list();pos.list <- list();anno.list <- list();ac.vec.list <- list();af.vec.list <- list();
           ref.list <- list();
           alt.list <- list();
+          ustat.list <- list();
+          vstat.list <- list();
           no.sample <- 0;
           N.mat <- matrix(NA,ncol=length(raw.data$nSample[[1]]),nrow=length(raw.data$nSample));
           log.mat <- t(N.mat);
@@ -99,6 +102,8 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                 N.mat[ii,] <- raw.data$nSample[[ii]][ix.var];
                 no.sample <- no.sample+N.list[[ii]];
                 U.stat <- rm.na(raw.data$ustat[[ii]][ix.var]);
+                ustat.list[[ii]] <- raw.data$ustat[[ii]][ix.var];
+                vstat.list[[ii]] <- raw.data$vstat[[ii]][ix.var];
                 V.stat <- rm.na(raw.data$vstat[[ii]][ix.var]);
                 score.stat.vec.list[[ii]] <- rm.na(U.stat/V.stat);
                 cov.mat.list[[ii]] <- as.matrix(rm.na(as.matrix(raw.data$cov[[ii]])[ix.var,ix.var]));
@@ -144,6 +149,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
             {
                 maf.vec[ix.major] <- 1-maf.vec[ix.major];
                 mac.vec[ix.major] <- 2*no.sample-ac.vec[ix.major];
+                ustat.list <- lapply(ustat.list,function(x,ix.major) {x[ix.major] <- (-1)*x[ix.major];return(x)},ix.major=ix.major)
                 tmp.major <- flip.score.cov(score.stat.vec.list,cov.mat.list,ix.major);
                 score.stat.vec.list <- tmp.major$score.stat.vec.list;
                 cov.mat.list <- tmp.major$cov.mat.list;
@@ -165,6 +171,8 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
               for(ii in 1:length(ix.pop))
                 {
                     score.stat.vec.list[[ii]] <- score.stat.vec.list[[ii]][ix.rare];
+                    ustat.list[[ii]] <- ustat.list[[ii]][ix.rare];
+                    vstat.list[[ii]] <- vstat.list[[ii]][ix.rare];
                     cov.mat.list[[ii]] <- as.matrix(cov.mat.list[[ii]][ix.rare,ix.rare]);
                     af.vec.list[[ii]] <- af.vec.list[[ii]][ix.rare];
                     ac.vec.list[[ii]] <- ac.vec.list[[ii]][ix.rare];
@@ -173,6 +181,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                     ref.list[[ii]] <- ref.gold[ix.rare];
                     alt.list[[ii]] <- alt.gold[ix.rare];
                 }
+              N.mat <- N.mat[,ix.rare];
               res.extra <- list(anno=anno.gold,
                                 pos=pos.gold[ix.rare],
                                 ref=ref.gold[ix.rare],
@@ -216,7 +225,17 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
               beta1.sd.out[kk] <- format(res[[kk]]$beta1.sd,digits=out.digits);
               maf.cutoff.out[kk] <- format(res[[kk]]$maf.cutoff,digits=out.digits);
               if(impMissing==TRUE) {
+                  print("ustat.list");
+                  print(ustat.list);
+                  print("vstat.list");
+                  print(vstat.list);
+                  print("cov.mat.list");
+                  print(cov.mat.list);
+                  print(dim(N.mat));
+                  
                   res.impute <- imputeConditional(ustat.list,vstat.list,cov.mat.list,N.mat,NULL,ix.X1,ix.X2);
+                  print('res.impute okay');
+                  print(res.impute);
                   res.tmp <- calcGeneLevelTest(res.impute$conditional.ustat,res.impute$conditional.V,maf.vec.rare[ix.X1],as.numeric(res.impute$N.out),test)
                   p.value.out[kk] <- format(res.tmp[[kk]]$p.value,digits=out.digits);
                   statistic.out[kk] <- format(res.tmp[[kk]]$statistic,digits=out.digits);

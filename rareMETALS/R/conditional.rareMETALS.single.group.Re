@@ -54,7 +54,7 @@ conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.fil
 #' @param knownCoding knownCoding option allows users to specify if a linear transformation needs to be applied known variants. Possible choices for knownCoding option include identical, burden, randomm-eff.
 #' @return return a list of meta-analysis results
 #' @export
-conditional.rareMETALS.single.group.core <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,knownCoding='identity',impMissing=FALSE)
+conditional.rareMETALS.single.group.core <- function(candidate.variant,score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,knownCoding='identity',impMissing=TRUE)
     {
         alpha <- 0.05;maf.cutoff <- 1;no.boot <- 0;test <- "SINGLE";
         both.vec <- set.intersect(candidate.variant,known.variant.vec);

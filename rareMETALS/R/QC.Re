@@ -401,6 +401,12 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     V.XZ <- matrix(covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
     V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
+    print('V.XZ');
+    print(V.XZ);
+    print('V.ZZ');
+    print(V.ZZ);
+    print('V.XX');
+    print(V.XX);
     conditional.ustat <- U.XY-V.XZ%*%ginv(V.ZZ)%*%U.ZY;
     beta.ZY <- ginv(V.ZZ)%*%U.ZY;
     scaleMat <- as.matrix(diag(as.matrix(nSample.covG))%*%t(diag(as.matrix(nSample.covG))));
@@ -408,6 +414,7 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     var.U.ZY <- covG.ori[ix.known,ix.known]/(scaleMat[ix.known,ix.known]);
     cov.U.XY.U.ZY <- covG.ori[ix.candidate,ix.known]/matrix(scaleMat[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
+    ##print(conditional.V);
     sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
     conditional.V <- conditional.V*as.numeric(sigma.sq.est);
     lambda <- .1;
