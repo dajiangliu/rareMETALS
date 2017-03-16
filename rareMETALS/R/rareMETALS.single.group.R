@@ -13,9 +13,19 @@
 
 #' @return a list consisting of results
 #' @export
-rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,alternative=c('two.sided','greater','less'),callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
+rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,alternative=c('two.sided','greater','less'),callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...)
   {
     ix.gold <- 1;
+    pars... <- list(...);
+    gc <- pars...$gc;
+    if(is.null(gc)) gc <- FALSE;
+    if(gc==TRUE) {
+        gc.fname <- pars...$gc.fname;
+        gc.list <- list();
+        for(ii in 1:length(gc.fname)) {
+            gc.list[[ii]] <- read.table(file=gc.fname[ii],header=TRUE,as.is=TRUE);
+        }
+    }
     extra.par <- list(ix.gold=ix.gold,QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
     capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, cov.file, range));
     if(length(raw.data.all)==0)
@@ -101,8 +111,17 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                   raw.data <- res.flipAllele$raw.data;
                   ix.include <- res.flipAllele$ix.include;
                   log.mat[ix.var,] <- res.flipAllele$log.mat.var;
-                  U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
+                  if(gc==FALSE) 
+                      U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
+                  if(gc==TRUE) {
+                      maf.tmp <- raw.data$af[[ii]][ix.var];
+                      maf.tmp <- rm.na(maf.tmp);
+                      if(maf.tmp>.5) maf.tmp <- 1-maf.tmp;
+                      id.bin <- which(gc[,1]<maf.tmp & gc[,2]>=maf.tmp);
+                      U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var])/sqrt(gc.list[[ii]][ix.bin,3]);
+                  }
                   V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
+                  
                   nref.var <- nref.var+rm.na(raw.data$nref[[ii]][ix.var]);
                   nalt.var <- nalt.var+rm.na(raw.data$nalt[[ii]][ix.var]);
                   nhet.var <- nhet.var+rm.na(raw.data$nhet[[ii]][ix.var]);
