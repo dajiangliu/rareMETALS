@@ -23,7 +23,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
         gc.fname <- pars...$gc.fname;
         gc.list <- list();
         for(ii in 1:length(gc.fname)) {
-            gc.list[[ii]] <- read.table(file=gc.fname[ii],header=TRUE,as.is=TRUE);
+            gc.list[[ii]] <- read.table(file=gc.fname[ii],header=FALSE,as.is=TRUE);
         }
     }
     extra.par <- list(ix.gold=ix.gold,QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
