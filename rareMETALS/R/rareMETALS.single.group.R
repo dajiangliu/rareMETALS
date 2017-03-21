@@ -118,7 +118,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                       maf.tmp <- rm.na(maf.tmp);
                       if(maf.tmp>.5) maf.tmp <- 1-maf.tmp;
                       ix.bin <- which(gc.list[[ii]][,1]<=maf.tmp & gc.list[[ii]][,2]>=maf.tmp);
-                      print(ix.bin);
+                      print(c(maf.tmp,ix.bin));
                       U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var])/sqrt(gc.list[[ii]][ix.bin,3]);
                   }
                   V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
