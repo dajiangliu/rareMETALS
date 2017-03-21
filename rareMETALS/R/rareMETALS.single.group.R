@@ -13,7 +13,7 @@
 
 #' @return a list consisting of results
 #' @export
-rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,alternative=c('two.sided','greater','less'),callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...)
+rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,alternative=c('two.sided','greater','less'),callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...);
   {
     ix.gold <- 1;
     pars... <- list(...);
@@ -117,7 +117,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                       maf.tmp <- raw.data$af[[ii]][ix.var];
                       maf.tmp <- rm.na(maf.tmp);
                       if(maf.tmp>.5) maf.tmp <- 1-maf.tmp;
-                      id.bin <- which(gc[,1]<maf.tmp & gc[,2]>=maf.tmp);
+                      id.bin <- which(gc.list[[ii]][,1]<maf.tmp & gc.list[[ii]][,2]>=maf.tmp);
                       U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var])/sqrt(gc.list[[ii]][ix.bin,3]);
                   }
                   V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
