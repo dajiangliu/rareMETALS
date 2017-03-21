@@ -13,7 +13,7 @@
 
 #' @return a list consisting of results
 #' @export
-rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,alternative=c('two.sided','greater','less'),callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...);
+rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,alternative=c('two.sided','greater','less'),callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...)
   {
     ix.gold <- 1;
     pars... <- list(...);
