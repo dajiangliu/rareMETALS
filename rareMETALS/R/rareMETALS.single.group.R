@@ -112,16 +112,19 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                   ix.include <- res.flipAllele$ix.include;
                   log.mat[ix.var,] <- res.flipAllele$log.mat.var;
                   if(gc==FALSE) 
+                  {
                       U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
+                      print(raw.data$ustat[[ii]][ix.var]);
+                  }
                   if(gc==TRUE) {
                       maf.tmp <- raw.data$af[[ii]][ix.var];
                       maf.tmp <- rm.na(maf.tmp);
                       if(maf.tmp>.5) maf.tmp <- 1-maf.tmp;
                       ix.bin <- which(gc.list[[ii]][,1]<=maf.tmp & gc.list[[ii]][,2]>=maf.tmp);
                       U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var])/sqrt(gc.list[[ii]][ix.bin,3]);
+                      print(c(raw.data$ustat[[ii]][ix.var],gc.list[[ii]][ix.bin,3],ix.bin))
                   }
-                  V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;
-                  
+                  V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;                  
                   nref.var <- nref.var+rm.na(raw.data$nref[[ii]][ix.var]);
                   nalt.var <- nalt.var+rm.na(raw.data$nalt[[ii]][ix.var]);
                   nhet.var <- nhet.var+rm.na(raw.data$nhet[[ii]][ix.var]);
