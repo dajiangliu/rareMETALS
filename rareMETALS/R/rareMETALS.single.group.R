@@ -109,13 +109,13 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                   }
                   res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var,log.mat[ix.var,],correctFlip,analyzeRefAltListOnly);
                   raw.data <- res.flipAllele$raw.data;
-                  print(raw.data$ustat);
+                  ##print(raw.data$ustat);
                   ix.include <- res.flipAllele$ix.include;
                   log.mat[ix.var,] <- res.flipAllele$log.mat.var;
                   if(gc==FALSE) 
                   {
                       U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
-                      print(raw.data$ustat[[ii]]);
+                     ## print(raw.data$ustat[[ii]]);
                   }
                   if(gc==TRUE) {
                       maf.tmp <- raw.data$af[[ii]][ix.var];
