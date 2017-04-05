@@ -482,7 +482,7 @@ checkOverlap <- function(score.stat.file1,score.stat.file2,...) {
     ix.common <- which(maf1>maf.cutoff);
     res1 <- res1[ix.common,];
     res2 <- res2[ix.common,];
-    ixVar <- as.integer(seq(1:nrow(res1),length=nVar));
+    ixVar <- as.integer(seq(1,nrow(res1),length=nVar));
     stat1 <- res1$USTAT[ixVar]/res1$SQRT_V_STAT[ixVar];
     stat2 <- res2$USTAT[ixVar]/res2$SQRT_V_STAT[ixVar];
     stat.out <- median((stat1-stat2)^2,na.rm=TRUE)/qchisq(.5,df=1,lower.tail=FALSE)/2
