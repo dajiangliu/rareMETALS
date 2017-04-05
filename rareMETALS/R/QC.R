@@ -472,6 +472,8 @@ checkOverlap <- function(score.stat.file1,score.stat.file2,...) {
     if(is.null(nVar)) nVar <- 10000;
     res1 <- readData(score.stat.file1);
     res2 <- readData(score.stat.file2);
+    print(head(res1));
+    print(head(res2));
     pos1 <- paste(res1$CHROM,res1$POS,sep=":");
     pos2 <- paste(res2$CHROM,res2$POS,sep=":");
     pos.both <- intersect(pos1,pos2);
