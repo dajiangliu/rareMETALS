@@ -27,7 +27,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
         }
     }
     extra.par <- list(ix.gold=ix.gold,QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
-    capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, cov.file, range,multiAllelic = TRUE));
+    capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, cov.file, range,multiAllelic = FALSE));
     if(length(raw.data.all)==0)
       return(list(list(p.value=NA,
                        skip=1,
