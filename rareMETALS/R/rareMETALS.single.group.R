@@ -184,7 +184,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
           beta1.sd[ix.var] <- sqrt(1/V.stat.sq);
           Z.meta <- U.stat/sqrt(V.stat.sq);
           cochranQ.stat[ix.var] <- sum((Z.byStudy-Z.meta)^2,na.rm=T);
-          cochranQ.df[ix.var] <- sum(which(!is.na(Z.byStudy-Z.meta)^2))-1;
+          cochranQ.df[ix.var] <- length(which(!is.na(Z.byStudy-Z.meta)^2))-1;
           if(cochranQ.df[ix.var]>0)
               cochranQ.pVal[ix.var] <- pchisq(cochranQ.stat[ix.var],df=cochranQ.df[ix.var],lower.tail=FALSE);
           if(cochranQ.df[ix.var]<=0)
