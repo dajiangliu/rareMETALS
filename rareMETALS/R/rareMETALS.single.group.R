@@ -152,11 +152,14 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                       }
                   beta.byStudy[ii] <- (raw.data$ustat[[ii]][ix.var])/(raw.data$vstat[[ii]][ix.var])^2;
                   beta.var.byStudy[ii] <- 1/(raw.data$vstat[[ii]][ix.var])^2;
-                  weight.byStudy[ii] <- (raw.data$vstat[[ii]][ix.var])^2;
+                  weight.byStudy[ii] <- NA;
+                  if(!is.na(raw.data$vstat[[ii]][ix.var]))
+                      weight.byStudy[ii] <- (raw.data$vstat[[ii]][ix.var])^2;
+                  
                   maf.pop[ii] <- ((raw.data$af[[ii]])[ix.var]);
                   maf.pop.ori[ii] <- (raw.data$af[[ii]])[ix.var];
               }
-          weight.byStudy <- weight.byStudy/sum(weight.byStudy);
+          weight.byStudy <- weight.byStudy/sum(weight.byStudy,na.rm=TRUE);
           maf.byStudy[ix.var] <- paste(maf.pop,collapse=",",sep=",");
           maf.vec[ix.var] <- sum(maf.pop*no.sample.mat[,ix.var],na.rm=TRUE)/sum(no.sample.mat[,ix.var],na.rm=TRUE);
           maf.sd.vec[ix.var] <- sqrt(sum((no.sample.mat[,ix.var])*((maf.pop.ori-maf.vec[ix.var])^2),na.rm=TRUE)/sum(no.sample.mat[,ix.var],na.rm=TRUE));
@@ -184,7 +187,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
 
           beta1.est[ix.var] <- U.stat/V.stat.sq;
           beta1.sd[ix.var] <- sqrt(1/V.stat.sq);
-          cochranQ.stat[ix.var] <- sum((beta.byStudy-beta1.est[ix.var])^2/(beta.var.byStudy+(beta1.sd[ix.var])^2-2*weight.byStudy*beta.var.byStudy),na.rm=T);
+          cochranQ.stat[ix.var] <- sum((beta.byStudy-beta1.est[ix.var])^2/(beta.var.byStudy+(beta1.sd[ix.var])^2-2*weight.byStudy*beta.var.byStudy),na.rm=TRUE);
           cochranQ.df[ix.var] <- length(which(!is.na(beta.byStudy-beta1.est[ix.var])^2))-1;
           if(cochranQ.df[ix.var]>0)
           {
