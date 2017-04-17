@@ -191,7 +191,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
           w.mat <- matrix(0,nrow=length(beta.byStudy),ncol=length(beta.byStudy));
           diag(w.mat) <- 1;
           w.mat <- w.mat+rm.na(matrix((-1)*rep(weight.byStudy,length(beta.byStudy)),nrow=length(beta.byStudy),ncol=length(beta.byStudy),byrow=TRUE));
-          cochranQ.stat.mixChisq <- t(beta.byStudy)%*%w.mat%*%beta.byStudy;
+          cochranQ.stat.mixChisq <- t(rm.na(beta.byStudy))%*%w.mat%*%rm.na(beta.byStudy);
           v.mat <- matrix(0,nrow=length(beta.byStudy),ncol=length(beta.byStudy));
           diag(v.mat) <- rm.na(beta.var.byStudy);
           cochranQ.df[ix.var] <- length(which(!is.na(beta.byStudy-beta1.est[ix.var])^2))-1;
