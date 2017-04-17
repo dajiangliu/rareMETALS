@@ -188,16 +188,25 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
           beta1.est[ix.var] <- U.stat/V.stat.sq;
           beta1.sd[ix.var] <- sqrt(1/V.stat.sq);
           cochranQ.stat[ix.var] <- sum((beta.byStudy-beta1.est[ix.var])^2/(beta.var.byStudy+(beta1.sd[ix.var])^2-2*weight.byStudy*beta.var.byStudy),na.rm=TRUE);
+          w.mat <- matrix(0,nrow=length(beta.byStudy),ncol=length(beta.byStudy));
+          diag(w.mat) <- 1;
+          w.mat <- w.mat+rm.na(matrix((-1)*rep(weight.byStudy,length(beta.byStudy)),nrow=length(beta.byStudy),ncol=length(beta.byStudy),byrow=TRUE));
+          cochranQ.stat.mixChisq <- t(beta.byStudy)%*%w.mat%*%beta.byStudy;
+          v.mat <- matrix(0,nrow=length(beta.byStudy),ncol=length(beta.byStudy));
+          diag(v.mat) <- (beta.var.byStudy);
+          
           cochranQ.df[ix.var] <- length(which(!is.na(beta.byStudy-beta1.est[ix.var])^2))-1;
           if(cochranQ.df[ix.var]>0)
           {
               cochranQ.pVal[ix.var] <- pchisq(cochranQ.stat[ix.var],df=cochranQ.df[ix.var],lower.tail=FALSE);
-              ##cochranQ.pVal.mixChisq[ix.var] <- 
+              svd.mat <- svd(w.mat%*%v.mat%*%w.mat);
+              lambda <- svd.mat$d;         
+              cochranQ.pVal.mixChisq[ix.var] <- try(liu(cochranQ.stat.mixChisq,lambda),silent=TRUE);;
           }
           if(cochranQ.df[ix.var]<=0)
           {
               cochranQ.pVal[ix.var] <- NA;
-              ##cochranQ.pVal.mixChisq[ix.var] <- NA;
+              cochranQ.pVal.mixChisq[ix.var] <- NA;
           }
           
           I2[ix.var] <- (cochranQ.stat[ix.var]-cochranQ.df[ix.var])/cochranQ.stat[ix.var];
@@ -290,6 +299,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                 nearby=nearby,
                 cochranQ.stat=cochranQ.stat,
                 cochranQ.df=cochranQ.df,
+                cochranQ.pVal.mixChisq=cochranQ.pVal.mixChisq,
                 cochranQ.pVal=cochranQ.pVal,
                 I2=I2,
                 log.mat=log.mat,
