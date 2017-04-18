@@ -199,10 +199,13 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
           {
               cochranQ.pVal[ix.var] <- pchisq(cochranQ.stat[ix.var],df=cochranQ.df[ix.var],lower.tail=FALSE);
               print(sum(w.mat%*%v.mat%*%w.mat))
-              svd.mat <- svd(w.mat%*%v.mat%*%w.mat);
-              lambda <- svd.mat$d;
-              print(lambda);
-              cochranQ.pVal.mixChisq[ix.var] <- try(liu(cochranQ.stat.mixChisq,lambda),silent=TRUE);;
+              svd.mat <- try(svd(w.mat%*%v.mat%*%w.mat),silent=TRUE);
+              cochranQ.pVal.mixChisq[ix.var] <- cochranQ.pVal[ix.var];
+              if(class(svd.mat)!="try-error") {
+                  lambda <- svd.mat$d;
+                  print(lambda);
+                  cochranQ.pVal.mixChisq[ix.var] <- try(liu(cochranQ.stat.mixChisq,lambda),silent=TRUE);
+              }
           }
           if(cochranQ.df[ix.var]<=0)
           {
