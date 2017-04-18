@@ -191,15 +191,15 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
           w.mat <- matrix(0,nrow=length(beta.byStudy),ncol=length(beta.byStudy));
           diag(w.mat) <- 1;
           w.mat <- w.mat+rm.na(matrix((-1)*rep(weight.byStudy,length(beta.byStudy)),nrow=length(beta.byStudy),ncol=length(beta.byStudy),byrow=TRUE));
-          cochranQ.stat.mixChisq <- t(rm.na(beta.byStudy))%*%w.mat%*%rm.na(beta.byStudy);
+          cochranQ.stat.mixChisq <- t(w.mat%*%rm.na(beta.byStudy))%*%(w.mat%*%rm.na(beta.byStudy))
           v.mat <- matrix(0,nrow=length(beta.byStudy),ncol=length(beta.byStudy));
-          diag(v.mat) <- rm.na(beta.var.byStudy);
+          diag(v.mat) <- sqrt(rm.na(beta.var.byStudy));
           cochranQ.df[ix.var] <- length(which(!is.na(beta.byStudy-beta1.est[ix.var])^2))-1;
           if(cochranQ.df[ix.var]>0)
           {
               cochranQ.pVal[ix.var] <- pchisq(cochranQ.stat[ix.var],df=cochranQ.df[ix.var],lower.tail=FALSE);
-              print(sum(w.mat%*%v.mat%*%w.mat))
-              svd.mat <- try(svd(w.mat%*%v.mat%*%w.mat),silent=TRUE);
+              ##print(sum(w.mat%*%v.mat%*%w.mat))
+              svd.mat <- try(svd(v.mat%*%w.mat%*%w.mat%*%v.mat),silent=TRUE);
               cochranQ.pVal.mixChisq[ix.var] <- cochranQ.pVal[ix.var];
               if(class(svd.mat)!="try-error") {
                   lambda <- svd.mat$d;
