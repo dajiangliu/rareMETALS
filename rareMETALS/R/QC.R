@@ -473,8 +473,6 @@ checkOverlap <- function(score.stat.file1,score.stat.file2,...) {
     if(is.null(nVar)) nVar <- 10000;
     res1 <- readData(score.stat.file1);
     res2 <- readData(score.stat.file2);
-    print(head(res1));
-    print(head(res2));
     pos1 <- paste(res1$CHROM,res1$POS,sep=":");
     pos2 <- paste(res2$CHROM,res2$POS,sep=":");
     pos.both <- intersect(pos1,pos2);
@@ -488,8 +486,6 @@ checkOverlap <- function(score.stat.file1,score.stat.file2,...) {
     ixVar <- as.integer(seq(1,nrow(res1),length=nVar));
     stat1 <- res1$U_STAT[ixVar]/res1$SQRT_V_STAT[ixVar];
     stat2 <- res2$U_STAT[ixVar]/res2$SQRT_V_STAT[ixVar];
-    print(head(stat1))
-    print(head(stat2));
     stat.out <- median((stat1-stat2)^2,na.rm=TRUE)/qchisq(.5,df=1,lower.tail=FALSE)/2
     return(stat.out);
     

@@ -77,6 +77,10 @@ QC <- function(raw.data,QC.par,cov=1)
 #' @export
 flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.var,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
     {
+        ii <- ix.pop;
+        if(is.na(raw.data$af[[ii]][ix.var])) {
+            raw.data$af[[ii]][ix.var] <- (raw.data$nalt[[ii]][ix.var]+1/2*raw.data$nhet[[ii]][ix.var])/raw.data$nSample[[ii]][ix.var];
+        }
         if((is.na(refaltList$ref[ix.var]) | is.na(refaltList$alt[ix.var])) & analyzeRefAltListOnly )
             {
                 ii <- ix.pop;
@@ -126,16 +130,17 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                 if(rm.na(raw.data$af[[ii]][ix.var])==0 | rm.na(raw.data$af[[ii]][ix.var])==1)
                     {
 
-                        if(af.diff<=af.diff.max)
+                        if(rm.na(af.gold[ix.var])<.5)
                             {
                                 ix.include[ii] <- 1;
                                 raw.data$ustat[[ii]][ix.var] <- 0;
+                                raw.data$af[[ii]][ix.var] <- 0;
                                 raw.data$vstat[[ii]][ix.var] <- 0;
                                 log.mat.var[ii] <- "Monomorphic";
                             }
-                        if(af.diff>=af.diff.max)
+                        if(rm.na(af.gold[ix.var])>=.5)
                             {
-                                raw.data$af[[ii]][ix.var] <- 1-raw.data$af[[ii]][ix.var];
+                                raw.data$af[[ii]][ix.var] <- 1;
                                 if(length(raw.data$cov)>0)
                                     {
                                         raw.data$cov[[ii]][ix.var,] <- (-1)*raw.data$cov[[ii]][ix.var,];
@@ -183,59 +188,59 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                         raw.data$nhet[[ii]][ix.var] <- NA;
                         raw.data$nalt[[ii]][ix.var] <- NA;
                     }
-                
-                if(flip.ref.alt & (!strandAmbiguous))
-                    {
-                        raw.data$af[[ii]][ix.var] <- 1-raw.data$af[[ii]][ix.var];
-                        raw.data$ustat[[ii]][ix.var] <- (-1)*(raw.data$ustat[[ii]][ix.var]);
-                        if(length(raw.data$cov)>0)
-                            {
-                                raw.data$cov[[ii]][ix.var,] <- (-1)*raw.data$cov[[ii]][ix.var,];
-                                raw.data$cov[[ii]][,ix.var] <- (-1)*raw.data$cov[[ii]][,ix.var]
-                            }
-                        
-                        nref.tmp <- (raw.data$nalt[[ii]][ix.var]);
-                        nalt.tmp <- (raw.data$nref[[ii]][ix.var]);
-                        nhet.tmp <- (raw.data$nhet[[ii]][ix.var]);
-                        raw.data$nref[[ii]][ix.var] <- nref.tmp;
-                        raw.data$nalt[[ii]][ix.var] <- nalt.tmp;
-                        raw.data$nhet[[ii]][ix.var] <- nhet.tmp;
-                        ix.include[ii] <- 1;
-                     
-                        log.mat.var[ii] <- "FlipRefAlt";
 
-                    }
                 if(match.ref.alt & (!strandAmbiguous))
                     {
                         ix.include[ii] <- 1;
                         log.mat.var[ii] <- "Match";
                     }
+
+                if(flip.ref.alt & (!strandAmbiguous))
+                {
+                    raw.data$af[[ii]][ix.var] <- 1-raw.data$af[[ii]][ix.var];
+                    raw.data$ustat[[ii]][ix.var] <- (-1)*(raw.data$ustat[[ii]][ix.var]);
+                    if(length(raw.data$cov)>0)
+                    {
+                        raw.data$cov[[ii]][ix.var,] <- (-1)*raw.data$cov[[ii]][ix.var,];
+                        raw.data$cov[[ii]][,ix.var] <- (-1)*raw.data$cov[[ii]][,ix.var]
+                    }
+                    
+                    nref.tmp <- (raw.data$nalt[[ii]][ix.var]);
+                    nalt.tmp <- (raw.data$nref[[ii]][ix.var]);
+                    nhet.tmp <- (raw.data$nhet[[ii]][ix.var]);
+                    raw.data$nref[[ii]][ix.var] <- nref.tmp;
+                    raw.data$nalt[[ii]][ix.var] <- nalt.tmp;
+                    raw.data$nhet[[ii]][ix.var] <- nhet.tmp;
+                    ix.include[ii] <- 1;
+                    
+                    log.mat.var[ii] <- "FlipRefAlt";
+                    
+                }
                 af.diff.min <- 0.05;
                 if(flip.ref.alt & strandAmbiguous)
                     {                        
                         if(af.diff<=af.diff.min)
                             {
                                 ix.include[ii] <- 1;
-                                if(length(raw.data$cov)>0)
-                                    {
-                                        raw.data$cov[[ii]][ix.var,] <- NA;
-                                        raw.data$cov[[ii]][,ix.var] <- NA;
-                                    }
+                                ## if(length(raw.data$cov)>0)
+                                ##     {
+                                ##         raw.data$cov[[ii]][ix.var,] <- NA;
+                                ##         raw.data$cov[[ii]][,ix.var] <- NA;
+                                ##     }
                                 
                                 log.mat.var[ii] <- "FlipStrand";
                                 
-                                raw.data$nSample[[ii]][ix.var] <- NA;
-                                raw.data$af[[ii]][ix.var] <- NA;
-                                raw.data$ac[[ii]][ix.var] <- NA;
-                                raw.data$ustat[[ii]][ix.var] <- NA;
-                                raw.data$vstat[[ii]][ix.var] <- NA;
-                                raw.data$nref[[ii]][ix.var] <- NA;
-                                raw.data$nhet[[ii]][ix.var] <- NA;
-                                raw.data$nalt[[ii]][ix.var] <- NA;
-                                
+                                ## raw.data$nSample[[ii]][ix.var] <- NA;
+                                ## raw.data$af[[ii]][ix.var] <- NA;
+                                ## raw.data$ac[[ii]][ix.var] <- NA;
+                                ## raw.data$ustat[[ii]][ix.var] <- NA;
+                                ## raw.data$vstat[[ii]][ix.var] <- NA;
+                                ## raw.data$nref[[ii]][ix.var] <- NA;
+                                ## raw.data$nhet[[ii]][ix.var] <- NA;
+                                ## raw.data$nalt[[ii]][ix.var] <- NA;                                
                                 
                             }
-                        if(af.diff>af.diff.min)
+                        if(af.diff>af.diff.max)
                             {
                                 raw.data$af[[ii]][ix.var] <- 1-raw.data$af[[ii]][ix.var];
                                 raw.data$ustat[[ii]][ix.var] <- (-1)*(raw.data$ustat[[ii]][ix.var]);
@@ -260,7 +265,7 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
 
                 if(match.ref.alt & strandAmbiguous)
                     {
-                        if(af.diff<=af.diff.max)
+                        if(af.diff<=af.diff.min)
                             {
                                 ix.include[ii] <- 1;
                                 
@@ -275,28 +280,24 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                                         raw.data$cov[[ii]][,ix.var] <- NA;
                                     }
                                 
-                                raw.data$nSample[[ii]][ix.var] <- NA;
-                                raw.data$af[[ii]][ix.var] <- NA;
-                                raw.data$ac[[ii]][ix.var] <- NA;
-                                raw.data$ustat[[ii]][ix.var] <- NA;
-                                raw.data$vstat[[ii]][ix.var] <- NA;
-                                raw.data$nref[[ii]][ix.var] <- NA;
-                                raw.data$nhet[[ii]][ix.var] <- NA;
-                                raw.data$nalt[[ii]][ix.var] <- NA;
-
-
+                                raw.data$af[[ii]][ix.var] <- 1-raw.data$af[[ii]][ix.var]
+                                raw.data$ac[[ii]][ix.var] <- 2*raw.data$nSample[[ii]][ix.var]-raw.data$ac[[ii]][ix.var];
+                                raw.data$ustat[[ii]][ix.var] <- raw.data$ustat[[ii]][ix.var]*(-1);
+                                tmp <- raw.data$nref[[ii]][ix.var];
+                                raw.data$nref[[ii]][ix.var] <- 2*raw.data$nSample[[ii]][ix.var]-raw.data$nref[[ii]][ix.var];
+                                raw.data$nalt[[ii]][ix.var] <- tmp;
                             }
-                    }
-                
+                    }                
                 if(mono)
                     {
-                        if(af.diff<=af.diff.max)
+                        if(rm.na(af.gold[ix.var])<.5)
                             {
                                 ix.include[ii] <- 1;
                                 log.mat.var[ii] <- "Monomorphic";
                                 raw.data$ustat[[ii]][ix.var] <- 0;
+                                raw.data$af[[ii]][ix.var] <- 0;
                             }
-                        if(af.diff>=af.diff.max)
+                        if(rm.na(af.gold[ix.var])>=.5)
                             {
                                 raw.data$af[[ii]][ix.var] <- 1-raw.data$af[[ii]][ix.var];
                                 raw.data$ustat[[ii]][ix.var] <- 0;
@@ -309,9 +310,9 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                                 nref.tmp <- (raw.data$nalt[[ii]][ix.var]);
                                 nalt.tmp <- (raw.data$nref[[ii]][ix.var]);
                                 nhet.tmp <- (raw.data$nhet[[ii]][ix.var]);
-                                raw.data$nref[[ii]][ix.var] <- nref.tmp;
-                                raw.data$nalt[[ii]][ix.var] <- nalt.tmp;
-                                raw.data$nhet[[ii]][ix.var] <- nhet.tmp;
+                                raw.data$nalt[[ii]][ix.var] <- 2*raw.data$nSample[[ii]][ix.var];
+                                raw.data$nref[[ii]][ix.var] <- 0;
+                                raw.data$nhet[[ii]][ix.var] <- 0;
                                 ix.include[ii] <- 1;
                                 log.mat.var[ii] <- "Monomorphic";
 
@@ -404,12 +405,13 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     conditional.ustat <- U.XY-V.XZ%*%ginv(V.ZZ)%*%U.ZY;
     beta.ZY <- ginv(V.ZZ)%*%U.ZY;
     scaleMat <- as.matrix(diag(as.matrix(nSample.covG))%*%t(diag(as.matrix(nSample.covG))));
+
     var.U.XY <- covG.ori[ix.candidate,ix.candidate]/(scaleMat[ix.candidate,ix.candidate]);
     var.U.ZY <- covG.ori[ix.known,ix.known]/(scaleMat[ix.known,ix.known]);
     cov.U.XY.U.ZY <- covG.ori[ix.candidate,ix.known]/matrix(scaleMat[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));   
     conditional.V <- var.U.XY+V.XZ%*%ginv(V.ZZ)%*%var.U.ZY%*%ginv(V.ZZ)%*%t(V.XZ)-cov.U.XY.U.ZY%*%t(V.XZ%*%ginv(V.ZZ))-(V.XZ%*%ginv(V.ZZ))%*%t(cov.U.XY.U.ZY);
     
-    sigma.sq.est <- 1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY);
+    sigma.sq.est <- abs(1-(t(U.ZY)%*%ginv(V.ZZ)%*%U.ZY));
     conditional.V <- conditional.V*as.numeric(sigma.sq.est);
     lambda <- .1; 
     conditional.V <- regMat(conditional.V,lambda);
@@ -433,7 +435,66 @@ regMat <- function(M,lambda) {
     M.reg <- sd.mat%*%(cor.tmp)%*%sd.mat;
     return(M.reg);
 }
+#' read rvtests and raremetal format;
+#'
+#' @param score.stat.file The score statistics file;
+#' @return the formatted stat;
+#' @export
+readData <- function(score.stat.file) {
+    res.tmp <- read.table(file=gzfile(score.stat.file),header=TRUE,as.is=TRUE,comment.char="",fill=TRUE,nrows=1000,sep='\n');
+    ix.header <- grep("CHROM",res.tmp[,1]);
+    res.header <- unlist(strsplit(res.tmp[ix.header,],split="\t"));
+    if(res.header[1]=="#CHROM") {
+            res <- read.table(file=gzfile(score.stat.file),header=FALSE,as.is=TRUE,fill=TRUE);
+            colnames(res) <- gsub("#","",res.header);
+        }
+    if(res.header[1]=="CHROM") {
+        res <- read.table(file=gzfile(score.stat.file),header=TRUE,as.is=TRUE,fill=TRUE);
+        
+    }
+    ix.af <- which(res.header=="ALL_AF");
+    if(length(ix.af)>0) {
+        res.header[ix.af] <- "ALT_FREQ";
+        colnames(res) <- gsub("#","",res.header);
+    }
+    return(res);
+}
 
+#' check sample overlaps between cohorts;
+#'
+#' @param score.stat.file
+#' @return a list with estimated lambda values;
+#' @export
+checkOverlap <- function(score.stat.file1,score.stat.file2,...) {
+    extraPar <- list(...);
+    maf.cutoff <- extraPar$maf.cutoff;
+    nVar <- extraPar$nVar;
+    if(is.null(maf.cutoff)) maf.cutoff <- .1;
+    if(is.null(nVar)) nVar <- 10000;
+    res1 <- readData(score.stat.file1);
+    res2 <- readData(score.stat.file2);
+    print(head(res1));
+    print(head(res2));
+    pos1 <- paste(res1$CHROM,res1$POS,sep=":");
+    pos2 <- paste(res2$CHROM,res2$POS,sep=":");
+    pos.both <- intersect(pos1,pos2);
+    res1 <- res1[match(pos.both,pos1),];
+    res2 <- res2[match(pos.both,pos2),];
+    maf1 <- res1$ALT_FREQ;
+    maf1[maf1>.5] <- 1-maf1[maf1>.5];
+    ix.common <- which(maf1>maf.cutoff);
+    res1 <- res1[ix.common,];
+    res2 <- res2[ix.common,];
+    ixVar <- as.integer(seq(1,nrow(res1),length=nVar));
+    stat1 <- res1$U_STAT[ixVar]/res1$SQRT_V_STAT[ixVar];
+    stat2 <- res2$U_STAT[ixVar]/res2$SQRT_V_STAT[ixVar];
+    print(head(stat1))
+    print(head(stat2));
+    stat.out <- median((stat1-stat2)^2,na.rm=TRUE)/qchisq(.5,df=1,lower.tail=FALSE)/2
+    return(stat.out);
+    
+    
+}
 
 
         

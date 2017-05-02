@@ -109,13 +109,11 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                   }
                   res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var,log.mat[ix.var,],correctFlip,analyzeRefAltListOnly);
                   raw.data <- res.flipAllele$raw.data;
-                  ##print(raw.data$ustat);
                   ix.include <- res.flipAllele$ix.include;
                   log.mat[ix.var,] <- res.flipAllele$log.mat.var;
                   if(gc==FALSE) 
                   {
                       U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var]);
-                     ## print(raw.data$ustat[[ii]]);
                   }
                   if(gc==TRUE) {
                       maf.tmp <- raw.data$af[[ii]][ix.var];
@@ -123,7 +121,6 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                       if(maf.tmp>.5) maf.tmp <- 1-maf.tmp;
                       ix.bin <- which(gc.list[[ii]][,1]<=maf.tmp & gc.list[[ii]][,2]>=maf.tmp);
                       U.stat <- U.stat+rm.na(raw.data$ustat[[ii]][ix.var])/sqrt(gc.list[[ii]][ix.bin,3]);
-                      print(c(raw.data$ustat[[ii]],gc.list[[ii]][ix.bin,3],ix.bin))
                   }
                   V.stat.sq <- V.stat.sq+(rm.na(raw.data$vstat[[ii]][ix.var]))^2;                  
                   nref.var <- nref.var+rm.na(raw.data$nref[[ii]][ix.var]);
@@ -198,12 +195,10 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
           if(cochranQ.df[ix.var]>0)
           {
               cochranQ.pVal[ix.var] <- pchisq(cochranQ.stat[ix.var],df=cochranQ.df[ix.var],lower.tail=FALSE);
-              ##print(sum(w.mat%*%v.mat%*%w.mat))
               svd.mat <- try(svd(v.mat%*%w.mat%*%w.mat%*%v.mat),silent=TRUE);
               cochranQ.pVal.mixChisq[ix.var] <- cochranQ.pVal[ix.var];
               if(class(svd.mat)!="try-error") {
                   lambda <- svd.mat$d;
-                  print(lambda);
                   cochranQ.pVal.mixChisq[ix.var] <- try(liu(cochranQ.stat.mixChisq,lambda),silent=TRUE);
               }
           }
