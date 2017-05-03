@@ -15,6 +15,7 @@
 #' @export
 rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,alternative=c('two.sided','greater','less'),callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...)
   {
+      cov.file <- NULL;
     ix.gold <- 1;
     pars... <- list(...);
     gc <- pars...$gc;
