@@ -1,3 +1,4 @@
+
 #' Estimate the variance explained for a list of variants (possibly in LD);
 #'
 #' @param score.stat.file files of score statistics

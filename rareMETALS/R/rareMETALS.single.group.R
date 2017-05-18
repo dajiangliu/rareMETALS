@@ -16,50 +16,50 @@
 rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,alternative=c('two.sided','greater','less'),callrate.cutoff=0,hwe.cutoff=0,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...)
   {
       cov.file <- NULL;
-    ix.gold <- 1;
-    pars... <- list(...);
-    gc <- pars...$gc;
-    if(is.null(gc)) gc <- FALSE;
-    if(gc==TRUE) {
-        gc.fname <- pars...$gc.fname;
-        gc.list <- list();
-        for(ii in 1:length(gc.fname)) {
-            gc.list[[ii]] <- read.table(file=gc.fname[ii],header=FALSE,as.is=TRUE);
-        }
-    }
-    extra.par <- list(ix.gold=ix.gold,QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
-    capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, cov.file, range,multiAllelic = FALSE));
-    if(length(raw.data.all)==0)
-      return(list(list(p.value=NA,
-                       skip=1,
-                       statistic=NA,
-                       no.var=0,
-                       no.sample=NA)));
-    if(length(alternative)>1) alternative <- alternative[1];
+      ix.gold <- 1;
+      pars... <- list(...);
+      gc <- pars...$gc;
+      if(is.null(gc)) gc <- FALSE;
+      if(gc==TRUE) {
+          gc.fname <- pars...$gc.fname;
+          gc.list <- list();
+          for(ii in 1:length(gc.fname)) {
+              gc.list[[ii]] <- read.table(file=gc.fname[ii],header=FALSE,as.is=TRUE);
+          }
+      }
+      extra.par <- list(ix.gold=ix.gold,QC.par=list(callrate.cutoff=callrate.cutoff,hwe.cutoff=hwe.cutoff));
+      capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, cov.file, range,multiAllelic = FALSE));
+      if(length(raw.data.all)==0)
+          return(list(list(p.value=NA,
+                           skip=1,
+                           statistic=NA,
+                           no.var=0,
+                           no.sample=NA)));
+      if(length(alternative)>1) alternative <- alternative[1];
     ix.gold <- extra.par$ix.gold;
-    if(length(extra.par$ix.gold)==0) ix.gold <- 1;
-    raw.data <- raw.data.all[[1]];
-    raw.data.ori <- raw.data;
-    raw.data$cov <- NULL;
-    ix.match <- match(raw.data$pos,refaltList$pos);
-    refaltList <- list(pos=refaltList$pos[ix.match],ref=refaltList$ref[ix.match],alt=refaltList$alt[ix.match],af=refaltList$af[ix.match],anno=refaltList$anno[ix.match],af.diff.max=refaltList$af.diff.max,checkAF=refaltList$checkAF);
-    
-    if(length(extra.par$QC.par)>0)
-        {
-            raw.data <- QC(raw.data,extra.par$QC.par,cov=0);
-        }
-    log.mat <- raw.data$log.mat;
-    ix.pop <- 1:length(raw.data$ref);
-    U.stat <- 0;V.stat.sq <- 0;V.stat.sq <- 0;
-    p.value <- 0;statistic <- 0;
-    direction.by.study <- "+";
-    beta1.est <- 0;
-    beta1.sd <- 0;
-    hsq.est <- 0;
-    no.sample <- 0;
-    maf.vec <- 0;
+      if(length(extra.par$ix.gold)==0) ix.gold <- 1;
+      raw.data <- raw.data.all[[1]];
+      raw.data.ori <- raw.data;
+      raw.data$cov <- NULL;
+      ix.match <- match(raw.data$pos,refaltList$pos);
+      refaltList <- list(pos=refaltList$pos[ix.match],ref=refaltList$ref[ix.match],alt=refaltList$alt[ix.match],af=refaltList$af[ix.match],anno=refaltList$anno[ix.match],af.diff.max=refaltList$af.diff.max,checkAF=refaltList$checkAF);
+      
+      if(length(extra.par$QC.par)>0)
+      {
+          raw.data <- QC(raw.data,extra.par$QC.par,cov=0);
+      }
+      log.mat <- raw.data$log.mat;
+      ix.pop <- 1:length(raw.data$ref);
+      U.stat <- 0;V.stat.sq <- 0;V.stat.sq <- 0;
+      p.value <- 0;statistic <- 0;
+      direction.by.study <- "+";
+      beta1.est <- 0;
+      beta1.sd <- 0;
+      hsq.est <- 0;
+      no.sample <- 0;
+      maf.vec <- 0;
     no.sample.pop <- 0;
-    no.sample.var <- 0;
+      no.sample.var <- 0;
     ustat <- 0;
     vstat <- 0;
     nref <- 0;nalt <- 0;nhet <- 0;
