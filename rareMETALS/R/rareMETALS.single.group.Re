@@ -274,9 +274,20 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                                 hweCtrl=list(rep(NA,length(ref.out[[1]]))),
                                 afCtrl=list(rep(NA,length(ref.out[[1]]))),
                                 afCase=list(rep(NA,length(ref.out[[1]]))));
-    
-    
+      res.formatted <- cbind(raw.data$pos,
+                             ref.gold,
+                             alt.gold,
+                             myFormat(maf.vec,2),
+                             myFormat(statistic,2),
+                             myFormat(p.value,2),
+                             myFormat(beta1.est,2),
+                             myFormat(beta1.sd,2),
+                             no.sample.var,
+                             direction.by.study);
+      res.formatted <- matrix(res.formatted,ncol=10);
+      
     return(list(p.value=p.value,
+                res.formatted=res.formatted,
                 ref=ref.gold,
                 alt=alt.gold,
                 integratedData=integratedData,
