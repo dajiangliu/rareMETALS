@@ -40,6 +40,7 @@ conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.fil
                     }
             }
         return(list(res=res.list,
+                    res.formatted=res.formatted,
                     res.out=res.mat))
     }
 
