@@ -300,8 +300,20 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 log.out <- paste(log.mat[ix.candidate,],sep=",",collapse=",")
             }
         res.single.out <- cbind(matrix(unlist(strsplit(pos.single.out,split=":")),ncol=2,byrow=TRUE),ref.single.out,alt.single.out,N.vec[ix.candidate],p.value.single.out,af.single.out,beta1.est.single.out,beta1.sd.single.out,direction.single.out,pos.ref.alt.known.single.out,log.out,note);
+        res.formatted <- cbind(pos.single.out,
+                               ref.single.out,
+                               alt.single.out,
+                               myFormat(af.single.out,2),
+                               myFormat(p.value.single.out,2),
+                               N.vec[ix.candidate],
+                               myFormat(beta1.est.single.out,2),
+                               myFormat(beta1.sd.single.out,2),
+                               direction.single.out,
+                               pos.ref.alt.known.single.out);
+        colnames(res.formatted) <- c("POS","REF","ALT","AF","PVALUE","N","BETA","SD","DIRECTION","COND");
         colnames(res.single.out) <- c("CHROM","POS","REF","ALT","SAMPLESIZE","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION","POS_REF_ALT_KNOWN","LOG","NOTE");
         return(list(res=res.extra,
+                    res.formatted=res.formatted,
                     res.out=res.single.out));        
     }
 r2cov.mat <- function(r2.mat,maf.vec)

@@ -285,7 +285,7 @@ rareMETALS.single.group <- function(score.stat.file,cov.file,range,refaltList,al
                              no.sample.var,
                              direction.by.study);
       res.formatted <- matrix(res.formatted,ncol=10);
-      
+      colnames(res.formatted) <- c("POS","REF","ALT","AF","STAT","PVALUE","BETA","SD","N","DIRECTION");
     return(list(p.value=p.value,
                 res.formatted=res.formatted,
                 ref=ref.gold,
