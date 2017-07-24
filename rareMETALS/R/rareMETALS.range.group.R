@@ -112,7 +112,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
        
         if(length(raw.data$ustat[[1]])>0)
             ix.var <- 1:length(raw.data$ustat[[1]]);
-        
+        cat('read in ',length(raw.data$ustat[[1]]),' variants\n');
         ix.var <- sort(unique(ix.var));
         if(length(ix.var)==0)
           {
