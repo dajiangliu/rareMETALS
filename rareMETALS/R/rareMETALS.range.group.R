@@ -227,21 +227,22 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               covG <- matrix(0,nrow=length(ix.rare),ncol=length(ix.rare));
               nSample.covG <- covG;
               print('calc cov start');
-              for(aa in 1:length(ix.rare)) {
-                  for(bb in 1:length(ix.rare)) {
-                      for(cc in ix.pop) {
-                          covG[aa,bb] <- covG[aa,bb]+rm.na(sqrt(N.mat[cc,aa]*N.mat[cc,bb])*cov.mat.list[[cc]][aa,bb]);
-                          nSample.covG[aa,bb] <- nSample.covG[aa,bb]+sqrt(rm.na(N.mat[cc,aa])*rm.na(N.mat[cc,bb]));
-                      }
-                  }
-              }
-              print(covG);
-              covG0 <- 0;nSample.covG0 <- 0;
+              ## for(aa in 1:length(ix.rare)) {
+              ##     for(bb in 1:length(ix.rare)) {
+              ##         for(cc in ix.pop) {
+              ##             covG[aa,bb] <- covG[aa,bb]+rm.na(sqrt(N.mat[cc,aa]*N.mat[cc,bb])*cov.mat.list[[cc]][aa,bb]);
+              ##             nSample.covG[aa,bb] <- nSample.covG[aa,bb]+sqrt(rm.na(N.mat[cc,aa])*rm.na(N.mat[cc,bb]));
+              ##         }
+              ##     }
+              ## }
+              ## print(covG);
+              ##covG0 <- 0;nSample.covG0 <- 0;
+
               for(cc in ix.pop) {
-                  covG0 <- covG0+rm.na(cov.mat.list[[cc]])*sqrt(rm.na(matrix(N.mat[cc,],ncol=1)%*%matrix(N.mat[cc,],nrow=1)));
-                  nSample.covG0 <- nSample.covG0+rm.na(sqrt(matrix(N.mat[cc,],ncol=1)%*%matrix(N.mat[cc,],nrow=1)));
+                  covG <- covG+rm.na(cov.mat.list[[cc]])*sqrt(rm.na(matrix(N.mat[cc,],ncol=1)%*%matrix(N.mat[cc,],nrow=1)));
+                  nSample.covG <- nSample.covG+rm.na(sqrt(matrix(N.mat[cc,],ncol=1)%*%matrix(N.mat[cc,],nrow=1)));
               }
-              print(covG0);
+              
               r2.approx <- cov2cor(rm.na(covG/nSample.covG));
               print('calc cov end');
               
