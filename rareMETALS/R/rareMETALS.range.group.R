@@ -221,7 +221,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                     alt.list[[ii]] <- alt.list[[ix.gold]][ix.rare];
                 }
               
-              N.mat <- matrix(N.mat[,ix.rare],nrow=nrow(N.mat),ncol=length(ix.rare));
+              N.mat <- matrix(as.double(N.mat[,ix.rare]),nrow=nrow(N.mat),ncol=length(ix.rare));
               covG <- matrix(0,nrow=length(ix.rare),ncol=length(ix.rare));
               nSample.covG <- covG;
               
@@ -234,7 +234,6 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                   }
               }
               r2.approx <- cov2cor(rm.na(covG/nSample.covG));
-
               res.extra <- list(anno=anno.list[[ix.gold]],
                                 pos=refaltList.rare$pos,
                                 ref=refaltList.rare$ref,
