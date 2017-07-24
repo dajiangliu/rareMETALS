@@ -183,6 +183,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
           maf.vec <- af.vec;
           mac.vec <- ac.vec;
           ix.major <- which(af.vec>0.5);
+          print('flip cov start');
           if(length(ix.major)>0)
             {
               maf.vec[ix.major] <- 1-maf.vec[ix.major];
@@ -191,6 +192,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               score.stat.vec.list <- tmp.major$score.stat.vec.list;
               cov.mat.list <- tmp.major$cov.mat.list;
             }
+          print('flip cov end');
           ix.rare <- which(maf.vec<maf.cutoff & maf.vec>0);
           
           maf.vec.rare <- maf.vec[ix.rare];
@@ -224,7 +226,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               N.mat <- matrix(as.double(N.mat[,ix.rare]),nrow=nrow(N.mat),ncol=length(ix.rare));
               covG <- matrix(0,nrow=length(ix.rare),ncol=length(ix.rare));
               nSample.covG <- covG;
-              
+              print('calc cov start');
               for(aa in 1:length(ix.rare)) {
                   for(bb in 1:length(ix.rare)) {
                       for(cc in ix.pop) {
@@ -234,6 +236,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                   }
               }
               r2.approx <- cov2cor(rm.na(covG/nSample.covG));
+              print('calc cov end');
               res.extra <- list(anno=anno.list[[ix.gold]],
                                 pos=refaltList.rare$pos,
                                 ref=refaltList.rare$ref,
