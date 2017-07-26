@@ -8,7 +8,7 @@ rareMETALS.range.group.core(score.stat.file, cov.file, range, range.name,
   test = "GRANVIL", refaltList, maf.cutoff = 1,
   alternative = c("two.sided", "greater", "less"), out.digits = 4,
   callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL,
-  correctFlip = TRUE, analyzeRefAltListOnly = TRUE)
+  correctFlip = TRUE, analyzeRefAltListOnly = TRUE, ldsc = FALSE)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}

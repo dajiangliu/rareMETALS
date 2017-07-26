@@ -15,14 +15,15 @@
 #' @param correctFlip Correct for flipped sites for score statistics and their covariance matrices
 #' @return a list consisting of results;
 #' @export
-rareMETALS.range.group <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',refaltList,maf.cutoff=1,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
+rareMETALS.range.group <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',refaltList,maf.cutoff=1,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...)
 {
-
+    extraPar <- list(...);
+    ldsc <- extraPar$ldsc;
     cat("Analyzing ",range.name[1],"\n");
-
+    if(is.null(ldsc)) ldsc <- FALSE;
     ii <- 1;
 
-    res <- rareMETALS.range.group.core(score.stat.file,cov.file,range[1],range.name[1],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly)
+    res <- rareMETALS.range.group.core(score.stat.file,cov.file,range[1],range.name[1],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly,ldsc)
     if(length(range)>1)
         {
             for(ii in 2:length(range))
@@ -52,7 +53,7 @@ rareMETALS.range.group <- function(score.stat.file,cov.file,range,range.name,tes
 #' @param max.VT The maximum number of thresholds used in VT; For small p-values, the calculation of VT p-values can be very slow. Setting max.VT to 10 can improve the speed for calculation without affecting the power too much. The default parameter is NULL, which does not set upper limit on the number of variable frequency threhsold. 
 #' @return a list consisting of results;
 #' @export
-rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',refaltList,maf.cutoff=1,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE)
+rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',refaltList,maf.cutoff=1,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,ldsc=FALSE)
   {
     ANNO <- "gene";gene.name <- range.name;
     no.boot=0;alpha=0.05;ix.gold=1
@@ -227,24 +228,16 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               covG <- matrix(0,nrow=length(ix.rare),ncol=length(ix.rare));
               nSample.covG <- covG;
               print('calc cov start');
-              ## for(aa in 1:length(ix.rare)) {
-              ##     for(bb in 1:length(ix.rare)) {
-              ##         for(cc in ix.pop) {
-              ##             covG[aa,bb] <- covG[aa,bb]+rm.na(sqrt(N.mat[cc,aa]*N.mat[cc,bb])*cov.mat.list[[cc]][aa,bb]);
-              ##             nSample.covG[aa,bb] <- nSample.covG[aa,bb]+sqrt(rm.na(N.mat[cc,aa])*rm.na(N.mat[cc,bb]));
-              ##         }
-              ##     }
-              ## }
-              ## print(covG);
-              ##covG0 <- 0;nSample.covG0 <- 0;
-
+              NcovG.list <- list();
+              nSample.covG.list <- list();
               for(cc in ix.pop) {
-                  covG <- covG+rm.na(cov.mat.list[[cc]])*sqrt(rm.na(matrix(N.mat[cc,],ncol=1)%*%matrix(N.mat[cc,],nrow=1)));
-                  nSample.covG <- nSample.covG+rm.na(sqrt(matrix(N.mat[cc,],ncol=1)%*%matrix(N.mat[cc,],nrow=1)));
+                  nSample.covG.list[[cc]] <- rm.na(sqrt(matrix(N.mat[cc,],ncol=1)%*%matrix(N.mat[cc,],nrow=1)));
+                  NcovG.list[[cc]] <- rm.na(cov.mat.list[[cc]])*nSample.covG.list[[cc]];
+                  covG <- covG+NcovG.list[[cc]];
+                  nSample.covG <- nSample.covG+nSample.covG.list[[cc]]
               }
               
               r2.approx <- cov2cor(rm.na(covG/nSample.covG));
-              print('calc cov end');
               
               res.extra <- list(anno=anno.list[[ix.gold]],
                                 pos=refaltList.rare$pos,
@@ -259,6 +252,8 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                                 af.mat=af.mat,
                                 ac.mat=ac.mat,
                                 r2.approx=r2.approx,
+                                NcovG.list=NcovG.list,
+                                nSample.covG.list=nSample.covG.list,
                                 log.mat=log.mat,
                                 N.mat=N.mat,
                                 raw.data=raw.data.ori,
