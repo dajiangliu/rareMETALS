@@ -398,7 +398,8 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     U.XY <- U.meta[ix.candidate];
     U.ZY <- U.meta[ix.known];
     covG.ori <- covG;
-    covG <- rm.na(covG/nSample.covG);    
+    covG <- rm.na(covG/nSample.covG);
+    print(covG);
     V.XZ <- matrix(covG[ix.candidate,ix.known],nrow=length(ix.candidate),ncol=length(ix.known));
     V.ZZ <- matrix(covG[ix.known,ix.known],nrow=length(ix.known),ncol=length(ix.known));
     V.XX <- matrix(covG[ix.candidate,ix.candidate],nrow=length(ix.candidate),ncol=length(ix.candidate));
