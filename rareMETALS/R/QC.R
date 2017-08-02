@@ -377,11 +377,13 @@ imputeConditional <- function(ustat.list,vstat.list,cov.mat.list,N.mat,beta.vec=
     nSample.covG <- matrix(1,nrow=nrow(cov.mat.list[[1]]),ncol=ncol(cov.mat.list[[1]]));
     N.mat.imp <- N.mat;
     U.meta <- 0;
+    
     for(ii in 1:length(ustat.list))
     {
         N.mat.imp[ii,] <- max(rm.na(N.mat[ii,]));
         U.meta <- U.meta+rm.na(ustat.list[[ii]]);
-        
+        print(N.mat[ii,]);
+        print(cov.mat.list[[ii]]);
         nSample.U <- nSample.U+rm.na(N.mat[ii,]);
         for(jj in 1:length(ustat.list[[1]]))
         {
