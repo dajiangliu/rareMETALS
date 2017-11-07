@@ -178,6 +178,8 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
           maf.vec <- rep(0,length(af.vec.list[[1]]));
           af.vec <- maf.vec;
           mac.vec <- 0;ac.vec <- 0;
+          print(af.mat);
+          print(N.mat);
           af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
           ac.vec <- colSums(ac.mat,na.rm=TRUE);
 
