@@ -195,6 +195,8 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
             }
           print('flip cov end');
           ix.rare <- which(maf.vec<maf.cutoff & maf.vec>0);
+          print('maf.vec');
+          print(maf.vec);
           print(c('ix.rare',ix.rare));
           maf.vec.rare <- maf.vec[ix.rare];
           mac.vec.rare <- mac.vec[ix.rare];
