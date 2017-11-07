@@ -156,8 +156,6 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                   N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
                   no.sample <- no.sample+N.list[[ii]];
                   N.mat[ii,] <- raw.data$nSample[[ii]];
-                  print('N.mat[ii,]')
-                  print(N.mat[ii,])
                   score.stat.vec.list[[ii]] <- (U.stat/V.stat);              
                   cov.mat.list[[ii]] <- matrix((raw.data$cov[[ii]])[ix.var,ix.var],nrow=length(ix.var),ncol=length(ix.var));
                   var.Y.list[[ii]] <- 1;
@@ -167,8 +165,6 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                   af.vec.list[[ii]] <- ((raw.data$af[[ii]])[ix.var]);
                   ac.vec.list[[ii]] <- ((raw.data$ac[[ii]])[ix.var]);
                   af.mat[ii,] <- af.vec.list[[ii]][ix.var];
-                  print('af.mat[ii,]')
-                  print(af.mat[ii,])
 
                   ac.mat[ii,] <- ac.vec.list[[ii]][ix.var];
                   pos.list[[ii]] <- (raw.data$pos)[ix.var];
@@ -183,15 +179,12 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
           maf.vec <- rep(0,length(af.vec.list[[1]]));
           af.vec <- maf.vec;
           mac.vec <- 0;ac.vec <- 0;
-          print(af.mat);
-          print(N.mat);
           af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
           ac.vec <- colSums(ac.mat,na.rm=TRUE);
 
           maf.vec <- af.vec;
           mac.vec <- ac.vec;
           ix.major <- which(af.vec>0.5);
-          print('flip cov start');
           if(length(ix.major)>0)
             {
               maf.vec[ix.major] <- 1-maf.vec[ix.major];
@@ -200,11 +193,7 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               score.stat.vec.list <- tmp.major$score.stat.vec.list;
               cov.mat.list <- tmp.major$cov.mat.list;
             }
-          print('flip cov end');
           ix.rare <- which(maf.vec<maf.cutoff & maf.vec>0);
-          print('maf.vec');
-          print(maf.vec);
-          print(c('ix.rare',ix.rare));
           maf.vec.rare <- maf.vec[ix.rare];
           mac.vec.rare <- mac.vec[ix.rare];
           refaltList.rare <- list(ref=refaltList$ref[ix.rare],
@@ -236,7 +225,6 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
               N.mat <- matrix(as.double(N.mat[,ix.rare]),nrow=nrow(N.mat),ncol=length(ix.rare));
               covG <- matrix(0,nrow=length(ix.rare),ncol=length(ix.rare));
               nSample.covG <- covG;
-              print('calc cov start');
               NcovG.list <- list();
               nSample.covG.list <- list();
               for(cc in ix.pop) {
@@ -277,7 +265,6 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                 }
               if(test=='GRANVIL')
                 {
-                    print(cov.mat.list);
                     res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(vstat.list=vstat.list,weight='MZ',ac.vec.list=ac.vec.list,
                                                                                                                                                     maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
                   res[[kk]] <- c(res.kk,res.extra);

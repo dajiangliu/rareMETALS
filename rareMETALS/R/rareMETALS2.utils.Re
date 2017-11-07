@@ -79,6 +79,7 @@ toMinor <- function(vecIn) {
 #' @export 
 myFormat <- function(n,digits) {
     res <- rep(NA,length(n));
+    n <- as.numeric(n);
     if(length(which(abs(n)>1))>0)
         res[which(abs(n)>1)] <- trimws(as.character(round(n[which(abs(n)>1)],digits=digits)));
     if(length(which(abs(n)>0.0001 & abs(n) <=1)))

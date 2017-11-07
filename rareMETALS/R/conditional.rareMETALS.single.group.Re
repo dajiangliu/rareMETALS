@@ -18,8 +18,12 @@ conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.fil
     {
         cat('Conditional analysis',candidate.variant[1],"\n",sep=" ");
         res <- conditional.rareMETALS.single.group.core(candidate.variant[1],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,correctFlip,knownCoding,impMissing);
+
         res.mat <- matrix(nrow=length(candidate.variant),ncol=ncol(res$res.out))
         res.mat[1,] <- res$res.out;
+        res.formatted <- matrix(nrow=length(candidate.variant),ncol=ncol(res$res.formatted))
+        res.formatted[1,] <- res$res.formatted;
+        colnames(res.formatted) <- c("POS","REF","ALT","AF","PVALUE","N","BETA","SD","DIRECTION","COND");
         colnames(res.mat) <- c("CHROM","POS","REF","ALT","SAMPLE_SIZE","PVALUE","AF","BETA_EST","BETA_SD","DIRECTION","POS_REF_ALT_KNOWN","LOG","NOTE");
         res.list <- list();
         res.list[[1]] <- res$res;
@@ -30,11 +34,13 @@ conditional.rareMETALS.single.group <- function(candidate.variant,score.stat.fil
                         cat('Conditional analysis',candidate.variant[ii],"\n",sep=" ");
                         res.ii <- conditional.rareMETALS.single.group.core(candidate.variant[ii],score.stat.file,cov.file,known.variant.vec,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,correctFlip,knownCoding,impMissing);
                         res.mat[ii,] <- res.ii$res.out;
+                        res.formatted[ii,] <- res.ii$res.formatted;
                         res.list[[ii]] <- res.ii$res;
                         
                     }
             }
         return(list(res=res.list,
+                    res.formatted=res.formatted,
                     res.out=res.mat))
     }
 
