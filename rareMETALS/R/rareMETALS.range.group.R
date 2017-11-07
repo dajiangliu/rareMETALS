@@ -18,12 +18,14 @@
 rareMETALS.range.group <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',refaltList,maf.cutoff=1,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,...)
 {
     extraPar <- list(...);
-    ldsc <- extraPar$ldsc;
+    ldsc <- extraPar$ldsc
+    robustCov <- extraPar$robustCov;
+    if(is.null(robustCov)) robustCov <- FALSE;
     cat("Analyzing ",range.name[1],"\n");
     if(is.null(ldsc)) ldsc <- FALSE;
     ii <- 1;
 
-    res <- rareMETALS.range.group.core(score.stat.file,cov.file,range[1],range.name[1],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly,ldsc)
+    res <- rareMETALS.range.group.core(score.stat.file,cov.file,range[1],range.name[1],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly,ldsc,robustCov=FALSE)
     if(length(range)>1)
         {
             for(ii in 2:length(range))
@@ -53,7 +55,7 @@ rareMETALS.range.group <- function(score.stat.file,cov.file,range,range.name,tes
 #' @param max.VT The maximum number of thresholds used in VT; For small p-values, the calculation of VT p-values can be very slow. Setting max.VT to 10 can improve the speed for calculation without affecting the power too much. The default parameter is NULL, which does not set upper limit on the number of variable frequency threhsold. 
 #' @return a list consisting of results;
 #' @export
-rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',refaltList,maf.cutoff=1,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,ldsc=FALSE)
+rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',refaltList,maf.cutoff=1,alternative=c('two.sided','greater','less'),out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,correctFlip=TRUE,analyzeRefAltListOnly=TRUE,ldsc=FALSE,robustCov=FALSE)
   {
     ANNO <- "gene";gene.name <- range.name;
     no.boot=0;alpha=0.05;ix.gold=1
@@ -258,28 +260,28 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                                 gene.name=gene.name[kk]);
               if(test=='WSS')
                   {
-                  res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(vstat.list=vstat.list,weight='MB',ac.vec.list=ac.vec.list,
+                  res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(vstat.list=vstat.list,weight='MB',ac.vec.list=ac.vec.list,robustCov=robustCov,
                                                                                                                                                     maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
                   res[[kk]] <- c(res.kk,res.extra);
                   res[[kk]]$maf.cutoff <- maf.cutoff;
                 }
               if(test=='GRANVIL')
                 {
-                    res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(vstat.list=vstat.list,weight='MZ',ac.vec.list=ac.vec.list,
+                    res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='WSS',extra.pars=list(vstat.list=vstat.list,weight='MZ',ac.vec.list=ac.vec.list,robustCov=robustCov,
                                                                                                                                                     maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
                   res[[kk]] <- c(res.kk,res.extra);
                   res[[kk]]$maf.cutoff <- maf.cutoff;
                 }
               if(test=='SKAT')
                 {
-                  res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='SKAT',extra.pars=list(vstat.list=vstat.list,kernel='beta',ac.vec.list=ac.vec.list,
+                  res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='SKAT',extra.pars=list(vstat.list=vstat.list,kernel='beta',ac.vec.list=ac.vec.list,robustCov=robustCov,
                                                                                                                                                      maf.vec=maf.vec.rare,mac.vec=mac.vec.rare))));
                   res[[kk]] <- c(res.kk,res.extra);
                   res[[kk]]$maf.cutoff <- maf.cutoff;
                 }
               if(test=='VT')
                 {
-                  res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='VT',extra.pars=list(vstat.list=vstat.list,ac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,mac.vec=mac.vec.rare,max.TH=max.VT))));
+                  res.kk <- (c(rvmeta.CMH(score.stat.vec.list,af.vec.list,cov.mat.list,var.Y.list,N.mat,alternative,no.boot,alpha,rv.test='VT',extra.pars=list(vstat.list=vstat.list,ac.vec.list=ac.vec.list,maf.vec=maf.vec.rare,robustCov=robustCov,mac.vec=mac.vec.rare,max.TH=max.VT))));
                   pos.VT <- res.extra$pos[res.kk$ixVar.VT];               
                   res[[kk]] <- c(res.kk,res.extra,list(pos.VT=pos.VT));
                 }

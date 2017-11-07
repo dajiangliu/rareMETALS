@@ -18,6 +18,7 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
       N.list <- list();
       vstat.list <- extra.pars$vstat.list;
       vstat.sq.vec <- 0;
+      robustCov <- extra.pars$robustCov;
       for(ii in 1:length(score.stat.vec.list))
       {
           N.list[[ii]] <- mean(N.mat[ii,],na.rm=TRUE);
@@ -51,7 +52,7 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
           ac.vec <- rm.na(maf.vec.list[[ii]]*N.mat[ii,])*2+ac.vec;
           N <- N+rm.na(N.list[[ii]]);
       }
-      
+      if(robustCov==TRUE) diag(X.T.times.X) <- vstat.sq.vec;
       N.vec <- colSums(N.mat,na.rm=TRUE);
       af.vec <- ac.vec/2/N.vec;
       
