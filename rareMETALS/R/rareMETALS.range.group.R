@@ -156,6 +156,8 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                   N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
                   no.sample <- no.sample+N.list[[ii]];
                   N.mat[ii,] <- raw.data$nSample[[ii]];
+                  print('N.mat[ii,]')
+                  print(N.mat[ii,])
                   score.stat.vec.list[[ii]] <- (U.stat/V.stat);              
                   cov.mat.list[[ii]] <- matrix((raw.data$cov[[ii]])[ix.var,ix.var],nrow=length(ix.var),ncol=length(ix.var));
                   var.Y.list[[ii]] <- 1;
@@ -165,6 +167,9 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
                   af.vec.list[[ii]] <- ((raw.data$af[[ii]])[ix.var]);
                   ac.vec.list[[ii]] <- ((raw.data$ac[[ii]])[ix.var]);
                   af.mat[ii,] <- af.vec.list[[ii]][ix.var];
+                  print('af.mat[ii,]')
+                  print(af.mat[ii,])
+
                   ac.mat[ii,] <- ac.vec.list[[ii]][ix.var];
                   pos.list[[ii]] <- (raw.data$pos)[ix.var];
                   ref.list[[ii]] <- (raw.data$ref)[[ii]][ix.var];
