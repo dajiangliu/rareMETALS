@@ -25,13 +25,13 @@ rareMETALS.range.group <- function(score.stat.file,cov.file,range,range.name,tes
     if(is.null(ldsc)) ldsc <- FALSE;
     ii <- 1;
 
-    res <- rareMETALS.range.group.core(score.stat.file,cov.file,range[1],range.name[1],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly,ldsc,robustCov=FALSE)
+    res <- rareMETALS.range.group.core(score.stat.file,cov.file,range[1],range.name[1],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly,ldsc,robustCov=robustCov)
     if(length(range)>1)
         {
             for(ii in 2:length(range))
                 {
                     cat("Analyzing ",range.name[ii],"\n");
-                    res0 <- rareMETALS.range.group.core(score.stat.file,cov.file,range[ii],range.name[ii],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly);                     
+                    res0 <- rareMETALS.range.group.core(score.stat.file,cov.file,range[ii],range.name[ii],test,refaltList,maf.cutoff,alternative,out.digits,callrate.cutoff,hwe.cutoff,max.VT,correctFlip,analyzeRefAltListOnly,robustCov=robustCov);                     
                     res$res.out <- rbind(res$res.out,res0$res.out);
                     res$res.list <- c(res$res.list,res0$res.list);
                     res$integratedData <- c(res$integratedData,res0$integratedData);
