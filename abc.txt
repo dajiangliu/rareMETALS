@@ -1,0 +1,3 @@
+##abc
+#CHROM POS
+1      123
