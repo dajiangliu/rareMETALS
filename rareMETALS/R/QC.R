@@ -157,7 +157,6 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                                 raw.data$nhet[[ii]][ix.var] <- nhet.tmp;
                                 ix.include[ii] <- 1;
                                 log.mat.var[ii] <- "Monomorphic";
-
                             }
                     }           
             }
@@ -177,9 +176,7 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                                 raw.data$cov[[ii]][ix.var,] <- NA;
                                 raw.data$cov[[ii]][,ix.var] <- NA;
                             }
-                        
                         log.mat.var[ii] <- "MismatchRemove";
-                        
                         raw.data$nSample[[ii]][ix.var] <- NA;
                         raw.data$af[[ii]][ix.var] <- NA;
                         raw.data$ac[[ii]][ix.var] <- NA;

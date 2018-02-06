@@ -139,6 +139,18 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
         pos.ref.alt.known.single.out <- paste(pos.gold[ix.known],ref.gold[ix.known],alt.gold[ix.known],anno.gold[ix.known],sep="/",collapse=",");
  
         res.single.out <- res.single.out.0;
+        ix.pop <- 1:length(raw.data$nSample);
+        for(ii in 1:length(ix.pop))
+        {   
+            for(jj in 1:length(ix.var))
+            {
+                res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var[jj],log.mat[ix.var[jj],],correctFlip);
+                raw.data <- res.flipAllele$raw.data;
+                log.mat[ix.var[jj],] <- res.flipAllele$log.mat.var;
+                
+            }
+        }
+
         res.extra <- list(ref.candidate=refaltList$ref[ix.candidate],
                           alt.candidate=refaltList$alt[ix.candidate],
                           anno.candidate=refaltList$anno[ix.candidate],
@@ -154,6 +166,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
         res.null <- list(res.list=res.extra,
                          res.out=res.single.out);
         note <- "";
+        
         if(length(both.vec)>0)
             {
                 warning("Candidate variants overlaps with known variants");
@@ -168,7 +181,7 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
             }
         if(length(candidate.variant)>0 & length(known.variant.vec)>0)
             {
-                ix.pop <- 1:length(raw.data$nSample);
+
                 score.stat.vec.list <- list();mac.vec.list <- list();maf.vec.list <- list();cov.mat.list <- list();var.Y.list <- list();N.list <- list();mean.Y.list <- list();pos.list <- list();anno.list <- list();ac.vec.list <- list();af.vec.list <- list();
                 af.mat <- matrix(NA,ncol=length(raw.data$ustat[[1]]),nrow=length(raw.data$ustat));
                 ac.mat <- af.mat;
@@ -176,20 +189,6 @@ conditional.rareMETALS.single.group.core <- function(candidate.variant,score.sta
                 ref.list <- list();
                 alt.list <- list();V.list <- list();
 
-                for(ii in 1:length(ix.pop))
-                    {   
-                        if(length(raw.data$covXZ[[ii]])>0) {
-                            warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
-                        }
-
-                        for(jj in 1:length(ix.var))
-                            {
-                                res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var[jj],log.mat[ix.var[jj],],correctFlip);
-                                raw.data <- res.flipAllele$raw.data;
-                                log.mat[ix.var[jj],] <- res.flipAllele$log.mat.var;
-
-                            }
-                    }
 
                 U.stat <- 0;V.stat.sq <- 0;
                 ustat.list <- list();
