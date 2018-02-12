@@ -96,6 +96,26 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
           log.mat <- t(N.mat);
           af.mat <- N.mat;
           ac.mat <- N.mat;
+          ix.match <- match(raw.data$pos[ix.var],refaltList$pos);
+          ref.gold <- refaltList$ref[ix.match];alt.gold <- refaltList$alt[ix.match];af.gold <- refaltList$af[ix.match];checkAF <- refaltList$checkAF;anno.gold <- refaltList$anno[ix.match];pos.gold <- refaltList$pos[ix.match];
+          if(length(checkAF)==0) checkAF <- FALSE;
+          refaltList <- list(ref=ref.gold,alt=alt.gold,af=af.gold,checkAF=checkAF,af.diff.max=refaltList$af.diff.max,anno=anno.gold,pos=pos.gold);
+
+          for(ii in 1:length(ix.pop))
+          {
+              if(length(raw.data$covXZ[[ii]])>0) {
+                  warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
+              }
+              
+              for(jj in 1:length(ix.var))
+              {
+                  res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var[jj],log.mat[ix.var[jj],],correctFlip,analyzeRefAltListOnly);
+                  raw.data <- res.flipAllele$raw.data;
+                  log.mat[ix.var[jj],] <- res.flipAllele$log.mat.var;
+                  
+              }
+          }
+          
           for(ii in 1:length(ix.pop))
             {
                 N.list[[ii]] <- rm.na(as.integer(mean(raw.data$nSample[[ii]],na.rm=TRUE)));
@@ -118,26 +138,22 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                 alt.list[[ii]] <- (raw.data$alt)[[ii]][ix.var];
                 anno.list[[ii]] <- (raw.data$anno)[ix.var];
             }
-          ix.match <- match(raw.data$pos[ix.var],refaltList$pos);
-          ref.gold <- refaltList$ref[ix.match];alt.gold <- refaltList$alt[ix.match];af.gold <- refaltList$af[ix.match];checkAF <- refaltList$checkAF;anno.gold <- refaltList$anno[ix.match];pos.gold <- refaltList$pos[ix.match];
-          if(length(checkAF)==0) checkAF <- FALSE;
-          refaltList <- list(ref=ref.gold,alt=alt.gold,af=af.gold,checkAF=checkAF,af.diff.max=refaltList$af.diff.max,anno=anno.gold,pos=pos.gold);
           
-          for(ii in 1:length(ix.pop))
-              {
-                  if(length(raw.data$covXZ[[ii]])>0) {
-                      warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
-                  }
+          ## for(ii in 1:length(ix.pop))
+          ## {
+          ##     if(length(raw.data$covXZ[[ii]])>0) {
+          ##         warning(paste0("Study  ",ii," is analyzed as binary trait. It is advised to use rareMETALS2 for meta-analysis"))
+          ##     }
+              
+          ##     for(jj in 1:length(ix.var))
+          ##     {
+          ##         res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var[jj],log.mat[ix.var[jj],],correctFlip,analyzeRefAltListOnly);
+          ##         raw.data <- res.flipAllele$raw.data;
+          ##         log.mat[ix.var[jj],] <- res.flipAllele$log.mat.var;
                   
-                  for(jj in 1:length(ix.var))
-                      {
-                          res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var[jj],log.mat[ix.var[jj],],correctFlip,analyzeRefAltListOnly);
-                          raw.data <- res.flipAllele$raw.data;
-                          log.mat[ix.var[jj],] <- res.flipAllele$log.mat.var;
-                          
-                      }
-              }
-                    
+          ##     }
+          ## }
+          
           maf.vec <- rep(0,length(af.vec.list[[1]]));
           af.vec <- maf.vec;
           af.vec <- colSums(af.mat*N.mat,na.rm=TRUE)/colSums(N.mat,na.rm=TRUE);
@@ -192,7 +208,7 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                                 pos.list=pos.list,
                                 alt.list=alt.list,
                                 ref.list=ref.list,
-                                raw.data=raw.data,
+                                raw.data=raw.data.ori,
                                 gene.name=range.name[kk]);
               ix.X1 <- 1:(length(ix.rare)-length(ix.tmp));
               ix.X2 <- (length(ix.rare)-length(ix.tmp)+1):length(ix.rare);

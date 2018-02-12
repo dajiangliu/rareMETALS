@@ -96,6 +96,11 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
           log.mat <- t(N.mat);
           af.mat <- N.mat;
           ac.mat <- N.mat;
+          ix.match <- match(raw.data$pos[ix.var],refaltList$pos);
+          ref.gold <- refaltList$ref[ix.match];alt.gold <- refaltList$alt[ix.match];af.gold <- refaltList$af[ix.match];checkAF <- refaltList$checkAF;anno.gold <- refaltList$anno[ix.match];pos.gold <- refaltList$pos[ix.match];
+          if(length(checkAF)==0) checkAF <- FALSE;
+          refaltList <- list(ref=ref.gold,alt=alt.gold,af=af.gold,checkAF=checkAF,af.diff.max=refaltList$af.diff.max,anno=anno.gold,pos=pos.gold);
+
           for(ii in 1:length(ix.pop))
           {
               if(length(raw.data$covXZ[[ii]])>0) {
@@ -110,7 +115,6 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                   
               }
           }
-
           
           for(ii in 1:length(ix.pop))
             {
@@ -134,10 +138,6 @@ conditional.rareMETALS.range.group <- function(range.name=NULL,score.stat.file,c
                 alt.list[[ii]] <- (raw.data$alt)[[ii]][ix.var];
                 anno.list[[ii]] <- (raw.data$anno)[ix.var];
             }
-          ix.match <- match(raw.data$pos[ix.var],refaltList$pos);
-          ref.gold <- refaltList$ref[ix.match];alt.gold <- refaltList$alt[ix.match];af.gold <- refaltList$af[ix.match];checkAF <- refaltList$checkAF;anno.gold <- refaltList$anno[ix.match];pos.gold <- refaltList$pos[ix.match];
-          if(length(checkAF)==0) checkAF <- FALSE;
-          refaltList <- list(ref=ref.gold,alt=alt.gold,af=af.gold,checkAF=checkAF,af.diff.max=refaltList$af.diff.max,anno=anno.gold,pos=pos.gold);
           
           ## for(ii in 1:length(ix.pop))
           ## {
