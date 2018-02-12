@@ -1,5 +1,0 @@
-library('methods');
-library('utils');
-library('roxygen2');
-roxygenise("BinaryRAREMETALS");
-
