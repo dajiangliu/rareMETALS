@@ -132,17 +132,17 @@ rareMETALS.range.group.core <- function(score.stat.file,cov.file,range,range.nam
           refaltList <- list(ref=ref.gold,alt=alt.gold,af=af.gold,checkAF=checkAF,af.diff.max=refaltList$af.diff.max,anno=anno.gold,pos=pos.gold);
           
           for(ii in 1:length(ix.pop))
+          {
+              for(jj in 1:length(ix.var))
               {
-                  for(jj in 1:length(ix.var))
-                      {
-                          res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var[jj],log.mat[ix.var[jj],],correctFlip,analyzeRefAltListOnly);
-
-                          raw.data <- res.flipAllele$raw.data;
-                          log.mat[ix.var[jj],] <- res.flipAllele$log.mat.var;
-
-                      }
+                  res.flipAllele <- flipAllele(raw.data,raw.data.ori,refaltList,ii,ix.var[jj],log.mat[ix.var[jj],],correctFlip,analyzeRefAltListOnly);
+                  
+                  raw.data <- res.flipAllele$raw.data;
+                  log.mat[ix.var[jj],] <- res.flipAllele$log.mat.var;
+                  
               }
-       
+          }
+          
           af.mat <- matrix(NA,ncol=length(raw.data$ustat[[ii]]),nrow=length(raw.data$ustat));
           ac.mat <- af.mat;
           N.mat <- af.mat;
