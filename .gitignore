@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.bak
 
 # Logs and databases #
 ######################
@@ -24,3 +25,5 @@
 *.Re
 *.Rproj
 *.Rold
+
+test/
