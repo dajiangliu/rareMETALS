@@ -8,7 +8,7 @@
 - [Foruml]
 - [How to instal](#quick-tutorial)
     - [Single variant tests](#Single-variant-tests)
-    - [Conditional single variant tests](#conditional-single-variant-tests)
+    - [Conditional single variant tests](#conditional-single-variant-tests)   
 -[Supported Functionalities]  
 -[Exemplar Datase]  
 -[How to Generate Summary Association Statistics and Prepare Them for Meta-analysis]  
