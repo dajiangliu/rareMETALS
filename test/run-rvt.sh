@@ -1,1 +1,0 @@
-/net/fantasia/home/zhanxw/rvtests.dev/simu/dajiang.1kg/run-rvt.sh
