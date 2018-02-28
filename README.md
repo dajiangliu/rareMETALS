@@ -21,7 +21,7 @@
   - [A Simple Tutorial for Using the conditional.rareMETALS.range]  
 
 
-## Change Log <a name="change-log"></a>
+### Change Log <a name="change-log"></a>
 - 05/18/2017 Version 6.8 incorporates a number of new features and bug fixes. We included support for multi-allelic variants, the support for a new conditional analysis method, the support for cohort level genomic controls, and the bug fixes for calculating heterogeneity statistics such as Q and I2.
 - 04/09/2016 Version 6.3 is released. Minor bug fix: Due to different level of missingness of variants in the gene, the single variant association statistics calculated using the covariance matrices of score statistics can be different than single variant association statistics calculated using vstat. This has lead to confusions. It has been fixed in version 6.3. The primary results from version 6.2 should be correct.
 - 09/25/2015 Version 6.2 is released. Minor bug fix: Removed the incorrect warning information in version 6.1 when quantitative traits are meta-analyzed. The software incorrectly consider it as binary trait and suggested the use of rareMETALS2.
