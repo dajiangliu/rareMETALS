@@ -2,9 +2,9 @@
 
 ## **Table of Contents**
 
-- [Change Log](#change-log)
-- [Download and Installation](#citation)
-- [Documentation](#Installing-the-rareGWAMA-R-package)
+1. [Change Log](#change-log)
+2. [Download and Installation](#citation)
+3. [Documentation](#Installing-the-rareGWAMA-R-package)
 - [Forum]()
 - [How to instal](#quick-tutorial)
     - [Single variant tests](#Single-variant-tests)
