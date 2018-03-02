@@ -5,14 +5,14 @@
 1. [Change Log](#change-log)
 2. [Download and Installation](#download-and-installation)
 3. [Documentation](#Installing-the-rareGWAMA-R-package)
-- [Forum]()
-- [How to instal](#quick-tutorial)
+4. [Forum]()
+5. [How to instal](#quick-tutorial)
     - [Single variant tests](#Single-variant-tests)
     - [Conditional single variant tests](#conditional-single-variant-tests)  
-- [Supported Functionalities]()  
-- [Exemplar Datase]()
-- [How to Generate Summary Association Statistics and Prepare Them for Meta-analysis]  
-- [A Simple Tutorial for Using functions]  
+6. [Supported Functionalities]()  
+7. [Exemplar Datase]()
+8. [How to Generate Summary Association Statistics and Prepare Them for Meta-analysis]  
+9. [A Simple Tutorial for Using functions]  
   - [A Simple Tutorial for Using the rareMETALS.single function]  
   - [A Simple Tutorial for Using the rareMETALS.single.group function]  
   - [A Simple Tutorial for Using the rareMETALS.range function]  
