@@ -43,11 +43,11 @@
 ### Downlaod and installation <a name="download-and-installation"></a>
 - The R package can be downloaded from [rareMETALS_6.8.tar.gz](https://genome.sph.umich.edu/w/images/b/b2/RareMETALS_6.8.tar.gz). It will be eventually released on the Comprehensive R-archive Network. If you want to perform gene-level association test using automatically generated annotations, you will also need [refFlat_hg19.txt.gz](https://genome.sph.umich.edu/w/images/0/04/RefFlat_hg19.txt.gz), which is the gene definition modified from refFlat.
 - Right now, the package is hosted on github, which allows installation and update to be very easy. 
-First, make sure you have the `mvtnorm` and `data.table` packages installed:
+-- First, make sure you have the `mvtnorm` and `data.table` packages installed:
 
     install.packages("devtools")
 
-Then you could use:
+-- Then you could use:
 
     library(devtools)   
     install_github("dajiangliu/rareMETALS")
