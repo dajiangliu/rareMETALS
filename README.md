@@ -3,7 +3,7 @@
 ## **Table of Contents**
 
 1. [Change Log](#change-log)
-2. [Download and Installation](#citation)
+2. [Download and Installation](#download-and-installation)
 3. [Documentation](#Installing-the-rareGWAMA-R-package)
 - [Forum]()
 - [How to instal](#quick-tutorial)
@@ -39,3 +39,13 @@
 - 08/06/2014 Version 4.7 is posted, where a few minor bugs were fixed. Thanks to Heather Highland and Xueling Sim for careful testing!! Please update. Thanks!
 - 07/15/2014 Fixed a bug in conditional.rareMETALS.single and conditional.rareMETALS.range; Please update. Thanks!
 - 06/27/2014 Updated to version 4.0: Many updates are implemented, including support for group files in both single variant and gene-level association test; checks for allele flips based upon variant frequency, the detection of possible allele flips using a novel statistic based upon variations of allele frequency between studies;
+
+### Downlaod and installation <a name="download-and-installation"></a>
+- The R package can be downloaded from [rareMETALS_6.8.tar.gz](https://genome.sph.umich.edu/w/images/b/b2/RareMETALS_6.8.tar.gz). It will be eventually released on the Comprehensive R-archive Network. If you want to perform gene-level association test using automatically generated annotations, you will also need [refFlat_hg19.txt.gz](https://genome.sph.umich.edu/w/images/0/04/RefFlat_hg19.txt.gz), which is the gene definition modified from refFlat.
+- Right now, the package is hosted on github, which allows installation and update to be very easy. 
+First, make sure you have the `mvtnorm` and `data.table` packages installed:
+    install.packages("devtools")
+Then you could use:
+    library(devtools)
+    install_github("dajiangliu/rareGWAMA")
+With `library(rareGWAMA)`, your are ready to go!
