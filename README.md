@@ -1,6 +1,6 @@
 # rareMETALS
 **areMETALS** is an R-package for performing single or gene-level tests for detecting rare variant associations. For questions regarding the use of this package, please contact Dajiang Liu([dajiang.liu at outlook dot com](mailto:dajiang.liu@outlook.com)) or Gonçalo Abecasis([goncalo at umich dot edu](mailto:goncalo@umich.edu)). The same methodology is also implemented in command line tools. Please see [here](https://genome.sph.umich.edu/wiki/RAREMETAL_Documentation)
-
+[to download](#download-and-installation)
 
 ## **Table of Contents**
 
