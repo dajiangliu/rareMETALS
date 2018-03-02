@@ -4,7 +4,7 @@
 
 1. [Change Log](#change-log)
 2. [Download and Installation](#download-and-installation)
-3. [Documentation](#Installing-the-rareGWAMA-R-package)
+3. [Documentation](#documatation)
 4. [Forum]() 
 5. [Supported Functionalities]()  
 6. [Exemplar Datase]()
@@ -52,3 +52,7 @@
    install_github("dajiangliu/rareMETALS")
    ```
    - With `library(rareMETALS)`, your are ready to go!
+
+
+### Documentation <a name=documatation></a>
+An R automatically generated documentation is available here: [rareMETALS-manual.pdf](https://genome.sph.umich.edu/w/images/4/44/RareMETALS-manual.pdf). Please note that it is still rough in places. Please let us know if you see any problems. Thanks!
