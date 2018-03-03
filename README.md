@@ -12,12 +12,12 @@ The same methodology is also implemented in command line tools. Please see [here
 6. [Exemplar Datase](#exemplar)
 7. [How to Generate Summary Association Statistics and Prepare Them for Meta-analysis](#HTSASPTMA) 
 8. [A Simple Tutorial for Using functions](#simple-tutorial-functions)  
-  - [Using the rareMETALS.single function](#rareMETALS.single-function)  
-  - [Using the rareMETALS.single.group function](#rareMETALS.single.group-function)  
-  - [Using the rareMETALS.range function](#rareMETALS.range-function)  
-  - [Using the rareMETALS.range.group function](#rareMETALS.range.group-function)  
-  - [Using the conditional.rareMETALS.single](#conditional.rareMETALS.single)  
-  - [Using the conditional.rareMETALS.range](#conditional.rareMETALS.range)  
+  - [rareMETALS.single](#rareMETALS.single-function)  
+  - [rareMETALS.single.group](#rareMETALS.single.group-function)  
+  - [rareMETALS.range](#rareMETALS.range-function)  
+  - [rareMETALS.range.group](#rareMETALS.range.group-function)  
+  - [conditional.rareMETALS.single](#conditional.rareMETALS.single)  
+  - [conditional.rareMETALS.range](#conditional.rareMETALS.range)  
 9. [Feedback/Contact](#Feedback-Contact)
 
 ### Change Log <a name="change-log"></a>
@@ -56,7 +56,7 @@ The same methodology is also implemented in command line tools. Please see [here
    - With `library(rareMETALS)`, your are ready to go!
 
 
-### Documentation <a name=documatation></a>
+### Documentation <a name="documatation"></a>
 An R automatically generated documentation is available here: [rareMETALS-manual.pdf](https://genome.sph.umich.edu/w/images/4/44/RareMETALS-manual.pdf). Please note that it is still rough in places. Please let us know if you see any problems. Thanks!
 
 
@@ -155,12 +155,11 @@ res31<-rareMETALS.single.group(score.stat.file,cov.file=NULL, range="19:11200093
 #### Using the rareMETALS.range function <a name=rareMETALS.range-functions></a>  
 ```
 res <- rareMETALS.range(score.stat.file,cov.file,range="19:11200093-11201275",range.name="LDLR",test = "GRANVIL",maf.cutoff = 0.05,alternative = c("two.sided"),ix.gold = 1,out.digits = 4,callrate.cutoff = 0,hwe.cutoff = 0,max.VT = NULL)
+```
+
+```
 print(res$res.out)
-
-```
-
-```
-gene.name.out p.value.out statistic.out no.site.out beta1.est.out
+ gene.name.out p.value.out statistic.out no.site.out beta1.est.out
 [1,] "LDLR"        "0.6064"    "0.2654"      "25"        "-0.01729"
      beta1.sd.out maf.cutoff.out direction.burden.by.study.out
 [1,] "0.03357"    "0.05"         "--"
@@ -169,7 +168,7 @@ gene.name.out p.value.out statistic.out no.site.out beta1.est.out
      top.singlevar.pval top.singlevar.af
 [1,] "0.004709"         "0.01038"
 
-pos.ref.alt.out       
+ pos.ref.alt.out       
 [1,] "19:11200093/T/C,19:11200213/G/A,19:11200235/G/A,19:11200272/C/A,19:11200282/G/A,19:11200309/C/A,19:11200412/C/T,19:11200419/C/T,19:11200431/C/T,19:1120\
 0442/G/A,19:11200475/C/G,19:11200508/G/A,19:11200514/C/T,19:11200557/G/A,19:11200579/C/T,19:11200728/C/T,19:11200753/T/C,19:11200754/G/A,19:11200806/C/T,19:1\
 1200839/T/A,19:11200840/C/A,19:11200896/C/T,19:11201259/G/C,19:11201274/C/T,19:11201275/A/T"
@@ -186,12 +185,31 @@ pos.ref.alt.out
 ```
 *More detailed results can be found in a list res$res.list*
 
-  - [Using the rareMETALS.range.group function]  
+#### Using the rareMETALS.range.group function <a name="rareMETALS.range.group-function"></a>
+```
+res32<-rareMETALS.range.group(score.stat.file, cov.file, range="19:11200093-11201275", range.name="LDLR",
+                      test = "GRANVIL", refaltList, maf.cutoff = 1,
+                      alternative = c("two.sided"), out.digits = 4,
+                      callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL,
+                      correctFlip = TRUE, analyzeRefAltListOnly = TRUE)
+```
+
+```
+print(res32$res.out)
+   gene.name.out N.out  p.value.out statistic.out no.site.out beta1.est.out beta1.sd.out maf.cutoff.out
+[1,] "LDLR"        "2504" "0.8629"    "0.0298"      "1"         "0.1764"      "1.044"      "1"           
+    direction.burden.by.study.out direction.meta.single.var.out top.singlevar.pos top.singlevar.refalt top.singlevar.pval
+[1,] "+-"                          "+"                           "19:11200282"     "3/1"                "0.8629"          
+    top.singlevar.af pos.ref.alt.out  
+[1,] "0.000599"       "19:11200282/G/A"
+```
+
+
   - [Using the conditional.rareMETALS.single]  
   - [Using the conditional.rareMETALS.range]  
   
 
-### Feedback/Contact <a name="Feedback-Contact"></a>
+### Feedback/Contact <a name=Feedback-Contact></a>
 Questions and requests can be sent to
 Github issue page ([link](https://github.com/dajiangliu/rareMETALS/issues))
 or
