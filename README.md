@@ -1,5 +1,5 @@
 # rareMETALS
-**rareMETALS** is an R-package for performing single or gene-level tests for detecting rare variant associations. For questions regarding the use of this package, please contact Dajiang Liu([dajiang.liu at outlook dot com](mailto:dajiang.liu@outlook.com)) or Gonçalo Abecasis([goncalo at umich dot edu](mailto:goncalo@umich.edu)), or follow [Feedback/Contact](<a name="Feedback/Contact"></a>). 
+**rareMETALS** is an R-package for performing single or gene-level tests for detecting rare variant associations. For questions regarding the use of this package, please contact Dajiang Liu([dajiang.liu at outlook dot com](mailto:dajiang.liu@outlook.com)) or Gonçalo Abecasis([goncalo at umich dot edu](mailto:goncalo@umich.edu)), or follow [Feedback/Contact](#Feedback-Contact). 
 The same methodology is also implemented in command line tools. Please see [here](https://genome.sph.umich.edu/wiki/RAREMETAL_Documentation)
 
 ## **Table of Contents**
@@ -18,7 +18,7 @@ The same methodology is also implemented in command line tools. Please see [here
   - [A Simple Tutorial for Using the rareMETALS.range.group function]  
   - [A Simple Tutorial for Using the conditional.rareMETALS.single]  
   - [A Simple Tutorial for Using the conditional.rareMETALS.range]  
-9. [Feedback/Contact](#Feedback/Contact)
+9. [Feedback/Contact](#Feedback-Contact)
 
 ### Change Log <a name="change-log"></a>
 - 05/18/2017 Version 6.8 incorporates a number of new features and bug fixes. We included support for multi-allelic variants, the support for a new conditional analysis method, the support for cohort level genomic controls, and the bug fixes for calculating heterogeneity statistics such as Q and I2.
@@ -60,8 +60,8 @@ The same methodology is also implemented in command line tools. Please see [here
 An R automatically generated documentation is available here: [rareMETALS-manual.pdf](https://genome.sph.umich.edu/w/images/4/44/RareMETALS-manual.pdf). Please note that it is still rough in places. Please let us know if you see any problems. Thanks!
 
 
-## Feedback/Contact <a name="Feedback/Contact"></a>
+### Feedback/Contact <a name="Feedback-Contact"></a>
 Questions and requests can be sent to
-Github issue page ([link](https://github.com/dajiangliu/rareGWAMA/issues))
+Github issue page ([link](https://github.com/dajiangliu/rareMETALS/issues))
 or
 Dajiang Liu ([dajiang.liu@outlook.com](mailto:dajiang.liu@outlook.com "mailto:dajiang.liu@outlook.com")) and Fang Chen([fchen1@hmc.psu.edu](mailto:fchen1@hmc.psu.edu))
