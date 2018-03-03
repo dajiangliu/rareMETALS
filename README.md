@@ -12,12 +12,12 @@ The same methodology is also implemented in command line tools. Please see [here
 6. [Exemplar Datase](#exemplar)
 7. [How to Generate Summary Association Statistics and Prepare Them for Meta-analysis](#HTSASPTMA) 
 8. [A Simple Tutorial for Using functions](#simple-tutorial-functions)  
-  - [rareMETALS.single](#rareMETALS.single-function)  
-  - [rareMETALS.single.group](#rareMETALS.single.group-function)  
-  - [rareMETALS.range](#rareMETALS.range-function)  
-  - [rareMETALS.range.group](#rareMETALS.range.group-function)  
-  - [conditional.rareMETALS.single](#conditional.rareMETALS.single)  
-  - [conditional.rareMETALS.range](#conditional.rareMETALS.range)  
+  - [rareMETALS.single](#rareMETALS-single-function)  
+  - [rareMETALS.single.group](#rareMETALS-single-group-function)  
+  - [rareMETALS.range](#rareMETALS-range-function)  
+  - [rareMETALS.range.group](#rareMETALS-range-group-function)  
+  - [conditional.rareMETALS.single](#conditional-rareMETALS-single)  
+  - [conditional.rareMETALS.range](#conditional-rareMETALS-range)  
 9. [Feedback/Contact](#Feedback-Contact)
 
 ### Change Log <a name="change-log"></a>
@@ -92,7 +92,7 @@ tabix -s 1 -b 2 -e 2 -S 1 study1.MetaCov.assoc.gz
 
 
 ### A Simple Tutorial for Using functions <a name=simple-tutorial-functions></a>
-#### Using the rareMETALS.single function <a name=rareMETALS.single-function></a>    
+#### Using the rareMETALS.single function <a name=rareMETALS-single-function></a>    
 rareMETALS.single function allow you to perform meta-analyses for single variant association tests. The summary association statistics are combined using Mantel Haenszel test statistic.   
 The details are described in our method paper: **Meta-analysis of gene-level tests of rare variant association, Nature Genetics, 46, 200–204 (2014)** [doi: 10.1038/ng.2852.](https://www.nature.com/articles/ng.2852)   
 Assume that you have a set of single variant score statistics and their covariance matrices.
@@ -121,7 +121,7 @@ res <- rareMETALS.single(score.stat.file,cov.file=NULL,range="19:11200093-112012
  [21] 0.096474975 0.956407850 0.038234190 0.253512486 0.550935361 0.482315038```
 ```
 
-#### Using the rareMETALS.single.group function <a name=simple-tutorial-functions></a>    
+#### Using the rareMETALS.single.group function <a name=rareMETALS-single-group-function></a>    
 Dataset used to get the refaltList: **Media**:[groupFile.txt.gz](https://genome.sph.umich.edu/w/images/f/fc/GroupFile.txt.gz)
 
 ```
@@ -152,13 +152,13 @@ res31<-rareMETALS.single.group(score.stat.file,cov.file=NULL, range="19:11200093
  
 ```
 
-#### Using the rareMETALS.range function <a name=rareMETALS.range-functions></a>  
+#### Using the rareMETALS.range function <a name=rareMETALS-range-functions></a>  
 ```
 res <- rareMETALS.range(score.stat.file,cov.file,range="19:11200093-11201275",range.name="LDLR",test = "GRANVIL",maf.cutoff = 0.05,alternative = c("two.sided"),ix.gold = 1,out.digits = 4,callrate.cutoff = 0,hwe.cutoff = 0,max.VT = NULL)
 ```
 
 ```
-print(res$res.out)
+> print(res$res.out)
  gene.name.out p.value.out statistic.out no.site.out beta1.est.out
 [1,] "LDLR"        "0.6064"    "0.2654"      "25"        "-0.01729"
      beta1.sd.out maf.cutoff.out direction.burden.by.study.out
@@ -178,14 +178,14 @@ gene.name.out p.value.out statistic.out no.site.out beta1.est.out beta1.sd.out m
     top.singlevar.refalt top.singlevar.pval top.singlevar.af
 [1,] "C/A"                "0.01047"          "0.01538"       
     
-pos.ref.alt.out                     
+ pos.ref.alt.out                     
 [1,]"19:11200093/T/C,19:11200213/G/A,19:11200235/G/A,19:11200272/C/A,19:11200282/G/A,19:11200309/C/A,19:11200412/C/T,19:11200419/C/T,19:11200431/C/T,19:11200442/G/A,19:11200475/C/G,
  19:11200508/G/A,19:11200514/C/T,19:11200557/G/A,19:11200579/C/T,19:11200728/C/T,19:11200753/T/C,19:11200754/G/A,19:11200806/C/T,19:11200839/T/A,19:11200840/C/A,19:11200896/C/T,
  19:11201259/G/C,19:11201274/C/T,19:11201275/A/T"
 ```
 *More detailed results can be found in a list res$res.list*
 
-#### Using the rareMETALS.range.group function <a name="rareMETALS.range.group-function"></a>
+#### Using the rareMETALS.range.group function <a name="rareMETALS-range-group-function"></a>
 ```
 res32<-rareMETALS.range.group(score.stat.file, cov.file, range="19:11200093-11201275", range.name="LDLR",
                       test = "GRANVIL", refaltList, maf.cutoff = 1,
@@ -195,7 +195,7 @@ res32<-rareMETALS.range.group(score.stat.file, cov.file, range="19:11200093-1120
 ```
 
 ```
-print(res32$res.out)
+> print(res32$res.out)
    gene.name.out N.out  p.value.out statistic.out no.site.out beta1.est.out beta1.sd.out maf.cutoff.out
 [1,] "LDLR"        "2504" "0.8629"    "0.0298"      "1"         "0.1764"      "1.044"      "1"           
     direction.burden.by.study.out direction.meta.single.var.out top.singlevar.pos top.singlevar.refalt top.singlevar.pval
@@ -204,8 +204,7 @@ print(res32$res.out)
 [1,] "0.000599"       "19:11200282/G/A"
 ```
 
-
-  - [Using the conditional.rareMETALS.single]  
+##### Using the conditional.rareMETALS.single <a name="conditional-rareMETALS-single"></a>
   - [Using the conditional.rareMETALS.range]  
   
 
