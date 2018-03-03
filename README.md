@@ -1,5 +1,5 @@
 # rareMETALS
-**rareMETALS** is an R-package for performing single or gene-level tests for detecting rare variant associations. For questions regarding the use of this package, please contact Dajiang Liu([dajiang.liu at outlook dot com](mailto:dajiang.liu@outlook.com)) or Gonçalo Abecasis([goncalo at umich dot edu](mailto:goncalo@umich.edu)), or follow [Feedback/Contact](#Feedback-Contact). 
+**rareMETALS** is an R-package for performing single or gene-level tests for detecting rare variant associations. For questions regarding the use of this package, please contact Dajiang Liu([dajiang.liu at outlook dot com](mailto:dajiang.liu@outlook.com)) or Gonçalo Abecasis([goncalo at umich dot edu](mailto:goncalo@umich.edu)), or follow [Feedback/Contact](#Feedback-Contact).   
 The same methodology is also implemented in command line tools. Please see [here](https://genome.sph.umich.edu/wiki/RAREMETAL_Documentation)
 
 ## **Table of Contents**
@@ -7,9 +7,9 @@ The same methodology is also implemented in command line tools. Please see [here
 1. [Change Log](#change-log)
 2. [Download and Installation](#download-and-installation)
 3. [Documentation](#documatation)
-4. [Forum]() 
-5. [Supported Functionalities]()  
-6. [Exemplar Datase]()
+4. [Forum](#forum) 
+5. [Supported Functionalities](#Supported-Functionalities)  
+6. [Exemplar Datase](#exemplar)
 7. [How to Generate Summary Association Statistics and Prepare Them for Meta-analysis]  
 8. [A Simple Tutorial for Using functions]  
   - [A Simple Tutorial for Using the rareMETALS.single function]  
@@ -59,6 +59,21 @@ The same methodology is also implemented in command line tools. Please see [here
 ### Documentation <a name=documatation></a>
 An R automatically generated documentation is available here: [rareMETALS-manual.pdf](https://genome.sph.umich.edu/w/images/4/44/RareMETALS-manual.pdf). Please note that it is still rough in places. Please let us know if you see any problems. Thanks!
 
+### Forum <a name=forum></a>
+I have created a google group for discussion on the usage and for bug reports etc. As you can see, there are numerous updates to the package since its release, thanks to the valuable suggestions from many users. We are committed to continue to update the package and improve its functionalities. If you find any issues to the package and think that the discussions may also benefit others, please post them to the user group. Here is the link to the [discussion group](https://groups.google.com/forum/#!forum/raremetals)
+
+### Supported Functionalities <a name=Supported-Functionalities></a>  
+- Marginal meta-analysis of single variant or gene-level association test
+- Conditional analysis of single variant or gene-level association, for variants (gene) where there are covariance information available between candidate variants and known variants.
+- Estimates of genetic effects and locus genetic variance
+- Estimate measures of genetic effect heterogeneities between studies
+
+### Exemplar Dataset <a name=exemplar></a>
+Four datasets are useful to get you started on how to use rareMETALS R package for meta-analyses of gene-level association test
+- Media:[study1.MetaScore.assoc.gz](https://genome.sph.umich.edu/w/images/0/0e/Study1.MetaScore.assoc.gz)
+- Media:[study2.MetaScore.assoc.gz](https://genome.sph.umich.edu/w/images/e/e5/Study2.MetaScore.assoc.gz)
+- Media:[study1.MetaCov.assoc.gz](https://genome.sph.umich.edu/w/images/d/da/Study1.MetaCov.assoc.gz) 
+- Media:[study2.MetaCov.assoc.gz](https://genome.sph.umich.edu/w/images/a/a5/Study2.MetaCov.assoc.gz)
 
 ### Feedback/Contact <a name="Feedback-Contact"></a>
 Questions and requests can be sent to
