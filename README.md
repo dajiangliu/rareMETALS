@@ -92,8 +92,9 @@ tabix -s 1 -b 2 -e 2 -S 1 study1.MetaCov.assoc.gz
 
 
 ### A Simple Tutorial for Using functions <a name=simple-tutorial-functions></a>
-  - Using the rareMETALS.single function 
-rareMETALS.single function allow you to perform meta-analyses for single variant association tests. The summary association statistics are combined using Mantel Haenszel test statistic. The details are described in our method paper: **Meta-analysis of gene-level tests of rare variant association, Nature Genetics, 46, 200–204 (2014)** [doi: 10.1038/ng.2852.](https://www.nature.com/articles/ng.2852)
+- Using the rareMETALS.single function    
+rareMETALS.single function allow you to perform meta-analyses for single variant association tests. The summary association statistics are combined using Mantel Haenszel test statistic.   
+The details are described in our method paper: **Meta-analysis of gene-level tests of rare variant association, Nature Genetics, 46, 200–204 (2014)** [doi: 10.1038/ng.2852.](https://www.nature.com/articles/ng.2852)   
 Assume that you have a set of single variant score statistics and their covariance matrices.
 Example:
 ```
@@ -120,8 +121,9 @@ res <- rareMETALS.single(score.stat.file,cov.file=NULL,range="19:11200093-112012
  [21] 0.096474975 0.956407850 0.038234190 0.253512486 0.550935361 0.482315038```
 ```
 
-  - [Using the rareMETALS.single.group function]  
-Dataset used to get the refaltList Media:[groupFile.txt.gz](https://genome.sph.umich.edu/w/images/f/fc/GroupFile.txt.gz)
+- [Using the rareMETALS.single.group function]    
+Dataset used to get the refaltList   
+Media:[groupFile.txt.gz](https://genome.sph.umich.edu/w/images/f/fc/GroupFile.txt.gz)
 
 ```
 res.site<-read.table("groupFile.txt",header=T)
