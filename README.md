@@ -39,7 +39,7 @@ The same methodology is also implemented in command line tools. Please see [here
 
 
 ### Documentation <a name="documatation"></a>
-An R automatically generated documentation is available here: [rareMETALS-manual.pdf](https://genome.sph.umich.edu/w/images/4/44/RareMETALS-manual.pdf). Please note that it is still rough in places. Please let us know if you see any problems. Thanks!
+An R automatically generated documentation is available here: [rareMETALS-manual.pdf](https://genome.sph.umich.edu/w/images/4/44/RareMETALS-manual.pdf). Please note that it is still rough in places. Please let us know [if you see any problems](#Feedback-Contact). Thanks!
 
 
 ### Forum <a name=forum></a>
