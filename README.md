@@ -99,9 +99,7 @@ Example:
 ```
 cov.file <- c("study1.MetaCov.assoc.gz","study2.MetaCov.assoc.gz")
 score.stat.file <- c("study1.MetaScore.assoc.gz","study2.MetaScore.assoc.gz")
-```
 
-```
 library(rareMETALS)
 res <- rareMETALS.single(score.stat.file,cov.file=NULL,range="19:11200093-11201275",alternative="two.sided",ix.gold=1,callrate.cutoff=0,hwe.cutoff=0)
 
@@ -119,12 +117,40 @@ res <- rareMETALS.single(score.stat.file,cov.file=NULL,range="19:11200093-112012
  > print(res$p.value)
  [1] 0.551263675 0.056308558 0.172481571 0.734935815 0.922326732 0.053804524 0.886985353 0.903835162 0.005280228 0.266575301
  [11] 0.196122312 0.157114376 0.951477852 0.840523624 0.759482777 0.112743041 0.414147263 0.825877149 0.006090142 0.096474975
-[21] 0.096474975 0.956407850 0.038234190 0.253512486 0.550935361 0.482315038```
+ [21] 0.096474975 0.956407850 0.038234190 0.253512486 0.550935361 0.482315038```
 ```
 
-
-  
   - [Using the rareMETALS.single.group function]  
+Dataset used to get the refaltList Media:[groupFile.txt.gz](https://genome.sph.umich.edu/w/images/f/fc/GroupFile.txt.gz)
+
+```
+res.site<-read.table("groupFile.txt",header=T)
+refaltList <- list(pos=paste(res.site[,1],res.site[,2],sep=":"),
+              ref=res.site$AF,alt=res.site$ALT,af=res.site$AF,af.diff.max=0.5,checkAF=T)
+res31<-rareMETALS.single.group(score.stat.file,cov.file=NULL, range="19:11200093-11201275", refaltList,
+                       alternative = c("two.sided"), callrate.cutoff = 0,
+                       hwe.cutoff = 0, correctFlip = TRUE, analyzeRefAltListOnly = TRUE)
+
+###result can be explored as below###
+ > names(res31)
+ [1] "p.value"            "ref"                "alt"                "integratedData"     "raw.data"          
+ [6] "clean.data"         "statistic"          "direction.by.study" "anno"               "maf"               
+ [11] "maf.byStudy"        "maf.maxdiff.vec"    "ix.maf.maxdiff.vec" "maf.sd.vec"         "no.sample.mat"     
+ [16] "no.sample"          "beta1.est"          "beta1.sd"           "QC.by.study"        "hsq.est"           
+ [21] "nearby"             "cochranQ.stat"      "cochranQ.df"        "cochranQ.pVal"      "I2"                
+ [26] "log.mat"            "pos"               
+ > print(res31$pos)
+ [1] "19:11200093" "19:11200213" "19:11200235" "19:11200272" "19:11200282" "19:11200309" "19:11200412" "19:11200419"
+ [9] "19:11200431" "19:11200442" "19:11200475" "19:11200508" "19:11200514" "19:11200557" "19:11200579" "19:11200728"
+ [17] "19:11200753" "19:11200754" "19:11200806" "19:11200839" "19:11200840" "19:11200896" "19:11201124" "19:11201259"
+ [25] "19:11201274" "19:11201275"
+ > print(res31$p.value)
+ [1]        NA        NA        NA        NA 0.9223267        NA        NA        NA        NA        NA        NA        NA
+ [13]        NA        NA        NA        NA        NA        NA        NA        NA        NA        NA        NA        NA
+ [25]        NA        NA
+ 
+```
+
   - [Using the rareMETALS.range function]  
   - [Using the rareMETALS.range.group function]  
   - [Using the conditional.rareMETALS.single]  
