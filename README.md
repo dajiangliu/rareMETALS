@@ -4,21 +4,21 @@ The same methodology is also implemented in command line tools. Please see [here
 
 ## **Table of Contents**
 
-1. [Change Log](#change-log)
-2. [Download and Installation](#download-and-installation)
-3. [Documentation](#documatation)
-4. [Forum](#forum) 
-5. [Supported Functionalities](#Supported-Functionalities)  
-6. [Exemplar Datase](#exemplar)
-7. [How to Generate Summary Association Statistics and Prepare Them for Meta-analysis](#HTSASPTMA) 
-8. [A Simple Tutorial for Using functions](#simple-tutorial-functions)  
+- [Change Log](#change-log)
+- [Download and Installation](#download-and-installation)
+- [Documentation](#documatation)
+- [Forum](#forum) 
+- [Supported Functionalities](#Supported-Functionalities)  
+- [Exemplar Datase](#exemplar)
+- [How to Generate Summary Association Statistics and Prepare Them for Meta-analysis](#HTSASPTMA) 
+- [A Simple Tutorial for Using functions](#simple-tutorial-functions)  
   - [rareMETALS.single](#rareMETALS-single-function)  
   - [rareMETALS.single.group](#rareMETALS-single-group-function)  
   - [rareMETALS.range](#rareMETALS-range-function)  
   - [rareMETALS.range.group](#rareMETALS-range-group-function)  
   - [conditional.rareMETALS.single](#conditional-rareMETALS-single)  
   - [conditional.rareMETALS.range](#conditional-rareMETALS-range)  
-9. [Feedback/Contact](#Feedback-Contact)
+- [Feedback/Contact](#Feedback-Contact)
 
 ### Change Log <a name="change-log"></a>
 - 05/18/2017 Version 6.8 incorporates a number of new features and bug fixes. We included support for multi-allelic variants, the support for a new conditional analysis method, the support for cohort level genomic controls, and the bug fixes for calculating heterogeneity statistics such as Q and I2.
@@ -205,8 +205,40 @@ res32<-rareMETALS.range.group(score.stat.file, cov.file, range="19:11200093-1120
 ```
 
 ##### Using the conditional.rareMETALS.single <a name="conditional-rareMETALS-single"></a>
-  - [Using the conditional.rareMETALS.range]  
-  
+It is well known that, owing to linkage disequilibrium, one or more common causal variants can result in shadow association signals at other nearby common variants, use RareMETALS to perform conditional analysis for single variant tests   
+example:
+```
+ res<-conditional.rareMETALS.single(candidate.variant.vec=c("19:11200282","19:11200309"), score.stat.file, cov.file,
+                             known.variant.vec=c("19:11200754","19:11200806","19:11200839"), maf.cutoff=0.05, no.boot =1000,
+                             alternative = c("two.sided"), ix.gold = 1,
+                             out.digits = 4, callrate.cutoff = 0, hwe.cutoff = 0,
+                             p.value.known.variant.vec = NA, anno.known.variant.vec = NA,
+                             anno.candidate.variant.vec = NA) 
+```
+```
+> print(res$res.out)
+ POS           REF ALT PVALUE    AF      BETA_EST  BETA_SD   DIRECTION_BY_STUDY ANNO  POS_REF_ALT_ANNO_KNOWN                                    
+[1,] "19:11200282" "G" "A" "0.5825"  "0.000599" "0.5616"  "1.044"    "-="               "N/A" "19:11200754/G/A/NA,19:11200806/C/T/NA,19:11200839/T/A/NA"
+[2,] "19:11200309" "C" "A" "0.01484" "0.01538"  "-0.3615" "0.02201"  "+="               "N/A" "19:11200754/G/A/NA,19:11200806/C/T/NA,19:11200839/T/A/NA"
+```
+
+##### Using the conditional.rareMETALS.range <a name=conditional-rareMETALS-range></a>
+example:
+```
+res<-conditional.rareMETALS.range(range.name = "LDLR", score.stat.file, cov.file,
+                            candidate.variant.vec=c("19:11200282","19:11200309"), known.variant.vec=c("19:11200754","19:11200806","19:11200839"), test = "GRANVIL", maf.cutoff=0.05,
+                            alternative = c("two.sided"), ix.gold = 1,
+                            out.digits = 4, callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL)
+```
+```
+> print(res$res.out)
+gene.name.out p.value.out statistic.out no.site.out beta1.est.out beta1.sd.out maf.cutoff.out direction.burden.by.study.out direction.meta.single.var.out
+ [1,] "LDLR"        "0.01961"   "5.446"       "2"         "-0.3429"     "0.1469"     "0.05"         "-?"                          "+-"                         
+    top.singlevar.pos top.singlevar.refalt top.singlevar.pval top.singlevar.af pos.ref.alt.out                   pos.ref.alt.known.out                            
+ [1,] "19:11200309"     "C/A"                "0.01484"          "0.01538"        "19:11200282/G/A,19:11200309/C/A" "19:11200754/G/A,19:11200806/C/T,19:11200839/T/A"
+```
+*More detailed results can be found in a list res$res.list*
+
 
 ### Feedback/Contact <a name=Feedback-Contact></a>
 Questions and requests can be sent to
