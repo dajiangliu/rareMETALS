@@ -79,6 +79,10 @@ tabix -s 1 -b 2 -e 2 -S 1 study1.MetaCov.assoc.gz
 
 
 ### A Simple Tutorial for Using functions <a name=simple-tutorial-functions></a>
+A demo R markdown file and output for the functions below can be used for test purpose:
+- Rmd file: [tutorial.Rmd](https://drive.google.com/file/d/1iwYDcc1lMyrW1zavmkMY19ujSw48zDlw/view?usp=sharing)
+- Output file: [output.pdf](https://drive.google.com/open?id=1UvjL6ogHT1Yn8ZnZT-mhwuRAy_z9pPDd)
+
 #### Using the rareMETALS.single function <a name=rareMETALS-single-function></a>    
 rareMETALS.single function allow you to perform meta-analyses for single variant association tests. The summary association statistics are combined using Mantel Haenszel test statistic.   
 The details are described in our method paper: **Meta-analysis of gene-level tests of rare variant association, Nature Genetics, 46, 200–204 (2014)** [doi: 10.1038/ng.2852.](https://www.nature.com/articles/ng.2852)   
@@ -114,9 +118,10 @@ Dataset used to get the refaltList: **Media**:[groupFile.txt.gz](https://genome.
 ```
 res.site<-read.table("groupFile.txt",header=T)
 refaltList <- list(pos=paste(res.site[,1],res.site[,2],sep=":"),
-              ref=res.site$AF,alt=res.site$ALT,af=res.site$AF,af.diff.max=0.5,checkAF=T)
+              ref=res.site$REF,alt=res.site$ALT,af=res.site$AF,af.diff.max=0.5,checkAF=T)
 res31<-rareMETALS.single.group(score.stat.file,cov.file=NULL, range="19:11200093-11201275", refaltList,
                        alternative = c("two.sided"), callrate.cutoff = 0,
+		       multiAllelic=T,
                        hwe.cutoff = 0, correctFlip = TRUE, analyzeRefAltListOnly = TRUE)
 
 ###result can be explored as below###
@@ -146,29 +151,15 @@ res <- rareMETALS.range(score.stat.file,cov.file,range="19:11200093-11201275",ra
 
 ```
 > print(res$res.out)
- gene.name.out p.value.out statistic.out no.site.out beta1.est.out
-[1,] "LDLR"        "0.6064"    "0.2654"      "25"        "-0.01729"
-     beta1.sd.out maf.cutoff.out direction.burden.by.study.out
-[1,] "0.03357"    "0.05"         "--"
-     direction.meta.single.var.out top.singlevar.pos top.singlevar.refalt
-[1,] "---++-+--+-+++++--+++++-+"   "19:11200431"     "C/T"
-     top.singlevar.pval top.singlevar.af
-[1,] "0.004709"         "0.01038"
+     gene.name.out p.value.out statistic.out no.site.out beta1.est.out beta1.sd.out
+[1,] "LDLR"        "0.6064"    "0.2654"      "25"        "-0.01729"    "0.03357"   
+     maf.cutoff.out direction.burden.by.study.out direction.meta.single.var.out
+[1,] "0.05"         "--"                          "---++-+--+-+++++--+++++-+"  
+     top.singlevar.pos top.singlevar.refalt top.singlevar.pval top.singlevar.af
+[1,] "19:11200431"     "C/T"                "0.00528"          "0.01038"       
 
- pos.ref.alt.out       
-[1,] "19:11200093/T/C,19:11200213/G/A,19:11200235/G/A,19:11200272/C/A,19:11200282/G/A,19:11200309/C/A,19:11200412/C/T,19:11200419/C/T,19:11200431/C/T,19:1120\
-0442/G/A,19:11200475/C/G,19:11200508/G/A,19:11200514/C/T,19:11200557/G/A,19:11200579/C/T,19:11200728/C/T,19:11200753/T/C,19:11200754/G/A,19:11200806/C/T,19:1\
-1200839/T/A,19:11200840/C/A,19:11200896/C/T,19:11201259/G/C,19:11201274/C/T,19:11201275/A/T"
-
-gene.name.out p.value.out statistic.out no.site.out beta1.est.out beta1.sd.out maf.cutoff.out direction.burden.by.study.out direction.meta.single.var.out top.singlevar.pos
-[1,] "LDLR"        "0.01916"   "5.487"       "25"        "-0.3575"     "0.1526"     "0.05"         "--"                          "---++-+--+-+++++--+++++-+"   "19:11200309"    
-    top.singlevar.refalt top.singlevar.pval top.singlevar.af
-[1,] "C/A"                "0.01047"          "0.01538"       
-    
- pos.ref.alt.out                     
-[1,]"19:11200093/T/C,19:11200213/G/A,19:11200235/G/A,19:11200272/C/A,19:11200282/G/A,19:11200309/C/A,19:11200412/C/T,19:11200419/C/T,19:11200431/C/T,19:11200442/G/A,19:11200475/C/G,
- 19:11200508/G/A,19:11200514/C/T,19:11200557/G/A,19:11200579/C/T,19:11200728/C/T,19:11200753/T/C,19:11200754/G/A,19:11200806/C/T,19:11200839/T/A,19:11200840/C/A,19:11200896/C/T,
- 19:11201259/G/C,19:11201274/C/T,19:11201275/A/T"
+     pos.ref.alt.out       
+[1,] "19:11200093/T/C,19:11200213/G/A,19:11200235/G/A,19:11200272/C/A,19:11200282/G/A,19:11200309/C/A,19:11200412/C/T,19:11200419/C/T,19:11200431/C/T,19:11200442/G/A,19:11200475/C/G,19:11200508/G/A,19:11200514/C/T,19:11200557/G/A,19:11200579/C/T,19:11200728/C/T,19:11200753/T/C,19:11200754/G/A,19:11200806/C/T,19:11200839/T/A,19:11200840/C/A,19:11200896/C/T,19:11201259/G/C,19:11201274/C/T,19:11201275/A/T"
 ```
 *More detailed results can be found in a list res$res.list*
 
@@ -178,17 +169,21 @@ res32<-rareMETALS.range.group(score.stat.file, cov.file, range="19:11200093-1120
                       test = "GRANVIL", refaltList, maf.cutoff = 1,
                       alternative = c("two.sided"), out.digits = 4,
                       callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL,
+		      multiAllelic=T,
                       correctFlip = TRUE, analyzeRefAltListOnly = TRUE)
 ```
 
 ```
 > print(res32$res.out)
-   gene.name.out N.out  p.value.out statistic.out no.site.out beta1.est.out beta1.sd.out maf.cutoff.out
-[1,] "LDLR"        "2504" "0.8629"    "0.0298"      "1"         "0.1764"      "1.044"      "1"           
-    direction.burden.by.study.out direction.meta.single.var.out top.singlevar.pos top.singlevar.refalt top.singlevar.pval
-[1,] "+-"                          "+"                           "19:11200282"     "3/1"                "0.8629"          
-    top.singlevar.af pos.ref.alt.out  
-[1,] "0.000599"       "19:11200282/G/A"
+
+     gene.name.out N.out  p.value.out statistic.out no.site.out beta1.est.out
+[1,] "LDLR"        "2504" "0.9223"    "0.009507"    "1"         "0.05649"    
+     beta1.sd.out maf.cutoff.out direction.burden.by.study.out
+[1,] "0.3343"     "1"            "+-"                         
+     direction.meta.single.var.out top.singlevar.pos top.singlevar.refalt
+[1,] "+"                           "19:11200282"     "3/1"               
+     top.singlevar.pval top.singlevar.af pos.ref.alt.out  
+[1,] "0.9223"           "0.000599"       "19:11200282/G/A"
 ```
 
 #### Using the conditional.rareMETALS.single <a name="conditional-rareMETALS-single"></a>
@@ -204,9 +199,12 @@ example:
 ```
 ```
 > print(res$res.out)
- POS           REF ALT PVALUE    AF      BETA_EST  BETA_SD   DIRECTION_BY_STUDY ANNO  POS_REF_ALT_ANNO_KNOWN                                    
-[1,] "19:11200282" "G" "A" "0.5825"  "0.000599" "0.5616"  "1.044"    "-="               "N/A" "19:11200754/G/A/NA,19:11200806/C/T/NA,19:11200839/T/A/NA"
-[2,] "19:11200309" "C" "A" "0.01484" "0.01538"  "-0.3615" "0.02201"  "+="               "N/A" "19:11200754/G/A/NA,19:11200806/C/T/NA,19:11200839/T/A/NA"
+     POS           REF ALT PVALUE    AF         BETA_EST  BETA_SD   DIRECTION_BY_STUDY
+[1,] "19:11200282" "G" "A" "0.922"   "0.000599" "0.05674" "0.3356"  "-+"              
+[2,] "19:11200309" "C" "A" "0.05322" "0.01538"  "-0.2213" "0.01311" "++"              
+     ANNO  POS_REF_ALT_ANNO_KNOWN                                    
+[1,] "N/A" "19:11200754/G/A/NA,19:11200806/C/T/NA,19:11200839/T/A/NA"
+[2,] "N/A" "19:11200754/G/A/NA,19:11200806/C/T/NA,19:11200839/T/A/NA"
 ```
 
 #### Using the conditional.rareMETALS.range <a name=conditional-rareMETALS-range></a>
@@ -218,16 +216,20 @@ res<-conditional.rareMETALS.range(range.name = "LDLR", score.stat.file, cov.file
                             out.digits = 4, callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL)
 ```
 ```
-> print(res$res.out)
-gene.name.out p.value.out statistic.out no.site.out beta1.est.out beta1.sd.out maf.cutoff.out direction.burden.by.study.out direction.meta.single.var.out
- [1,] "LDLR"        "0.01961"   "5.446"       "2"         "-0.3429"     "0.1469"     "0.05"         "-?"                          "+-"                         
-    top.singlevar.pos top.singlevar.refalt top.singlevar.pval top.singlevar.af pos.ref.alt.out                   pos.ref.alt.known.out                            
- [1,] "19:11200309"     "C/A"                "0.01484"          "0.01538"        "19:11200282/G/A,19:11200309/C/A" "19:11200754/G/A,19:11200806/C/T,19:11200839/T/A"
+#Error message:
+Error in conditional.rareMETALS.range(range.name = "LDLR", score.stat.file,  : 
+  object 'ac.vec' not found
+In addition: Warning messages:
+1: In QC(raw.data, extra.pars$QC.par, cov = 1) :
+  study 1 different missingness among variants
+2: In QC(raw.data, extra.pars$QC.par, cov = 1) :
+  study 2 different missingness among variants 
 ```
 *More detailed results can be found in a list res$res.list*
 
 
 ### Change Log <a name="change-log"></a>
+- 11/14/2019 Version 7.2 is released. Minor bug fix: Add multi-allelic option; edit one typo in “refaltlist”; adjust output displays. 
 - 05/18/2017 Version 6.8 incorporates a number of new features and bug fixes. We included support for multi-allelic variants, the support for a new conditional analysis method, the support for cohort level genomic controls, and the bug fixes for calculating heterogeneity statistics such as Q and I2.
 - 04/09/2016 Version 6.3 is released. Minor bug fix: Due to different level of missingness of variants in the gene, the single variant association statistics calculated using the covariance matrices of score statistics can be different than single variant association statistics calculated using vstat. This has lead to confusions. It has been fixed in version 6.3. The primary results from version 6.2 should be correct.
 - 09/25/2015 Version 6.2 is released. Minor bug fix: Removed the incorrect warning information in version 6.1 when quantitative traits are meta-analyzed. The software incorrectly consider it as binary trait and suggested the use of rareMETALS2.
