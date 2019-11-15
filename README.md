@@ -22,15 +22,20 @@ The same methodology is also implemented in command line tools. Please see [here
 
 
 ### Downlaod and installation <a name="download-and-installation"></a>
+- **[Pre-request]** Make sure you have installed necessary R packages `devtools`, `mvtnorm` and `data.table` installed:
+   - Installation
+   ```
+   install.packages("devtools")
+   install.packages("mvtnorm")
+   install.packages("data.table")
+   ```
+   - If you have compilation error in cloud server, you may need to load the GCC compilar (e.g. in the PSU ICS server it would be `ml gcc/7.3.1`)
+
 - **[Option one]** The R package can be downloaded from [rareMETALS_6.8.tar.gz](https://genome.sph.umich.edu/w/images/b/b2/RareMETALS_6.8.tar.gz). It will be eventually released on the Comprehensive R-archive Network. If you want to perform gene-level association test using automatically generated annotations, you will also need [refFlat_hg19.txt.gz](https://genome.sph.umich.edu/w/images/0/04/RefFlat_hg19.txt.gz), which is the gene definition modified from refFlat.
    - To install the package, please use `R CMD INSTALL rareMETALS_XXX.tar.gz` command, where **XXX** is the version number for rareMETALS
 
 - **[Option two]** Right now, the package is hosted on github, which allows installation and update to be very easy. 
-  - First, make sure you have the `mvtnorm` and `data.table` packages installed:
-  ```
-  install.packages("devtools")
-  ```
-  - Then you could use:
+   - Installation:
    ```
    library(devtools)   
    install_github("dajiangliu/rareMETALS")
