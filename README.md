@@ -22,7 +22,7 @@ The same methodology is also implemented in command line tools. Please see [here
 
 
 ### Downlaod and installation <a name="download-and-installation"></a>
-- **[Pre-request]** Make sure you have installed necessary R packages `devtools`, `mvtnorm` and `data.table` installed:
+- **[Pre-request]** Make sure you have installed necessary R packages `devtools`, `mvtnorm` and `data.table`:
    - Installation
    ```
    install.packages("devtools")
@@ -30,8 +30,12 @@ The same methodology is also implemented in command line tools. Please see [here
    install.packages("data.table")
    ```
    - If you have compilation error in cloud server, you may need to load the GCC compilar (e.g. in the PSU ICS server it would be `ml gcc/7.3.1`)
+   - If you are installing it in your personal labtop such as a mac, you may need to install xcrun for proper compilation by `xcode-select --install`
 
-- **[Option one]** The R package can be downloaded from [rareMETALS_6.8.tar.gz](https://genome.sph.umich.edu/w/images/b/b2/RareMETALS_6.8.tar.gz). It will be eventually released on the Comprehensive R-archive Network. If you want to perform gene-level association test using automatically generated annotations, you will also need [refFlat_hg19.txt.gz](https://genome.sph.umich.edu/w/images/0/04/RefFlat_hg19.txt.gz), which is the gene definition modified from refFlat.
+- **[Option one]** Install from the file:
+   - The R package **rareMETALS_7.2.tar.gz** can be downloaded by:  
+   `wget https://raw.github.com/dajiangliu/rareMETALS/master/data/rareMETALS_7.2.tar.gz`  
+   It will be eventually released on the Comprehensive R-archive Network. If you want to perform gene-level association test using automatically generated annotations, you will also need [refFlat_hg19.txt.gz](https://genome.sph.umich.edu/w/images/0/04/RefFlat_hg19.txt.gz), which is the gene definition modified from refFlat.
    - To install the package, please use `R CMD INSTALL rareMETALS_XXX.tar.gz` command, where **XXX** is the version number for rareMETALS
 
 - **[Option two]** Right now, the package is hosted on github, which allows installation and update to be very easy. 
@@ -82,6 +86,10 @@ tabix -s 1 -b 2 -e 2 -S 1 study1.MetaCov.assoc.gz
 A demo R markdown file and output for the functions below can be used for test purpose:
 - Rmd file: [tutorial.Rmd](https://drive.google.com/file/d/1iwYDcc1lMyrW1zavmkMY19ujSw48zDlw/view?usp=sharing)
 - Output file: [output.pdf](https://drive.google.com/open?id=1UvjL6ogHT1Yn8ZnZT-mhwuRAy_z9pPDd)
+
+Some tips for running the analysis:
+- gene level test by range.group is memory intensive, if it exceeds the resource limits, you may split the input search list into smaller jobs.
+- single loci test by single.group is time consuming when you span the whole chromosome, it's suggested to run in parallel or split into smaller sub groups to make it faster. 
 
 #### Using the rareMETALS.single function <a name=rareMETALS-single-function></a>    
 rareMETALS.single function allow you to perform meta-analyses for single variant association tests. The summary association statistics are combined using Mantel Haenszel test statistic.   
