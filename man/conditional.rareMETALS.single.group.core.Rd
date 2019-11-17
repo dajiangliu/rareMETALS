@@ -4,8 +4,8 @@
 \alias{conditional.rareMETALS.single.group.core}
 \title{Perform conditional analysis for single variant tests}
 \usage{
-conditional.rareMETALS.single.group.core(candidate.variant, score.stat.file,
-  cov.file, known.variant.vec, refaltList, maf.cutoff,
+conditional.rareMETALS.single.group.core(candidate.variant,
+  score.stat.file, cov.file, known.variant.vec, refaltList, maf.cutoff,
   alternative = c("two.sided", "greater", "less"), out.digits = 4,
   callrate.cutoff = 0, hwe.cutoff = 0, correctFlip = TRUE,
   knownCoding = "identity", impMissing = TRUE)
@@ -41,4 +41,3 @@ return a list of meta-analysis results
 \description{
 Perform conditional analysis for single variant tests
 }
-

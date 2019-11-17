@@ -15,4 +15,3 @@ the formatted stat;
 \description{
 read rvtests and raremetal format;
 }
-

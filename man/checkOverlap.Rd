@@ -12,4 +12,3 @@ a list with estimated lambda values;
 \description{
 check sample overlaps between cohorts;
 }
-

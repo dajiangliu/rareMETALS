@@ -4,9 +4,9 @@
 \alias{rareMETALS.single.correctRefAlt}
 \title{Single variant meta-analysis}
 \usage{
-rareMETALS.single.correctRefAlt(score.stat.file, cov.file, range, refaltList,
-  alternative = c("two.sided", "greater", "less"), callrate.cutoff = 0,
-  hwe.cutoff = 0)
+rareMETALS.single.correctRefAlt(score.stat.file, cov.file, range,
+  refaltList, alternative = c("two.sided", "greater", "less"),
+  callrate.cutoff = 0, hwe.cutoff = 0)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}
@@ -31,4 +31,3 @@ a list consisting of results
 \description{
 Single variant meta-analysis
 }
-

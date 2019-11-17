@@ -9,7 +9,7 @@ rareMETALS.range.group.core(score.stat.file, cov.file, range, range.name,
   alternative = c("two.sided", "greater", "less"), out.digits = 4,
   callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL,
   correctFlip = TRUE, analyzeRefAltListOnly = TRUE, ldsc = FALSE,
-  robustCov = FALSE)
+  robustCov = FALSE, multiAllelic = FALSE)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}
@@ -42,4 +42,3 @@ a list consisting of results;
 \description{
 Meta-analysis of gene-level tests by range;
 }
-

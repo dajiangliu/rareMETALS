@@ -14,7 +14,7 @@
 #' @param max.VT The maximum number of thresholds used in VT; Setting max.VT to 10 can improve the speed for calculation without affecting the power too much. The default parameter is NULL, which does not set upper limit on the number of variable frequency threhsold. 
 #' @return a list consisting of results
 #' @export
-rareMETALS.range <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',maf.cutoff=1,alternative=c('two.sided','greater','less'),ix.gold=1,out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL)
+rareMETALS.range <- function(score.stat.file,cov.file,range,range.name,test='GRANVIL',maf.cutoff=1,alternative=c('two.sided','greater','less'),ix.gold=1,out.digits=4,callrate.cutoff=0,hwe.cutoff=0,max.VT=NULL,robustCov=FALSE)
 {
     res <- rareMETALS.range.core(score.stat.file,cov.file,range[1],range.name[1],test,maf.cutoff,alternative,ix.gold,out.digits,callrate.cutoff,hwe.cutoff,max.VT);
     if(length(range)>1)
