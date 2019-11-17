@@ -23,19 +23,19 @@ The same methodology is also implemented in command line tools. Please see [here
 
 ### Downlaod and installation <a name="download-and-installation"></a>
 - **[Pre-request]** Make sure you have installed necessary R packages `devtools`, `mvtnorm` and `data.table`:
-   - Installation
    ```
    install.packages("devtools")
    install.packages("mvtnorm")
    install.packages("data.table")
    ```
-   - Debug
+   
+   For debug:
    ```
    If you have compilation error in cloud server, you may need to load the compilar (e.g. gcc/7.3.1)
    If you are installing it in your personal labtop such as a mac, you may need to install xcrun for proper compilation by "xcode-select --install"
    ```
 
-- **[Option one]** Install from github:
+- **[Option one]** Install from github (recommended):
 ```
 library(devtools)
 install_github("dajiangliu/rareMETALS")
