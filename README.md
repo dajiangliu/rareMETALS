@@ -35,19 +35,18 @@ The same methodology is also implemented in command line tools. Please see [here
    If you are installing it in your personal labtop such as a mac, you may need to install xcrun for proper compilation by "xcode-select --install"
    ```
 
-- **[Option one]** Install from the file:
-   - The newest version **rareMETALS_7.2.tar.gz** can be downloaded by:  
+- **[Option one]** Install from github:
+```
+library(devtools)
+install_github("dajiangliu/rareMETALS")
+```
+
+- **[Option two]** Install from the source:
+   - Download the newest version **rareMETALS_7.2.tar.gz**:
    `wget https://raw.github.com/dajiangliu/rareMETALS/master/data/rareMETALS_7.2.tar.gz`  
-   - It will be eventually released on the Comprehensive R-archive Network. If you want to perform gene-level association test using automatically generated annotations, you will also need [refFlat_hg19.txt.gz](https://genome.sph.umich.edu/w/images/0/04/RefFlat_hg19.txt.gz), which is the gene definition modified from refFlat.
+   - If you want to perform gene-level association test using automatically generated annotations, you will also need [refFlat_hg19.txt.gz](https://genome.sph.umich.edu/w/images/0/04/RefFlat_hg19.txt.gz), which is the gene definition modified from refFlat.
    - To install the package, please use `R CMD INSTALL rareMETALS_XXX.tar.gz` command, where **XXX** is the version number for rareMETALS
 
-- **[Option two]** Right now, the package is hosted on github, which allows installation and update to be very easy. 
-   - Installation:
-   ```
-   library(devtools)   
-   install_github("dajiangliu/rareMETALS")
-   ```
-   - With `library(rareMETALS)`, your are ready to go!
 
 
 ### Documentation <a name="documatation"></a>
