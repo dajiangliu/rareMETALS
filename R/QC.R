@@ -1,4 +1,3 @@
-
 QC <- function(raw.data,QC.par,cov=1)
   {
     
@@ -272,11 +271,11 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                         if(af.diff>af.diff.max)
                             {
                                 log.mat.var[ii] <- "FlipStrand";
-                                if(length(raw.data$cov)>0)
-                                    {
-                                        raw.data$cov[[ii]][ix.var,] <- NA;
-                                        raw.data$cov[[ii]][,ix.var] <- NA;
-                                    }
+                                ## if(length(raw.data$cov)>0)
+                                ##     {
+                                ##         raw.data$cov[[ii]][ix.var,] <- NA;
+                                ##         raw.data$cov[[ii]][,ix.var] <- NA;
+                                ##     }
                                 
                                 raw.data$af[[ii]][ix.var] <- 1-raw.data$af[[ii]][ix.var]
                                 raw.data$ac[[ii]][ix.var] <- 2*raw.data$nSample[[ii]][ix.var]-raw.data$ac[[ii]][ix.var];
@@ -341,6 +340,13 @@ flipAllele <- function(raw.data,raw.data.ori,refaltList,ix.pop,ix.var,log.mat.va
                         if(is.na(af.diff.new)) af.diff.new <- 0;
                         if(af.diff.new>af.diff.max)
                             {
+                                if(length(raw.data$cov)>0)
+                                    {
+                                        raw.data$cov[[ii]][ix.var,] <- NA;
+                                        raw.data$cov[[ii]][,ix.var] <- NA;
+                                    }
+                                
+                                
                                 ix.include[ii] <- 1;
                                 log.mat.var[ii] <- "DiffAF";
                                 raw.data$nSample[[ii]][ix.var] <- NA;

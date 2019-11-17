@@ -4,8 +4,8 @@
 \alias{rareMETALS.range.multiAllele}
 \title{Function to perform multi-allelic association test}
 \usage{
-rareMETALS.range.multiAllele(score.stat.file, cov.file, tabixRange, rangeName,
-  maf.cutoff, rvTest)
+rareMETALS.range.multiAllele(score.stat.file, cov.file, tabixRange,
+  rangeName, maf.cutoff, rvTest)
 }
 \arguments{
 \item{score.stat.file}{The file names for score statistics files;}
@@ -26,4 +26,3 @@ A matrix of results; each row being the result for a gene;
 \description{
 Function to perform multi-allelic association test
 }
-

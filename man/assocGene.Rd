@@ -19,4 +19,3 @@ A list of results;
 \description{
 Association analysis of gene-level test with multi-allele sites;
 }
-

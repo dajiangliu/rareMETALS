@@ -19,6 +19,7 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
       vstat.list <- extra.pars$vstat.list;
       vstat.sq.vec <- 0;
       robustCov <- extra.pars$robustCov;
+      if(is.null(robustCov)) robustCov <- FALSE;
       for(ii in 1:length(score.stat.vec.list))
       {
           N.list[[ii]] <- mean(N.mat[ii,],na.rm=TRUE);
@@ -52,7 +53,16 @@ rvmeta.CMH <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list,
           ac.vec <- rm.na(maf.vec.list[[ii]]*N.mat[ii,])*2+ac.vec;
           N <- N+rm.na(N.list[[ii]]);
       }
-      if(robustCov==TRUE) diag(X.T.times.X) <- vstat.sq.vec;
+      if(robustCov==TRUE) {
+          X.T.times.X <- 0;
+          for(ii in 1:length(score.stat.vec.list)) {
+              (rm.na(vstat.list[[ii]]))^2;(rm.na(vstat.list[[ii]]))^2;
+              diag.v <- matrix(0,nrow=nrow(cov.mat.list[[ii]]),ncol=ncol(cov.mat.list[[ii]]));
+              diag(diag.v) <- rm.na(vstat.list[[ii]]);
+              X.T.times.X <- X.T.times.X+diag.v%*%rm.na(cov2cor(cov.mat.list[[ii]]))%*%diag.v;
+          }
+          ##diag(X.T.times.X) <- vstat.sq.vec;
+      }
       N.vec <- colSums(N.mat,na.rm=TRUE);
       af.vec <- ac.vec/2/N.vec;
       

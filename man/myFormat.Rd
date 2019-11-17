@@ -17,4 +17,3 @@ formatted result a vector;
 \description{
 format according to publication standard;
 }
-

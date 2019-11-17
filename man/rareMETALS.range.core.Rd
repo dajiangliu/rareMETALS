@@ -6,8 +6,8 @@
 \usage{
 rareMETALS.range.core(score.stat.file, cov.file, range, range.name,
   test = "GRANVIL", maf.cutoff = 1, alternative = c("two.sided",
-  "greater", "less"), ix.gold = 1, out.digits = 4, callrate.cutoff = 0,
-  hwe.cutoff = 0, max.VT = NULL)
+  "greater", "less"), ix.gold = 1, out.digits = 4,
+  callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}
@@ -40,4 +40,3 @@ a list consisting of results
 \description{
 #' Meta-analysis of gene-level tests by range;
 }
-

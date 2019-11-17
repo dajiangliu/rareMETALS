@@ -15,4 +15,3 @@ a list of formatted data;
 \description{
 Format data into analyzable format;
 }
-

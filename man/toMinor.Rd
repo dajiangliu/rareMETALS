@@ -18,4 +18,3 @@ To minor: change number >.5 to 1-#
 
 To minor: change number >.5 to 1-#
 }
-

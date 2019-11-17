@@ -17,4 +17,3 @@ A list which consist of GCs for each study;
 \description{
 calculate GC by frequency bins;
 }
-

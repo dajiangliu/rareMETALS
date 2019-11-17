@@ -4,8 +4,8 @@
 \alias{rareMETALS.cleanScore}
 \title{Single variant meta-analysis}
 \usage{
-rareMETALS.cleanScore(score.stat.file, refaltList, hwe.cutoff, callrate.cutoff,
-  af.diff.max = 0.7, checkAF = TRUE)
+rareMETALS.cleanScore(score.stat.file, refaltList, hwe.cutoff,
+  callrate.cutoff, af.diff.max = 0.7, checkAF = TRUE)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}
@@ -22,4 +22,3 @@ a list consisting of results
 \description{
 Single variant meta-analysis
 }
-

@@ -4,7 +4,8 @@
 \alias{get.conditional.score.stat.RE}
 \title{This is the function to obtain conditional score statistics when conditional on the genes that are detected by SKAT test;}
 \usage{
-get.conditional.score.stat.RE(ustat, X.T.times.X, N, ix.candidate, ix.known)
+get.conditional.score.stat.RE(ustat, X.T.times.X, N, ix.candidate,
+  ix.known)
 }
 \arguments{
 \item{ustat}{The non-standardized score statistics}
@@ -21,4 +22,3 @@ the score statistic and their covariance matrix;
 \description{
 This is the function to obtain conditional score statistics when conditional on the genes that are detected by SKAT test;
 }
-
